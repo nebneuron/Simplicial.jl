@@ -22,7 +22,7 @@ in(a::Array{Int,1},c::CombinatorialCode)=in(CodeWord(a),c)
 # This function provides membership relationship of a word in a SimplicialComplex
 function in(word::CodeWord,K::SimplicialComplex)
 word_dimension=length(word)-1;
- Ind=find(K.dimensions.>=word_dimension) # we only need to check the words of dimension bigger or equal to the dimension of the word
+ Ind=find(K.dimensions.>=word_dimension) # we only need to check the facets of dimension bigger or equal to the dimension of the word
  	if length(Ind)<1
  		return false
  	else  for j=1:length(Ind)
