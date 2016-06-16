@@ -8,6 +8,8 @@ type CombinatorialCode
                 neurons::CodeWord 	# the set of all neurons that show up in the code
   ## this is the constructor for the CombinatorialCode type. It takes a list of Integer arrays, where each array represents a codeword
   ## codewords are checked for duplication
+
+  # The following function constructs a combinatorial code from a list of words
   function CombinatorialCode(ListOfWords::Array{Any,1})
            if length(ListOfWords)<1; println("WARNING: Empty code passed!!");
                return new([], Array{Int,1}([]),-1,-1,0,emptyset)
@@ -54,7 +56,17 @@ type CombinatorialCode
            if ThereWereDuplicates println("Warning: There were duplicated words") end
            new(words,weights,MaximumWeight,Minimumweight,Nwords,neurons)
         end
-    end
+
+
+# The following function is a "brute-force constructor" of a code (added as a convinience)
+  function CombinatorialCode(words::Array{CodeWord,1},weights::Array{Int,1}, MaximumWeight::Int,Minimumweight::Int,Nwords::Int,neurons::CodeWord)
+    # check basic sanity. Not all consistency checks are performed....
+    if length(words)!=Nwords; error("The array words should have length Nwords") end
+    for i=1:Nwords; if length(words[i])!=weights[i]; error("The sizes of words should match the weights variable") end end
+    new(words,weights,MaximumWeight,Minimumweight,Nwords,neurons)
+  end
+end
+
 ###############################################################################################
 
 
