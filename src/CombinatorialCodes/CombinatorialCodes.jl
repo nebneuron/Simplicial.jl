@@ -59,10 +59,14 @@ type CombinatorialCode
 
 
 # The following function is a "brute-force constructor" of a code (added as a convinience)
-  function CombinatorialCode(words::Array{CodeWord,1},weights::Array{Int,1}, MaximumWeight::Int,Minimumweight::Int,Nwords::Int,neurons::CodeWord)
-    # check basic sanity. Not all consistency checks are performed....
-    if length(words)!=Nwords; error("The array words should have length Nwords") end
-    for i=1:Nwords; if length(words[i])!=weights[i]; error("The sizes of words should match the weights variable") end end
+  function CombinatorialCode(words::Array{CodeWord,1}, neurons::CodeWord)
+    Nwords=length(words);
+    weights=zeros(Int,Nwords);  for i=1:Nwords; weights[i]=length(words[i]) end
+    MaximumWeight=maximum(weights) ;   Minimumweight=minimum(weights);
+    # perform one sanity check: ensure that  the union of all words is contained in the set neurons
+    collected_vertices=emptyset # keep track of all the vertices here
+    for aword=words; collected_vertices=union(collected_vertices,aword); end
+    if !issubset(collected_vertices,neurons); error(" the union of vertices in the words should be a subset of the neurons field"); end
     new(words,weights,MaximumWeight,Minimumweight,Nwords,neurons)
   end
 end
