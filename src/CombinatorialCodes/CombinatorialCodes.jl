@@ -63,7 +63,7 @@ type CombinatorialCode
     Nwords=length(words);
     weights=zeros(Int,Nwords);  for i=1:Nwords; weights[i]=length(words[i]) end
     MaximumWeight=maximum(weights) ;   Minimumweight=minimum(weights);
-    # perform one sanity check: ensure that  the union of all words is contained in the set neurons
+    # perform one sanity check: ensure that  the union of all words is contained in the set of neurons
     collected_vertices=emptyset # keep track of all the vertices here
     for aword=words; collected_vertices=union(collected_vertices,aword); end
     if !issubset(collected_vertices,neurons); error(" the union of vertices in the words should be a subset of the neurons field"); end
