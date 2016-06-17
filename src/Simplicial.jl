@@ -8,7 +8,7 @@ include("CombinatorialCodes/CombinatorialCodes.jl")
 include("CombinatorialCodes/BernoulliRandomCode.jl")
 
 include("SimplicialComplexes/SimplicialComplex.jl")
-include("utilities/function_in.jl")     # This is a simple function that checks a codeword membership in a code. Needs also be written for the simplicial complex type..
+include("utilities/function_in.jl")     # This is a simple function that checks a codeword membership in a code. 
 include("utilities/SC2CC_and_CC2SC.jl") # These are functions that transform between the SimplicialComplex and CombinatorialCode types
 
 include("utilities/CC_and_SC_compare_functions.jl")
