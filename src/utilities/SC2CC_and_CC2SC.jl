@@ -13,7 +13,7 @@ function CombinatorialCode(SC::SimplicialComplex)
             append!(CC, Subsets_of_ithfacet)
         end
     end
-    CC=CombinatorialCode(CC)
+    return CombinatorialCode(CC)
 end
 
 #####################################################################
@@ -26,5 +26,5 @@ function SimplicialComplex(CC::CombinatorialCode)
     for i=1:CC.Nwords
         push!(SC,collect(CC.words[i]))
     end
-    SC=SimplicialComplex(SC)
+    return SimplicialComplex(SC)
 end
