@@ -14,14 +14,11 @@ SimplicialComplex represent abstract simplicial complexes, defined below.
 CombinatorialCode has no special constraints (beyond the definition of
 SetCollection), but exists largely to provide a clearer logic to programs. Any
 concrete subtype FSC (representing (V,S)) of FiniteSetCollection must support
-the following functions:
-  in(s::Set,FSC::T) returns true if s is in S
-  
+the following functions:  
+  in(s::Set,FSC::T) returns true if s is in S  
   faces(FSC::T) returns an iterable collection of the sets in S. We use "faces"
-because we are primarily concerned with abstract simplicial complexes.
-
-  vertexSet(FSC::T) returns an iterable copy of V.
-  
+because we are primarily concerned with abstract simplicial complexes.  
+  vertexSet(FSC::T) returns an iterable copy of V.  
   //TODO: make the concrete implementations of FiniteSetCollection iterable
 
 # Simplicial Complexes
@@ -38,42 +35,31 @@ The following functions are (or will be) included in this package to act on
 concrete implementations of SimplicialComplex. Check the documentation for each
 function to see which concrete types it can act on. Relevant terminology is
 defined below. Functions that have been implemented are in _italics_
-Queries:
-  isPure(D), isVoid(D), isEmpty(D): boolean queries about the simplicial complex D
-  
-  dimension(D): returns the dimension of simplicial complex D
-  
-  numFaces(D): returns the total number of faces of D
-  
-  fVector(D): returns the f-vector of D
-  
-  vertexSet(D): returns the vertex set V(D)
-  
-  faces(D), facets(D): return a collection of faces or facets, respectively.
-  
-  nFaces(n,D): returns a collection of all faces of D of dimension n
-  
-  isFace(s,D), isFacet(s,D): answer queries about their argument (i.e. is the given set s a face of D)
-  
-  cofaces(s,D): returns a collection of cofaces of s in D
 
-Insertion/Removal
-  insertFace(s,D), _deleteFace(s,D)_: insert/delete faces from D (including inserting all subfaces, or deleting all cofaces).
-  
-  cone(v,D): creates a new simplicial complex (V',D') with the property that V' = V \cup {v}, and for every s in D, both s and (s \cup {v}) are in D'
-  
-  _link(s,D)_: returns a simplicial complex representing the link of s in D
-  
-  rest(s,D): returns a simplicial complex (s,D') such that t is in D' if and only if t is in D and t is a subset of s.
+**Queries**  
+  * isPure(D), isVoid(D), isEmpty(D): boolean queries about the simplicial complex D
+  * dimension(D): returns the dimension of simplicial complex D
+  * numFaces(D): returns the total number of faces of D
+  * fVector(D): returns the f-vector of D
+  * vertexSet(D): returns the vertex set V(D)
+  * faces(D), facets(D): return a collection of faces or facets, respectively.
+  * nFaces(n,D): returns a collection of all faces of D of dimension n
+  * isFace(s,D), isFacet(s,D): answer queries about their argument (i.e. is the given set s a face of D)
+  * cofaces(s,D): returns a collection of cofaces of s in D
 
-Other
-  findFreePairs(D): returns a list of ordered pairs (s,t) such that D can be collapsed along s,t.
-  
-  _dual(D)_: returns a new complex representing the Alexander dual of D.
+**Insertion/Removal**  
+  * insertFace(s,D), _deleteFace(s,D)_: insert/delete faces from D (including inserting all subfaces, or deleting all cofaces).
+  * cone(v,D): creates a new simplicial complex (V',D') with the property that V' = V \cup {v}, and for every s in D, both s and (s \cup {v}) are in D'
+  * _link(s,D)_: returns a simplicial complex representing the link of s in D
+  * rest(s,D): returns a simplicial complex (s,D') such that t is in D' if and only if t is in D and t is a subset of s.
+
+**Other**
+  * findFreePairs(D): returns a list of ordered pairs (s,t) such that D can be collapsed along s,t.
+  * _dual(D)_: returns a new complex representing the Alexander dual of D.
 
 
 # Terminology
-Definition: An _abstract simplicial complex_ is a pair (V,D) where V is a
+**Definition:** An _abstract simplicial complex_ is a pair (V,D) where V is a
 finite set and D is a collection of subsets of V satisfying two conditions:
   1. for all v in V, {v} is in D
   2. for all s in D, if t is a subset of s, then t is in D
