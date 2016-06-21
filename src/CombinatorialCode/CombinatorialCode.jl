@@ -1,5 +1,5 @@
 ###################### This is the type that defines combinatorial codes
-type CombinatorialCode
+type CombinatorialCode <: FiniteSetCollection
                 words::Array{CodeWord,1}   # the codewords, these are ordered by the weights (in the increasing order)
                 weights::Array{Int,1} # the sizes of the codewords in the same order as the words
                 MaximumWeight::Int  #
@@ -8,8 +8,6 @@ type CombinatorialCode
                 neurons::CodeWord 	# the set of all neurons that show up in the code
   ## this is the constructor for the CombinatorialCode type. It takes a list of Integer arrays, where each array represents a codeword
   ## codewords are checked for duplication
-
-  # The following function constructs a combinatorial code from a list of words
   function CombinatorialCode(ListOfWords::Array{Any,1})
            if length(ListOfWords)<1; println("WARNING: Empty code passed!!");
                return new([], Array{Int,1}([]),-1,-1,0,emptyset)
@@ -56,26 +54,14 @@ type CombinatorialCode
            if ThereWereDuplicates println("Warning: There were duplicated words") end
            new(words,weights,MaximumWeight,Minimumweight,Nwords,neurons)
         end
-
-
-# The following function is a "brute-force constructor" of a code (added as a convinience)
-  function CombinatorialCode(words::Array{CodeWord,1}, neurons::CodeWord)
-    Nwords=length(words);
-    weights=zeros(Int,Nwords);  for i=1:Nwords; weights[i]=length(words[i]) end
-    MaximumWeight=maximum(weights) ;   Minimumweight=minimum(weights);
-    # perform one sanity check: ensure that  the union of all words is contained in the set of neurons
-    collected_vertices=emptyset # keep track of all the vertices here
-    for aword=words; collected_vertices=union(collected_vertices,aword); end
-    if !issubset(collected_vertices,neurons); error(" the union of vertices in the words should be a subset of the neurons field"); end
-    new(words,weights,MaximumWeight,Minimumweight,Nwords,neurons)
-  end
-end
-
+    end
 ###############################################################################################
 
 
 # This is a function that detects if the code has the empty set:
 HasEmptySet(code::CombinatorialCode)=in(emptyset,code)
 
-# This function detects if the code is NULL, i.e. has no codewords whatsoever
-isNULL(code::CombinatorialCode)=(length(code.words)==0)
+# This function detects if the code is null, i.e. has no codewords whatsoever
+# Since "null" and "void" are used interchangeably throughout the documentation, here are two ways to check the same thing.
+isNull(code::CombinatorialCode)=(length(code.words)==0)
+isVoid(code::CombinatorialCode)=isNull(code)

@@ -1,4 +1,6 @@
+## Membership check for the concrete types defined in this package.
 
+#### --- for type CombinatorialCode ---
 # This function provides membership relationship of a word in a code
 function in(word::CodeWord,code::CombinatorialCode)
 wordlenth=length(word)
@@ -18,9 +20,10 @@ return false
 in(a::Array{Int,1},c::CombinatorialCode)=in(CodeWord(a),c)
 
 
+### --- for children of abstract type SimplicialComplex ---
 
 # This function provides membership relationship of a word in a SimplicialComplex
-function in(word::CodeWord,K::SimplicialComplex)
+function in(word::CodeWord,K::FacetList)
 word_dimension=length(word)-1;
  Ind=find(K.dimensions.>=word_dimension) # we only need to check the facets of dimension bigger or equal to the dimension of the word
  	if length(Ind)<1
@@ -35,4 +38,4 @@ return false
  end
 
  # This is an array version of the function in
- in(a::Array{Int,1},K::SimplicialComplex)=in(CodeWord(a),K)
+ in(a::Array{Int,1},K::FacetList)=in(CodeWord(a),K)

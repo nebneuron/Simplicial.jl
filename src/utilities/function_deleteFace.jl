@@ -1,8 +1,8 @@
-## The following two functions computes deletion 
+## The following two functions computes deletion
 ## of a simplicial complex (a combinatorial code, respectively) by a simplex (a subcode, respectively)
 #################################################################################
 ## this function computes the deletion of a simplicial complex by a simplex
-function del(SC::SimplicialComplex, sigma::Set{Int})
+function deleteFace(sigma::CodeWord, SC::FacetList)
     SC_facets=SC.facets
     ## build an array Simplex_test,
     ## if sigma is contained in a facet, push the facet into the array
@@ -27,7 +27,7 @@ function del(SC::SimplicialComplex, sigma::Set{Int})
 end
 ####################################################################################
 ## this function computes the deletion of a combinatorial code by a sub-codeword
-function del(C::CombinatorialCode, sigma::Set{Int})
+function deleteFace(sigma::CodeWord, C::CombinatorialCode)
     ## build an array subcodeword_test,
     ## if sigma is contained in the ith word, push the word into the array
     ## else, skip it.

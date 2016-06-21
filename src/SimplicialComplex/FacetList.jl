@@ -1,6 +1,6 @@
 ###################### This is the type that defines simplicial complexes
-type SimplicialComplex
-    facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
+type FacetList{SetType} <: SimplicialComplex
+    facets::Array{SetType,1}  # the maximal faces ordered by the weights (in the increasing order)
     dimensions::Array{Int,1} # the dimensions of the facets
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
     Nwords::Int  # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
@@ -10,7 +10,7 @@ type SimplicialComplex
      ## It takes a list of Integer arrays, where each array represents a facet
      ## facets are checked for inclusions
      ## An input looks like ListOfWords=Any[[1,2,3],[2,3,4],[3,1,5],[1,2,4],[2,2,3,3]].
-    function SimplicialComplex(ListOfWords::Array{Any,1})
+    function FacetList(ListOfWords::Array{Any,1})
         if ListOfWords==Any[]
             new([],-1,-1,0,emptyset)
         elseif ListOfWords==Any[[]]
@@ -58,4 +58,13 @@ type SimplicialComplex
             new(facets, dimensions, dim, Nwords, neurons)
         end
     end
+
+  function FacetList(CC::CombinatorialCode)
+    SC = [];
+    for i = 1:CC.Nwords
+      push!(SC,collect(CC.words[i]))
+    end
+    new(SC)
+  end
 end
+
