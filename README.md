@@ -1,6 +1,6 @@
-# DISCLAIMER: This software is still in development! Use at your own risk!
-# This software is written in [Julia](http://julialang.org) programming language.
-# Package Maintained by Vladimir Itskov, Min-Chun Wu, Alex Kunin, et. al.
+DISCLAIMER: This software is still in development! Use at your own risk!
+This software is written in [Julia](http://julialang.org) programming language.
+Package Maintained by Vladimir Itskov, Min-Chun Wu, Alex Kunin, et. al.
 
 ###############################
 # Package FiniteSetCollection #
