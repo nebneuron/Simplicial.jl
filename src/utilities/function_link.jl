@@ -2,8 +2,8 @@
 ## The following two function are the link functions for simplicial complexes and combinatorialcodes
 ####################################################################################################
 
-## this function computes the link of a simplex in a simplicial complex
-function link(SC::SimplicialComplex, sigma::Set{Int})
+## this function returns a new simplicial complex representing the link of sigma in SC
+function link(sigma::CodeWord, SC::FacetList)
     ## build an array Simplex_test, if sigma is contained in a facet, push the facet into the array
     Simplex_test=[]
     for i=1:SC.Nwords
@@ -20,14 +20,14 @@ function link(SC::SimplicialComplex, sigma::Set{Int})
         for i=1:length(Simplex_test)
             Simplex_test[i]=collect(setdiff(Simplex_test[i],sigma))
         end
-        SimplicialComplex(Any(Simplex_test))
+        return FacetList(Any(Simplex_test))
     end
 end
 
 #####################################################################################################
 
-## this function computes the link of a sub-codeword in a combinatorial code
-function link(C::CombinatorialCode, sigma::Set{Int})
+## this function returns a new code representing the link of sigma in C
+function link(sigma::CodeWord, C::CombinatorialCode)
     ## for testing validity of sigma,
     ## build an array Codeword_test, if sigma is contained in a facet, push the facet into the array
     Codeword_test=[]
