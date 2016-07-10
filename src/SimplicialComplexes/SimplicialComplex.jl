@@ -16,13 +16,8 @@ type SimplicialComplex
 function SimplicialComplex(ListOfWords::Array{Any,1})
         if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of Null Complex
             new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)
-        elseif ListOfWords==Any[[]]
-            facets=[emptyset]
-            dimensions=[-1]
-            dim=-1
-            Nwords=1
-            neurons=emptyset
-            new(facets,dimensions,dim,Nwords,neurons)
+        elseif (ListOfWords==Any[[]])||(ListOfWords==[emptyset]) #  the irrelevant complex with empty vertex set 
+            new([emptyset],[-1],-1,1,emptyset)
         else
             ## refine the list of words to a list of sets (to eliminate redundant vertices)
             facets=sort(map(CodeWord,ListOfWords), by=length) # order the words by lengths
