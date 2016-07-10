@@ -19,7 +19,7 @@ Objects of this type represent combinatorial codes (V,C). It has the following c
 
 The following methods are defined:
   * `HasEmptySet(code::CombinatorialCode)` returns true if the emptyset is an element of `code`
-  * `isNULL(code::CombinatorialCode)` returns true if `code` contains no codewords (even the empty set)
+
 
 ## Type SimplicialComplex
 Objects of this type represent simplicial complexes (V,D). They are stored as a list of the facets of D. It has the following constructors:
@@ -28,6 +28,10 @@ Objects of this type represent simplicial complexes (V,D). They are stored as a 
 
 ## Methods
 The following methods are defined:
+
+#### `isvoid`
+  * `isvoid(code::CombinatorialCode)` returns true if `code` contains no codewords (not even the empty set)
+  * `isvoid(K::SimplicialComplex)` returns true if `K` contains no facets (not even the empty set)
 
 #### `==`
 Equality comparison operator has the following methods added:
