@@ -10,9 +10,12 @@ type SimplicialComplex
      ## It takes a list of Integer arrays, where each array represents a facet
      ## facets are checked for inclusions
      ## An input looks like ListOfWords=Any[[1,2,3],[2,3,4],[3,1,5],[1,2,4],[2,2,3,3]].
-    function SimplicialComplex(ListOfWords::Array{Any,1})
-        if ListOfWords==Any[]
-            new([],-1,-1,0,emptyset)
+
+
+
+function SimplicialComplex(ListOfWords::Array{Any,1})
+        if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of Null Complex
+            new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)
         elseif ListOfWords==Any[[]]
             facets=[emptyset]
             dimensions=[-1]
