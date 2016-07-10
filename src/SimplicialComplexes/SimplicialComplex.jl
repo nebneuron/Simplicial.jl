@@ -14,7 +14,7 @@ type SimplicialComplex
 
 
 function SimplicialComplex(ListOfWords::Array{Any,1})
-        if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of Null Complex
+        if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of the void (or null) Complex
             new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)
         elseif (ListOfWords==Any[[]])||(ListOfWords==[emptyset]) #  the irrelevant complex with empty vertex set 
             new([emptyset],[-1],-1,1,emptyset)
