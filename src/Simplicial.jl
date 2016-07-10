@@ -9,6 +9,9 @@ include("CombinatorialCodes/CombinatorialCodes.jl")
 include("CombinatorialCodes/BernoulliRandomCode.jl")
 
 include("SimplicialComplexes/SimplicialComplex.jl")
+include("utilities/isvoid.jl")          # This is a simple function that checks if a simplicial complex or a code is void (=NULL)
+
+
 include("utilities/function_in.jl")     # This is a simple function that checks a codeword membership in a code.
 include("utilities/SC2CC_and_CC2SC.jl") # These are functions that transform between the SimplicialComplex and CombinatorialCode types
 
@@ -26,7 +29,7 @@ include("utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl")
 include("utilities/function_show.jl") # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
 
 export CodeWord, emptyset
-export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isNULL, in, ==
+export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, in, ==
 export SimplicialComplex, Alexander_dual, link, del, Bicomplex
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
