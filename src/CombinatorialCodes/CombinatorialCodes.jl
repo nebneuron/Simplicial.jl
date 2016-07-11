@@ -11,7 +11,7 @@ type CombinatorialCode
 
   # The following function constructs a combinatorial code from a list of words
   function CombinatorialCode(ListOfWords::Array{Any,1})
-           if length(ListOfWords)<1; println("WARNING: Empty code passed!!");
+           if length(ListOfWords)<1; println("WARNING: The void code was passed!!");
                return new([], Array{Int,1}([]),-1,-1,0,emptyset)
            end
            neurons=emptyset # keep track of all the vertices here

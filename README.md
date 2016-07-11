@@ -29,9 +29,11 @@ Objects of this type represent simplicial complexes (V,D). They are stored as a 
 ## Methods
 The following methods are defined:
 
-#### `isvoid`
+#### `isvoid` and `isirrelevant`
   * `isvoid(code::CombinatorialCode)` returns true if `code` contains no codewords (not even the empty set)
+  * `isirrelevant(code::CombinatorialCode)` returns true if `code` consists of only the empty set
   * `isvoid(K::SimplicialComplex)` returns true if `K` contains no facets (not even the empty set)
+  * `isirrelevant(K::SimplicialComplex)` returns true if `K` has only the empty set
 
 #### `==`
 Equality comparison operator has the following methods added:
@@ -69,7 +71,7 @@ returns a new simplicial complex which is the Alexander Dual of SC.
 **Definition:** An _abstract simplicial complex_ is a pair (V,D) where V is a finite set and D is a collection of subsets of V satisfying two conditions:
   1. for all v in V, {v} is in D
   2. for all s in D, if t is a subset of s, then t is in D
-  We typically refer to a simplicial complex simply as D. If s is in D, we call s a _face_ of D or a _simplex_ of D (from here forward, we will use "face" exclusively). The subsets of a face are, in turn, its faces, and its supersets (in D) are its _cofaces_. When D is ambiguosly used to refer to the pair (V,D), we denote V by V(D).
+  We typically refer to a simplicial complex simply as D. If s is in D, we call s a _face_ of D or a _simplex_ of D (from here forward, we will use "face" exclusively). The subsets of a face are, in turn, its faces, and its supersets (in D) are its _cofaces_. When D is ambiguously used to refer to the pair (V,D), we denote V by V(D).
 
 We call attention to a special case here: there are two possible simplicial complexes with empty vertex (i.e. V = {}). The first is the _void complex_, or the _null complex_, where D is also empty (so V = {}, D = {}). The other is the _irrelevant complex_ or the _empty complex_, where D contains only one set, the empty set (so V = {}, D = {{}}).
 
@@ -77,4 +79,3 @@ We call attention to a special case here: there are two possible simplicial comp
  * A _facet_ is a maximal (by set inclusion) face of a simplicial complex. A simplicial complex is _pure_ if all its facets are of the same dimension.
  * The _Alexander dual_ of a simplicial complex (V,D) is the complex (V,D') where s is in D' iff V \ s is not in D.
  * The _link_ of a face s is the simplicial complex link(s,D) = {t \subset V : s \cap t = empty, s \cup t \in D}.
-
