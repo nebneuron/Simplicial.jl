@@ -4,7 +4,7 @@ type SimplicialComplex
     dimensions::Array{Int,1} # the dimensions of the facets
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
     Nwords::Int  # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
-    neurons::CodeWord 	# the set of all vertices that show up in the simplicial complex
+    vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
 
      ## this is the constructor for the SimplicialComplex type.
      ## It takes a list of Integer arrays, where each array represents a facet
@@ -44,16 +44,16 @@ function SimplicialComplex(ListOfWords::Array{Any,1})
 
 
             ## union one by one the entries of facets using for loop
-            neurons=emptyset
+            vertices=emptyset
             for i=1:length(facets)
-                neurons=union(neurons, facets[i])
+                vertices=union(vertices, facets[i])
             end
 
             ## dimensions is the array of dimensions of each words in facets
             dimensions=Int[length(facets[i])-1 for i=1:length(facets)]
             dim=length(facets[end])-1
             Nwords=length(facets)
-            new(facets, dimensions, dim, Nwords, neurons)
+            new(facets, dimensions, dim, Nwords, vertices)
         end
     end
 end

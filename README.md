@@ -13,8 +13,8 @@ The module also defines the constant `emptyset` to represent the empty set as an
 
 ## Type CombinatorialCode
 Objects of this type represent combinatorial codes (V,C). It has the following constructors:  
-  * `C = CombinatorialCode(ListOfWords::Array{Any,1})` will convert each element of `ListOfWords` into a `CodeWord`, then remove repetitions of words, before storing them in sorted order in `C.words`. Moreover, it sets `C.neurons` to be the union of all sets in `ListOfWords`
-  * `C = CombinatorialCode(words::Array{CodeWord,1}, neurons::CodeWord)` same as above, except it manually sets `C.neurons`
+  * `C = CombinatorialCode(ListOfWords::Array{Any,1})` will convert each element of `ListOfWords` into a `CodeWord`, then remove repetitions of words, before storing them in sorted order in `C.words`. Moreover, it sets `C.vertices` to be the union of all sets in `ListOfWords`
+  * `C = CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)` same as above, except it manually sets `C.vertices`
   * `C = CombinatorialCode(SC::SimplicialComplex)` creates a code which stores every face of `SC`
 
 The following methods are defined:
@@ -23,7 +23,7 @@ The following methods are defined:
 
 ## Type SimplicialComplex
 Objects of this type represent simplicial complexes (V,D). They are stored as a list of the facets of D. It has the following constructors:
-  * `K = SimplicialComplex(ListOfWords::Array{Any,1})` converts the elements of `ListOfWords` to `CodeWord` and then stores the maximal (by set inclusion) words. Moreover, it sets `K.neurons` to the union of the facets.
+  * `K = SimplicialComplex(ListOfWords::Array{Any,1})` converts the elements of `ListOfWords` to `CodeWord` and then stores the maximal (by set inclusion) words. Moreover, it sets `K.vertices` to the union of the facets.
   * `K = SimplicialComplex(CC::CombinatorialCode)` creates a simplicial complex which represents the "subset-completion" of `CC`
 
 ## Methods
@@ -66,7 +66,7 @@ returns a new simplicial complex which is the Alexander Dual of SC.
 
 
 ## Terminology
-**Definition:** A _combinatorial code_ is a pair (V,C) where V is a finite set (typically the set {1,...,_n_} for some _n_) and C is a set of subsets of V. The elements of C are called _codewords_; the set V is sometimes called the set of _neurons_.
+**Definition:** A _combinatorial code_ is a pair (V,C) where V is a finite set (typically the set {1,...,_n_} for some _n_) and C is a set of subsets of V. The elements of C are called _codewords_; the set V is sometimes called the set of _vertices_.
 
 **Definition:** An _abstract simplicial complex_ is a pair (V,D) where V is a finite set and D is a collection of subsets of V satisfying two conditions:
   1. for all v in V, {v} is in D

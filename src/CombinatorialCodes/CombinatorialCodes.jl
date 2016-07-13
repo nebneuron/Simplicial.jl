@@ -5,7 +5,7 @@ type CombinatorialCode
                 MaximumWeight::Int  #
                 Minimumweight::Int  #
                 Nwords::Int       	# total number of codewords in the code
-                neurons::CodeWord 	# the set of all neurons that show up in the code
+                vertices::CodeWord 	# the set of all vertices that show up in the code
   ## this is the constructor for the CombinatorialCode type. It takes a list of Integer arrays, where each array represents a codeword
   ## codewords are checked for duplication
 
@@ -14,7 +14,7 @@ type CombinatorialCode
            if length(ListOfWords)<1; println("WARNING: The void code was passed!!");
                return new([], Array{Int,1}([]),-1,-1,0,emptyset)
            end
-           neurons=emptyset # keep track of all the vertices here
+           vertices=emptyset # keep track of all the vertices here
            # First, compute the weights
            weights=zeros(Int,length(ListOfWords))
            for i=1:length(ListOfWords)
@@ -44,7 +44,7 @@ type CombinatorialCode
                         if ~CurrentSetIsDuplicated
                         push!(CurrentListOfWords,CurrentSet)
                         push!(words,CurrentSet)
-                        neurons=union(neurons,CurrentSet)
+                        vertices=union(vertices,CurrentSet)
                         end
                	    end
                  end
@@ -54,20 +54,20 @@ type CombinatorialCode
             weights=zeros(Int,Nwords)
             for i=1:Nwords ; weights[i]=length(words[i]); end
            if ThereWereDuplicates println("Warning: There were duplicated words") end
-           new(words,weights,MaximumWeight,Minimumweight,Nwords,neurons)
+           new(words,weights,MaximumWeight,Minimumweight,Nwords,vertices)
         end
 
 
 # The following function is a "brute-force constructor" of a code (added as a convinience)
-  function CombinatorialCode(words::Array{CodeWord,1}, neurons::CodeWord)
+  function CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)
     Nwords=length(words);
     weights=zeros(Int,Nwords);  for i=1:Nwords; weights[i]=length(words[i]) end
     MaximumWeight=maximum(weights) ;   Minimumweight=minimum(weights);
-    # perform one sanity check: ensure that  the union of all words is contained in the set of neurons
+    # perform one sanity check: ensure that  the union of all words is contained in the set of vertices
     collected_vertices=emptyset # keep track of all the vertices here
     for aword=words; collected_vertices=union(collected_vertices,aword); end
-    if !issubset(collected_vertices,neurons); error(" the union of vertices in the words should be a subset of the neurons field"); end
-    new(words,weights,MaximumWeight,Minimumweight,Nwords,neurons)
+    if !issubset(collected_vertices,vertices); error(" the union of vertices in the words should be a subset of the vertices field"); end
+    new(words,weights,MaximumWeight,Minimumweight,Nwords,vertices)
   end
 end
 

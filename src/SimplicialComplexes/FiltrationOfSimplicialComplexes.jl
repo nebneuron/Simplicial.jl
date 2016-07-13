@@ -5,7 +5,7 @@ type FiltrationOfSimplicialComplexes
     birth::Array{Int,1}          # The birth times of each simplex in the field `faces`. These values are supposed to be positive integers and lie in the interval [1, `depth`]
     birth_values:: Array{Real,1} # This is an _optional_ array of real values that may arise from computing the Dowker complex. If specified, the values of this field should agree with the values of birth
                                  # If the intent is to not specify the values of this field it should be assigned to be =Real[]
-    neurons::CodeWord 	# the set of all vertices that show up in the simplicial complex
+    vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
 
 
  function FiltrationOfSimplicialComplexes(ListOfFaces::Array{Any,1}), BirthValues:Array{Real,1})
