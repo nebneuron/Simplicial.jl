@@ -1,3 +1,43 @@
+CodeWord=Array{Int,1}
+## Before the type FiltrationOfSimplicialComplexes definition, 
+## we introduce a function FaceBirthpush! that would be used in defining type FiltrationOfSimplicialComplexes
+## This function is the core of the type FiltrationOfSimplicialComplexes
+## Its inputs are 
+## (1) a list of faces, ## ListOfFaces
+## (2) the corresponding births of the faces (assumed ordered), ## births
+## (3) a face that is going to be added, ## AddedFace ## and 
+## (4) the stage of the added face (only allowed to be greater than or equal to the last birth) ## AssignedBirth
+## The function examines whether the added face is contained in any of the face in the list:
+## if true, return the matrix [ListOfFaces births]; 
+## if false, return the matrix [ListOfFaces births; AddedFace AssignedBirth].
+function FaceBirthpush!(ListOfFaces::Array{Any,1},births::Array{Int,1},AddedFace::Array{Int,1},AssignedBirth::Int)
+    if length(ListOfFaces)!=length(births)
+        error("List of faces and births do not have the same length.")
+    elseif (AssignedBirth<births[length(births)])
+        error("Assigned birth should be greater than or equal to last birth.")
+    elseif AddedFace==Int[]
+        return (ListOfFaces, births)
+    else
+        j=1
+        for i=1:length(ListOfFaces)
+            if issubset(AddedFace,ListOfFaces[i])
+                break        
+            else
+                j=j+1
+                continue
+            end
+        end
+
+        if j==length(ListOfFaces)+1
+            push!(ListOfFaces, AddedFace)
+            push!(births, AssignedBirth)
+        end
+        return (ListOfFaces, births)
+    end
+end
+
+############################################################################################################################
+
 type FiltrationOfSimplicialComplexes
     faces::Array{CodeWord,1}     # these are all possible faces that appear in the filtration (may include just the `emptyset` if the first complex is the irrelevant complex)
     dimensions::Array{Int,1}     # the dimensions of the faces -- these are the dimensions of the faces (IN THE SAME ORDER)
@@ -9,7 +49,7 @@ type FiltrationOfSimplicialComplexes
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
 
 
- function FiltrationOfSimplicialComplexes(ListOfFaces::Array{CodeWord,1}, births=[])
+ function FiltrationOfSimplicialComplexes(ListOfFaces::Array{CodeWord,1}, births::Array{Int,1})
   # this functions takes the list of faces together with their birth times, cleans it up (there may be redundant words), and then constructs the appropriate object
   # ..........
   # .......... insert the preprocessing here
@@ -19,71 +59,126 @@ type FiltrationOfSimplicialComplexes
       if isempty(ListOfFaces)
          new(Array{CodeWord}(0), Array{Int}(0), 0, Array{Int}(0), CodeWord([]));
       else
-         if length(ListOfFaces)~=length(births); error("The list of faces need to be of the same length as the list of births"); end
-         F=FiltrationOfSimplicialComplexes([]);
-         for i=1:length(ListOfFaces)
-             push!(F,ListOfFaces[i],births[i])
+         if length(ListOfFaces)!=length(births); error("The list of faces need to be of the same length as the list of births"); end
+            SortFaceBirth=sortrows([births ListOfFaces])
+            faces=Any[SortFaceBirth[1,2]]
+            birth=Int[SortFaceBirth[1,1]]
+         for i=2:length(ListOfFaces)
+                TempPair=FaceBirthpush!(faces,birth,SortFaceBirth[i,2],SortFaceBirth[i,1])
+                faces=TempPair[1]
+                birth=TempPair[2]
          end
-         return F
+            Newbirths=Int[1]
+            NewIndex=1
+            for i=1:length(birth)-1
+                if birth[i+1]==birth[i]
+                    push!(Newbirths,NewIndex)
+                else
+                    push!(Newbirths,NewIndex+1)
+                    NewIndex=NewIndex+1
+                end
+            end
+            birth=Newbirths
+            depth=birth[length(birth)]
+            dimensions=[length(faces[i]) for i=1:length(faces)]
+            vertices=CodeWord([])
+            for i=1:length(faces)
+                vertices=union(vertices,Set{Int}(faces[i]))
+            end
+            new(faces,dimensions,depth,birth,vertices)
       end
 
   end
 
 end
 
-
-function push!(F::FiltrationOfSimplicialComplexes, face::CodeWord, birth=1 )
-# Usage FaceAdded=push!(F::FiltrationOfSimplicialComplexes, face::CodeWord, birth::Int, birthvalue=[] )
-# This adds a new face to F
-# The Boolean variable FaceAdded is true if we ended up adding a new facet, otherwise it is false
-# first, check if the face is empty. If empty do nothing
-if isempty(face)
-  return false # we had not added any new face
-end
-the_face_dimension=length(face)-1;
-
-# Now, assume that the face is non-empty
-# Check if F is the null complex, if so, add the appropriate values
-if isempty(F.faces)
-  F.faces=[face];
-  F.dimensions=[the_face_dimension];
-  F.depth=1;
-  F.birth=[birth]; #
-  F.vertices=face;
-  return true # we added a new facet
-end
-
-# Here we check that the pre-birth facets do not contain the face and also the post-birth facets are not contained in the face, and then either push the appropriate face (and maybe delete some other facets) or leave unchenged
-pre_birth=    (f.birth.<=birth);
-post_birth =  (f.birth.>birth):
-# here we do the rest of this.
-# making sure everything makes sense ...
-#.......
-F.vertices=union(F.vertices,face);
-#.....
+##############################################################################################
+## This function is an enhanced version of FaceBirthpush!
+## Its input are (1) a Fil of SC, (2) a face to be added, and (3) the birth that the face is being added at.
+## Its output is the resulting Fil of SC.
+function Filpush!(F::FiltrationOfSimplicialComplexes, FaceAdded::CodeWord, birth::Int)
+    ListOfFaces=F.faces
+    births=F.birth
+    AddedFace=FaceAdded
+    AssignedBirth=birth
+    FaceBirthpush!(ListOfFaces,births,AddedFace,AssignedBirth)
+    return FiltrationOfSimplicialComplexes(LisfOfFaces,births)
 end
 
 
+
+############################################################################################
+include("SimplicialComplex.jl")
 
 function Sample(S::FiltrationOfSimplicialComplexes, DepthOfSampling::Int)
-#
-# This function takes a filtration of simplicial complexes S and
-# returns a SimplicialComplex K that is at the step  DepthOfSampling of the filtration
-# construct K .....
-return K
+    #
+    # This function takes a filtration of simplicial complexes S and
+    # returns a SimplicialComplex K that is at the step  DepthOfSampling of the filtration
+    SimplicialFaces=Any[]
+    for i=1:length(S.faces)
+        if S.birth[i]<=DepthOfSampling
+            push!(SimplicialFaces, S.faces[i])
+        else
+            break
+        end
+    end
+    # construct K .....
+    K=SimplicialComplex(SimplicialFaces)
+    return K
 end
 
+
 function Sample(S::FiltrationOfSimplicialComplexes, DepthsOfSampling::Array{Int,1} )
-#
-# This function takes a filtration of simplicial complexes S and
-# returns a different filtration of simplicial complexes T that is now sub-sampled  steps listed in the array   DepthsOfSampling
-# construct T .....
-return T
+    #
+    # This function takes a filtration of simplicial complexes S and
+    # returns a different filtration of simplicial complexes T that is now sub-sampled  steps listed in the array   DepthsOfSampling
+    
+    # construct T .....
+    # sort the Array DepthsOfSampling in case the input is not in order
+    DepthsOfSampling=sort(DepthsOfSampling)
+    # Create an array of new birth times for the assigned steps
+    NewBirth=Int[]
+    j=1
+    for i=1:length(DepthsOfSampling)
+        while (j<length(S.birth)+1)&&(S.birth[j]<=DepthsOfSampling[i])
+            push!(NewBirth,i)
+            j=j+1
+        end
+    end
+    # collect the new faces according to the new birth times
+    NewFaces=Any[S.faces[k] for k=1:length(NewBirth)]
+    # Construct the desired T
+    T=FiltrationOfSimplicialComplexes(NewFaces,NewBirth)
+    return T
 end
 
 
 function DowkerComplex(A::Array{Float64,2})
-# This returns the Dowker complex of a rectangular matrix A
-# construct S=FiltrationOfSimplicialComplexes(...)
-return S
+    # This returns the Dowker complex of a rectangular matrix A
+    # construct S=FiltrationOfSimplicialComplexes(...)
+    
+    ########### Notice: this function omits the trivial empty simplicial complex (i.e. the trivial head of the filtration)
+    ## Due to the change of convention (columns for detectors->rows for detectors), we do the transpose of A.
+    A=A'
+    ## 1. collect the elements of A into an array and sort it
+    Steps=sort(collect(A))
+    ## for each value in Steps, collect the faces as defined by Dowker complex
+    ListOfFaces=Any[]
+    BirthValues=Int[]
+    for k=1:length(Steps)
+        for i=1:size(A,1)
+            Face=Int[]
+            for j=1:size(A,2)
+                if A[i,j]<=Steps[k]
+                    push!(Face,j)
+                else
+                    continue
+                end
+            end
+            push!(ListOfFaces,Face)
+            push!(BirthValues,k)
+        end
+    end
+    ListOfFaces=Array{CodeWord,1}(ListOfFaces)
+    return FiltrationOfSimplicialComplexes(ListOfFaces, BirthValues)
 end
