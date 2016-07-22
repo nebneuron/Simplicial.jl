@@ -2,6 +2,7 @@ module Simplicial
 import Base.in # since we define a new method for the function in, we need to load all the old methods -- this is an oddity of the current version of julia
 import Base.==
 import Base.show
+import Base.push!
 
 include("CodeWords.jl") # definition for the type of CodeWord and the related methods for this type
 
