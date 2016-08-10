@@ -9,16 +9,16 @@
 ## The function examines whether the added face is contained in any of the face in the list:
 ## if true, return the matrix [ListOfFaces births]; 
 ## if false, return the matrix [ListOfFaces births; AddedFace AssignedBirth].
-function FaceBirthpush!(ListOfFaces::Array{Array{Int,1},1},births::Array{Int,1},AddedFace::Array{Int,1},AssignedBirth::Int)
-    if length(ListOfFaces)!=length(births)
+function FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},AddedFace::CodeWord,AssignedBirth::Int)
+    if length(ListOfFaces)!=length(births) # ListOfFaces should have the same length as births.
         error("List of faces and births do not have the same length.")
-    elseif (AssignedBirth<births[length(births)])
+    elseif (AssignedBirth<births[length(births)]) # Assigned birth should be greater than or equal to the last birth.
         error("Assigned birth should be greater than or equal to last birth.")
-    elseif AddedFace==Int[]
+    elseif AddedFace==Int[] # If nothing added, return the orignal input.
         return (ListOfFaces, births)
-    else
-        j=1
-        for i=1:length(ListOfFaces)
+    else # dealing with the normal case
+        j=1 # j as an iteration indicator, representing the jth CodeWord in ListOfFaces
+        for i=1:length(ListOfFaces) # check whether the added face is contained in either of the CodeWord in ListOfFaces
             if issubset(AddedFace,ListOfFaces[i])
                 break        
             else
@@ -26,8 +26,8 @@ function FaceBirthpush!(ListOfFaces::Array{Array{Int,1},1},births::Array{Int,1},
                 continue
             end
         end
-
-        if j==length(ListOfFaces)+1
+        ## j equaling length(ListOfFaces)+1 means AddedFace passes all "containment" test and should really be added
+        if j==length(ListOfFaces)+1 
             push!(ListOfFaces, AddedFace)
             push!(births, AssignedBirth)
         end
@@ -38,7 +38,7 @@ end
 ############################################################################################################################
 
 type FiltrationOfSimplicialComplexes
-    faces::Array{Array{Int,1},1}     # these are all possible faces that appear in the filtration (may include just the `emptyset` if the first complex is the irrelevant complex)
+    faces::Array{CodeWord,1}     # these are all possible faces that appear in the filtration (may include just the `emptyset` if the first complex is the irrelevant complex)
     dimensions::Array{Int,1}     # the dimensions of the faces -- these are the dimensions of the faces (IN THE SAME ORDER)
     depth::Int                   # this is the depth of filtration, i.e. the total number of simplicial complexes it contains
     birth::Array{Int,1}          # The birth times of each simplex in the field `faces`. These values are supposed to be positive integers and lie in the interval [1, `depth`]
@@ -48,7 +48,7 @@ type FiltrationOfSimplicialComplexes
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
 
 
-   function FiltrationOfSimplicialComplexes(ListOfFaces::Array{Array{Int,1},1}, births::Array{Int,1})
+   function FiltrationOfSimplicialComplexes(ListOfFaces::Array{CodeWord,1}, births::Array{Int,1})
   # this functions takes the list of faces together with their birth times, cleans it up (there may be redundant words), and then constructs the appropriate object
   # ..........
   # .......... insert the preprocessing here
@@ -58,32 +58,53 @@ type FiltrationOfSimplicialComplexes
       if isempty(ListOfFaces)
          new(Array{CodeWord}(0), Array{Int}(0), 0, Array{Int}(0), CodeWord([]));
       else
-         if length(ListOfFaces)!=length(births); error("The list of faces need to be of the same length as the list of births"); end
-            SortFaceBirth=sortrows([births ListOfFaces])
-            faces=Array{Int,1}[SortFaceBirth[1,2]]
-            birth=Int[SortFaceBirth[1,1]]
-         for i=2:length(ListOfFaces)
-                TempPair=FaceBirthpush!(faces,birth,SortFaceBirth[i,2],SortFaceBirth[i,1])
-                faces=TempPair[1]
-                birth=TempPair[2]
-         end
-            Newbirths=Int[1]
-            NewIndex=1
-            for i=1:length(birth)-1
-                if birth[i+1]==birth[i]
-                    push!(Newbirths,NewIndex)
+            # The length of ListOfFaces and that of births being different is not allowed.
+            if length(ListOfFaces)!=length(births); error("The list of faces needs to be of the same length as the list of births"); end
+                SortFaceBirth=sortrows([births map(x->collect(x),ListOfFaces)]) # births might be not ordered, sort it first. (along with the ListOfFaces)
+                faces=CodeWord[Set(SortFaceBirth[1,2])] # we will add the faces recursively; now, add the first one.
+                birth=Int[SortFaceBirth[1,1]] # add the first birth in births into birth
+            for i=2:length(ListOfFaces) # this loop is the adding of the faces and births
+            TempPair=FaceBirthpush!(faces,birth,Set(SortFaceBirth[i,2]),SortFaceBirth[i,1])
+            faces=TempPair[1]
+            birth=TempPair[2]
+            end
+            
+            ## The following step is for adding back the stages with no contribution
+            ######################################## This is the start of adding back the noncontributing stages
+            NewFaces=CodeWord[faces[1]]
+            NewBirth=Int[birth[1]]
+            for j=2:length(birth)
+                if (birth[j-1]==birth[j])||(birth[j-1]+1==birth[j])
+                        push!(NewFaces,faces[j])
+                        push!(NewBirth,birth[j])
                 else
-                    push!(Newbirths,NewIndex+1)
-                    NewIndex=NewIndex+1
+                    diff=collect(birth[j-1]+1:birth[j]-1)
+                    for k in diff
+                        push!(NewFaces,CodeWord())
+                    end
+                    append!(NewBirth,diff)
+                    push!(NewFaces,faces[j])
+                    push!(NewBirth,birth[j])
                 end
             end
-            birth=Newbirths
-            depth=birth[length(birth)]
-            dimensions=[length(faces[i]) for i=1:length(faces)]
+            lastbirth=SortFaceBirth[size(SortFaceBirth,1),1]
+            lastdiff=collect(NewBirth[length(NewBirth)]+1:lastbirth)
+            for k in lastdiff
+                push!(NewFaces,CodeWord())
+            end
+            append!(NewBirth,lastdiff)
+                        
+            faces=NewFaces
+            birth=NewBirth
+            
+            ############################# This is the end of adding back the noncontributing stages
+            
+            dimensions=[length(collect(faces[i]))-1 for i=1:length(faces)] # collect the dimensions
             vertices=CodeWord([])
             for i=1:length(faces)
-                vertices=union(vertices,Set{Int}(faces[i]))
+                vertices=union(vertices,faces[i])
             end
+            depth=birth[length(birth)]
         new(faces,dimensions,depth,birth,vertices)
       end
 
@@ -101,7 +122,7 @@ function push!(F::FiltrationOfSimplicialComplexes, FaceAdded::CodeWord, birth::I
     AddedFace=FaceAdded
     AssignedBirth=birth
     FaceBirthpush!(ListOfFaces,births,AddedFace,AssignedBirth)
-    return FiltrationOfSimplicialComplexes(LisfOfFaces,births)
+    return FiltrationOfSimplicialComplexes(ListOfFaces,births)
 end
 
 
@@ -175,5 +196,6 @@ function DowkerComplex(A::Array{Float64,2})
             end
         end
     end
+    ListOfFaces=map(x->Set(x),ListOfFaces)
     FiltrationOfSimplicialComplexes(ListOfFaces,birth)
 end
