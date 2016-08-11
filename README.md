@@ -4,16 +4,19 @@ DISCLAIMER: This software is still in development. Use at your own risk!
 
 This is a [Julia language](http://julialang.org) implementation of data structures and algorithms for handling abstract simplicial complexes and combinatorial codes, defined below. To use this package, include the file Simplicial.jl, then use module `Simplicial`.
 Example: 
+
 `julia> include("repositories/Simplicial/src/Simplicial.jl")`
 
 `julia> using Simplicial `
 
-The module Simplicial defines the following types:
- * The type `CodeWord` is an alias for `Set{Int}`
- * The type `CombinatorialCode` represents combinatorial codes.
- * The type `SimplicialComplex` represents simplicial complexes.
 
-The module also defines the constant `emptyset` to represent the empty set as an instance of type `CodeWord`
+The module Simplicial defines the following types:
+ * The type `CodeWord` is an alias for `Set{Int}`. It is *always* recommended to use it instead of Set{Int}, as the exact data types may change in the future. 
+ * `CombinatorialCode` for  combinatorial codes.
+ * `SimplicialComplex` for simplicial complexes.
+ * `FiltrationOfSimplicialComplexes` for increasing sequences of simplicial complexes.
+ 
+There is a number of utility constants, such as  `emptyset` (the empty set as an instance of type `CodeWord`).
 
 ## Type CombinatorialCode
 Objects of this type represent combinatorial codes (V,C). It has the following constructors:  
@@ -29,6 +32,12 @@ The following methods are defined:
 Objects of this type represent simplicial complexes (V,D). They are stored as a list of the facets of D. It has the following constructors:
   * `K = SimplicialComplex(ListOfWords::Array{Any,1})` converts the elements of `ListOfWords` to `CodeWord` and then stores the maximal (by set inclusion) words. Moreover, it sets `K.vertices` to the union of the facets.
   * `K = SimplicialComplex(CC::CombinatorialCode)` creates a simplicial complex which represents the "subset-completion" of `CC`
+
+
+## Type `FiltrationOfSimplicialComplexes`
+
+(*It's what you think it is; the description is still to be written*). 
+
 
 ## Methods
 The following methods are defined:
