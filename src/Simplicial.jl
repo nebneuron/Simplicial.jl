@@ -25,7 +25,7 @@ include("utilities/link_function_SC_and_CC.jl")
 include("utilities/del_function_SC_and_CC.jl")
 
 include("utilities/function_Bicomplex.jl")
-
+include("utilities/void_and_irrelevant_complexes_and_codes.jl")
 include("utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl")
 include("utilities/function_show.jl") # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
 
@@ -34,7 +34,7 @@ include("SimplicialComplexes/FiltrationOfSimplicialComplexes.jl")
 
 export CodeWord, emptyset
 export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
-export SimplicialComplex, Alexander_dual, link, del, Bicomplex
+export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex
 export FiltrationOfSimplicialComplexes, DowkerComplex, Sample
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
