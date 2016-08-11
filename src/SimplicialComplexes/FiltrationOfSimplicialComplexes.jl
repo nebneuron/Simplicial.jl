@@ -69,35 +69,6 @@ type FiltrationOfSimplicialComplexes
             birth=TempPair[2]
             end
             
-            ## The following step is for adding back the stages with no contribution
-            ######################################## This is the start of adding back the noncontributing stages
-            NewFaces=CodeWord[faces[1]]
-            NewBirth=Int[birth[1]]
-            for j=2:length(birth)
-                if (birth[j-1]==birth[j])||(birth[j-1]+1==birth[j])
-                        push!(NewFaces,faces[j])
-                        push!(NewBirth,birth[j])
-                else
-                    diff=collect(birth[j-1]+1:birth[j]-1)
-                    for k in diff
-                        push!(NewFaces,CodeWord())
-                    end
-                    append!(NewBirth,diff)
-                    push!(NewFaces,faces[j])
-                    push!(NewBirth,birth[j])
-                end
-            end
-            lastbirth=SortFaceBirth[size(SortFaceBirth,1),1]
-            lastdiff=collect(NewBirth[length(NewBirth)]+1:lastbirth)
-            for k in lastdiff
-                push!(NewFaces,CodeWord())
-            end
-            append!(NewBirth,lastdiff)
-                        
-            faces=NewFaces
-            birth=NewBirth
-            
-            ############################# This is the end of adding back the noncontributing stages
             
             dimensions=[length(collect(faces[i]))-1 for i=1:length(faces)] # collect the dimensions
             vertices=CodeWord([])
