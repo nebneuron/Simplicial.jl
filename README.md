@@ -4,7 +4,6 @@ DISCLAIMER: This software is still in development. Use at your own risk!
 
 This is a [Julia language](http://julialang.org) implementation of data structures and algorithms for handling abstract simplicial complexes and combinatorial codes, defined below. To use this package, include the file Simplicial.jl, then use module `Simplicial`.
 Example: 
-
 `julia> include("repositories/Simplicial/src/Simplicial.jl")`
 
 `julia> using Simplicial `
