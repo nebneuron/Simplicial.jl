@@ -4,7 +4,7 @@ import Base.==
 import Base.show
 import Base.push!
 
-include("CodeWords.jl") # definition for the type of CodeWord and the related methods for this type
+include("ImportantConstants.jl") # definition for the type of CodeWord and the related methods for this type
 
 include("CombinatorialCodes/CombinatorialCodes.jl")
 include("CombinatorialCodes/BernoulliRandomCode.jl")
