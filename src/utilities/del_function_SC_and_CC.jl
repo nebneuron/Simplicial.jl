@@ -14,13 +14,22 @@ function del(SC::SimplicialComplex, sigma::Set{Int})
     end
 
     ## if Simplex_test is empty, sigma is not a simplex
-    ## else do setdiff by sigma for each facet of SC, giving del
-    del=[]
+    del=Any[]
     if Simplex_test==[]
         println("ERROR!! $sigma is not a simplex.")
+    ## go through every facet and check whether sigma is contained in that facet
+        ## if false, simply push the facet into del
+        ## if true, diff:=setdiff(facet,sigma), and, push the union of every "codimension-1" face of sigma and diff to del
     else
-        for i=1:SC.Nwords
-            push!(del, collect(setdiff(SC_facets[i],sigma)))
+        for facet in SC.facets
+            if !issubset(sigma,facet)
+                push!(del, collect(facet))
+            else
+                diff=setdiff(facet,sigma)
+                for subsigma in combinations(collect(sigma),length(sigma)-1)
+                    push!(del, collect(union(diff,Set(subsigma))))
+                end
+            end
         end
         del=SimplicialComplex(del)
     end
