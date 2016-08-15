@@ -1,14 +1,11 @@
-
-
+# This is the type that we use for the increasing fitrations of simplicial complexes
 type FiltrationOfSimplicialComplexes
     faces::Array{CodeWord,1}     # these are all possible faces that appear in the filtration (may include just the `emptyset` if the first complex is the irrelevant complex)
     dimensions::Array{Int,1}     # the dimensions of the faces -- these are the dimensions of the faces (IN THE SAME ORDER)
     depth::Int                   # this is the depth of filtration, i.e. the total number of simplicial complexes it contains
     birth::Array{Int,1}          # The birth times of each simplex in the field `faces`. These values are supposed to be positive integers and lie in the interval [1, `depth`]
-
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
-
-
+#
    function FiltrationOfSimplicialComplexes(ListOfFaces::Array{CodeWord,1}, births::Array{Int,1})
   # this functions takes the list of faces together with their birth times, cleans it up (there may be redundant words), and then constructs the appropriate object
   # First we check if ListOfFaces is empty. If so then return the void complex with a bunch of empty fields
