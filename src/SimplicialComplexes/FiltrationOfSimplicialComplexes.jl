@@ -107,7 +107,7 @@ function DowkerComplex(A::Array{Float64,2})
     ########### Notice: this function omits the trivial empty simplicial complex (i.e. the trivial head of the filtration)
     Maxes=[maximum(A[:,i]) for i=1:size(A,2)]
     Minis=[minimum(A[:,i]) for i=1:size(A,2)]
-    Sorted=sort(collect(A))
+    Sorted=sort(collect(Set(A)))
     ListOfFaces=Array{Int,1}[]
     birth=Int[]
     for i=1:length(Sorted) ## this is the ith step
