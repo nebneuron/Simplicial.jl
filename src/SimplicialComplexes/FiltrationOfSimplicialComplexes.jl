@@ -177,9 +177,9 @@ function DowkerComplex(A)
 for i=1:length(Sorted) ## this is the ith step
         NewFaces=Array{CodeWord,1}(); # These are the facets that we potentially need to add at the next step of the Dowker complex
           for j=1:Ncolumns;
-            currentcodeword=CodeWord(find(OrderOfElement[:,j].<=i)); # This is the codeword from the j-th column
+            push!(NewFaces,CodeWord(find(OrderOfElement[:,j].<=i))); # This is the codeword from the j-th column
           end
-         DeleteRedundantFacets!(NewFaces);
+         DeleteRedundantFacets!(NewFaces); # Here we deleteted redundant faces
         # Now we are going through the list NewFaces and check if it was not already contained in the previously added facets
         L=length(NewFaces);
         NewFaceIsNotRedundant=trues(L);
