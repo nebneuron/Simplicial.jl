@@ -109,34 +109,8 @@ function Sample(S::FiltrationOfSimplicialComplexes, DepthsOfSampling::Array{Int,
 end
 
 
-function DowkerComplex(A::Array{Float64,2})
-    # This returns the Dowker complex of a rectangular matrix A
-    # construct S=FiltrationOfSimplicialComplexes(...)
 
-    ########### Notice: this function omits the trivial empty simplicial complex (i.e. the trivial head of the filtration)
-    Maxes=[maximum(A[:,i]) for i=1:size(A,2)]
-    Minis=[minimum(A[:,i]) for i=1:size(A,2)]
-    Sorted=sort(collect(Set(A)))
-    ListOfFaces=Array{Int,1}[]
-    birth=Int[]
-    for i=1:length(Sorted) ## this is the ith step
-        for j=1:size(A,2) ## this is the jth column
-            if Minis[j]<=Sorted[i]<=Maxes[j]
-                face=Int[]
-                for k=1:size(A,1) ## this is the kth position in the jth column
-                    if A[k,j]<=Sorted[i]
-                        push!(face,k)
-                    end
-                end
-                push!(ListOfFaces,face)
-                push!(birth,i)
-            end
-        end
-    end
-    ListOfFaces=map(x->CodeWord(x),ListOfFaces)
-    FiltrationOfSimplicialComplexes(ListOfFaces,birth)
-end
-
+#
 
 
 
@@ -176,4 +150,138 @@ function FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},Adde
     end
 end
 
+###########
+function DowkerComplex(A)
+    # This returns the Dowker complex of a rectangular matrix A
+    # Normal usage of this function should be
+    #  FS, GraphDensity=DowkerComplex(A);
+
+    Nrows, Ncolumns =size(A)
+    MaximalPossibleNumberOfEntries=Nrows* Ncolumns
+    VectorA=A[:];
+    Sorted=sort(unique(VectorA)); N_UniqueElements=length(Sorted);
+    OrderOfElement=zeros(Int,MaximalPossibleNumberOfEntries);
+    for i=1:N_UniqueElements
+        OrderOfElement[VectorA.==Sorted[i]]=i;
+    end
+    OrderOfElement=reshape(OrderOfElement,Nrows, Ncolumns);
+    # The array OrderOfElement contains the order of each element of A
+    # Now we construct the list of facets and births
+    birth=Int[]; # these are birth times of faces
+    ListOfFaces=Array{CodeWord,1}([]);
+    GraphDensity=Float64[];
+    cardinality=Int[]; # here we keep track of the size of the face
+
+        CurrentTime=1;
+        totallength=0;
+for i=1:length(Sorted) ## this is the ith step
+        NewFaces=Array{CodeWord,1}([]); # These are the facets that we potentially need to add at the next step of the Dowker complex
+          for j=1:Ncolumns;
+            currentcodeword=CodeWord(find(OrderOfElement[:,j].<=i)); # This is the codeword from the j-th column
+            # Now we check if this codeword was not already a subset of the previous codewords
+            if !isempty(currentcodeword)
+              redundant=false;
+                for codeword in NewFaces
+                  if issubset(currentcodeword,codeword)
+                  redundant=true
+                  break
+                  end
+                end
+                if !redundant
+                    push!(NewFaces,currentcodeword);
+                end
+             end #  !isempty(currentcodeword)
+          end
+
+        # Now we are going through the list NewFaces and check if it was not already contained in the previously added facets
+        L=length(NewFaces);
+        NewFaceIsNotRedundant=trues(L);
+        for l=1:L
+              CurrentFacet=NewFaces[l];
+              CurrentLength=length(CurrentFacet);
+              for c=1:length(ListOfFaces)
+                if CurrentLength<=cardinality[c] # Check if the current face size is smaller or equal than the one in ListOfFaces[c]
+                if issubset(CurrentFacet,ListOfFaces[c])
+                  NewFaceIsNotRedundant[l]=false
+                  break
+                end
+              end
+              end
+        end
+
+        # Now we determine if there were any nonredundant faces. If all faces were redundant, we skip a time step
+        if any(NewFaceIsNotRedundant)
+           # compute the current graph density, while allowing for repeating entries in the original matrix A
+           CurrentGraphDensity=sum(Sorted.<=Sorted[i])/MaximalPossibleNumberOfEntries;
+
+           for f in NewFaces[NewFaceIsNotRedundant]
+             push!(ListOfFaces,f)
+             push!(cardinality,length(f))
+             push!(birth,CurrentTime)
+             push!(GraphDensity,CurrentGraphDensity)
+             totallength=totallength+1
+           end
+           CurrentTime=CurrentTime+1;
+        end
+
+     # here we also check if the last face that was put in was the full simplex. If this is the case we need to stop
+     if cardinality[totallength]==Nrows
+        break
+     end
+
+end # for i=1:length(Sorted)
+
+    return  FiltrationOfSimplicialComplexes(ListOfFaces,birth,CodeWord(1:Nrows)), GraphDensity
+end
+############################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ############################################################################################################################
+##### Below is an obsolete (and somewhat incorrect) version of the Dowker complex function that was originally written by Min-Chun
+##### It is left for testing and reference purposes. Do not use.
+function DowkerComplex_obsolete(A::Array{Float64,2})
+    # This returns the Dowker complex of a rectangular matrix A
+    # construct S=FiltrationOfSimplicialComplexes(...)
+
+    ########### Notice: this function omits the trivial empty simplicial complex (i.e. the trivial head of the filtration)
+    Maxes=[maximum(A[:,i]) for i=1:size(A,2)]
+    Minis=[minimum(A[:,i]) for i=1:size(A,2)]
+    Sorted=sort(collect(Set(A)))
+    ListOfFaces=Array{Int,1}[]
+    birth=Int[]
+    for i=1:length(Sorted) ## this is the ith step
+        for j=1:size(A,2) ## this is the jth column
+            if Minis[j]<=Sorted[i]<=Maxes[j]
+                face=Int[]
+                for k=1:size(A,1) ## this is the kth position in the jth column
+                    if A[k,j]<=Sorted[i]
+                        push!(face,k)
+                    end
+                end
+                push!(ListOfFaces,face)
+                push!(birth,i)
+            end
+        end
+    end
+    ListOfFaces=map(x->CodeWord(x),ListOfFaces)
+    FiltrationOfSimplicialComplexes(ListOfFaces,birth)
+end

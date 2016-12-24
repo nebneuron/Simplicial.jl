@@ -35,7 +35,7 @@ include("SimplicialComplexes/FiltrationOfSimplicialComplexes.jl")
 export CodeWord, emptyset
 export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex
-export FiltrationOfSimplicialComplexes, DowkerComplex, Sample
+export FiltrationOfSimplicialComplexes, DowkerComplex, Sample, DowkerComplex_obsolete
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
 end
