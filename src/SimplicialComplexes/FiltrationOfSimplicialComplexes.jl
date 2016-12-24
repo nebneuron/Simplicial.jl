@@ -6,6 +6,15 @@ type FiltrationOfSimplicialComplexes
     birth::Array{Int,1}          # The birth times of each simplex in the field `faces`. These values are supposed to be positive integers and lie in the interval [1, `depth`]
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
 #
+
+  function FiltrationOfSimplicialComplexes(faces::Array{CodeWord,1},birth::Array{Int,1},vertices::CodeWord )
+  # This function makes the filtration of simplicial complexes, assuming that the variables that were passed are 'sane' i.e. the redundancy of facets was already eliminated
+  Nfaces=length(faces);
+  if length(birth)!=Nfaces error("wrond data passed to FiltrationOfSimplicialComplexes") end
+  depth=maximum(birth);
+  dimensions=map(x->length(x)-1,faces);
+  new(faces,dimensions,depth,birth,vertices)
+end # of the dumb costructor function of FiltrationOfSimplicialComplexes
    function FiltrationOfSimplicialComplexes(ListOfFaces::Array{CodeWord,1}, births::Array{Int,1})
   # this functions takes the list of faces together with their birth times, cleans it up (there may be redundant words), and then constructs the appropriate object
   # First we check if ListOfFaces is empty. If so then return the void complex with a bunch of empty fields
