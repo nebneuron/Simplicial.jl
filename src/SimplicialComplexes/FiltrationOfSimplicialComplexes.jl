@@ -133,7 +133,7 @@ function DowkerComplex(A::Array{Float64,2})
             end
         end
     end
-    ListOfFaces=map(x->Set(x),ListOfFaces)
+    ListOfFaces=map(x->CodeWord(x),ListOfFaces)
     FiltrationOfSimplicialComplexes(ListOfFaces,birth)
 end
 
