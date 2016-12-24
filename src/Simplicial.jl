@@ -23,7 +23,7 @@ include("SimplicialComplexes/Alexander_dual_function.jl")
 include("utilities/link_function_SC_and_CC.jl")
 
 include("utilities/del_function_SC_and_CC.jl")
-
+include("utilities/DeleteRedundantFacets!.jl")
 include("utilities/function_Bicomplex.jl")
 include("utilities/void_and_irrelevant_complexes_and_codes.jl")
 include("utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl")
@@ -34,7 +34,7 @@ include("SimplicialComplexes/FiltrationOfSimplicialComplexes.jl")
 
 export CodeWord, emptyset
 export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
-export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex
+export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, DowkerComplex, Sample, DowkerComplex_obsolete
 export  AIMC_minus_C, link_AIMC_minus_C
 export show

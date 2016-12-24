@@ -16,39 +16,17 @@ type SimplicialComplex
 function SimplicialComplex(ListOfWords::Array{Any,1})
         if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of the void (or null) Complex
             new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)
-        elseif (ListOfWords==Any[[]])||(ListOfWords==[emptyset]) #  the irrelevant complex with empty vertex set 
+        elseif (ListOfWords==Any[[]])||(ListOfWords==[emptyset]) #  the irrelevant complex with empty vertex set
             new([emptyset],[-1],-1,1,emptyset)
         else
             ## refine the list of words to a list of sets (to eliminate redundant vertices)
-            facets=sort(map(CodeWord,ListOfWords), by=length) # order the words by lengths
-
-            ## After ordering by length, check from first to last whether it is included in some later set
-            redundant_word_indexes=[]
-            for i=1:length(facets)
-               if !in(i,redundant_word_indexes)
-                 if isempty(facets[i])
-                    push!(redundant_word_indexes, i)
-                  else
-                      for j=i+1:length(facets)
-                          if  issubset(facets[i],facets[j])
-                              push!(redundant_word_indexes, i)
-                              break
-                          end
-                      end
-                 end
-               end
-            end
-
-            ## delete words[i], where i are the indices found above
-            deleteat!(facets, redundant_word_indexes)
-
-
+            facets=map(CodeWord,ListOfWords);
+            DeleteRedundantFacets!(facets);
             ## union one by one the entries of facets using for loop
             vertices=emptyset
             for i=1:length(facets)
                 vertices=union(vertices, facets[i])
             end
-
             ## dimensions is the array of dimensions of each words in facets
             dimensions=Int[length(facets[i])-1 for i=1:length(facets)]
             dim=length(facets[end])-1

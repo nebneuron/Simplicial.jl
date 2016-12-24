@@ -175,24 +175,11 @@ function DowkerComplex(A)
         CurrentTime=1;
         totallength=0;
 for i=1:length(Sorted) ## this is the ith step
-        NewFaces=Array{CodeWord,1}([]); # These are the facets that we potentially need to add at the next step of the Dowker complex
+        NewFaces=Array{CodeWord,1}(); # These are the facets that we potentially need to add at the next step of the Dowker complex
           for j=1:Ncolumns;
             currentcodeword=CodeWord(find(OrderOfElement[:,j].<=i)); # This is the codeword from the j-th column
-            # Now we check if this codeword was not already a subset of the previous codewords
-            if !isempty(currentcodeword)
-              redundant=false;
-                for codeword in NewFaces
-                  if issubset(currentcodeword,codeword)
-                  redundant=true
-                  break
-                  end
-                end
-                if !redundant
-                    push!(NewFaces,currentcodeword);
-                end
-             end #  !isempty(currentcodeword)
           end
-
+         DeleteRedundantFacets!(NewFaces);
         # Now we are going through the list NewFaces and check if it was not already contained in the previously added facets
         L=length(NewFaces);
         NewFaceIsNotRedundant=trues(L);
