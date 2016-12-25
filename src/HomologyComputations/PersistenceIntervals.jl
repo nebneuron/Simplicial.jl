@@ -1,28 +1,4 @@
 ## To use perseusWin.exe, I change the last part of the code.
-#### The following function transfomrs the information of filtered complex into a fixed format:
-#### The first row indicates how many "coordinates" are used to represent a vertex
-#### From the 2nd row on, each row represents a simplex, and in each row,
-#### (1) the first entry indicates the birth time of the simplex,
-#### (2) the last entry indicates the dimension of the simplex,
-#### (3) in-between the first and last entry (exclusively) is the representation of the simplex.
-function write_perseus_simplex_file(faces, filtLevels, baseFileName)
-  # See https://www.sas.upenn.edu/~vnanda/perseus/ for file formet
-  # faces: rows are binary strings corresponding to faces, cols are vertices
-  # filtLevels: vector with natural number filtration levels for the rows in faces
-  # baseFileName: name of the output file
-    outfile = open("$baseFileName.txt", "w");
-
-    writedlm(outfile, "1");             # dimension of data points for perseus -- ignore but leave here
-
-                                          # threshold parameters
-    for i=1:size(faces,1);
-        writedlm(outfile, [sum(faces[i,:])-1 find(faces[i,:])' filtLevels[i]], ' ');
-    end
-                                                    # matrix
-    close(outfile);
-end
-
-
 
 ## This function computes the persistence intervals (over F_2) of a filtered complex
 ## The inputs are
@@ -34,20 +10,7 @@ end
 function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
     ## This box is transforming a filtered complex into binary expression
     baseFileName="Temp";
-    FacesMatrix=zeros(Int,length(FS.birth),length(FS.vertices))
-    for i=1:length(FS.birth)
-        for j=1:length(FS.vertices)
-            if j in (FS.faces)[i]
-                FacesMatrix[i,j]=1
-            end
-        end
-        end
-    FacesMatrix
-
-    ## Use write_perseus_simplex_file to transform FacesMatrix and birth
-    ## into the required format used by perseusWin.exe
-    write_perseus_simplex_file(FacesMatrix, FS.birth, baseFileName)
-
+    WritePerseusSimplexFile(FS, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
     TheLocationOfPerseusExecutable="/Users/vui1/repositories/Simplicial/src/HomologyComputations/perseus/"
     print("Computing simplicial homology. This may take some time and memory..")
@@ -68,7 +31,7 @@ function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
     Intervals=Any[]
     for k=0:maxdim
         try
-            push!(Intervals,readdlm("$baseFileName"*"_$k.txt"))
+            push!(Intervals,    map(Int,readdlm("$baseFileName"*"_$k.txt")) )
         end
     end
 
@@ -86,5 +49,25 @@ function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
     rm("$baseFileName"*"_betti.txt")
 
     ## Return the desired resulting array
-    Intervals
+    return Intervals
+end
+
+
+#### The following function transfomrs the information of filtered complex into a fixed format:
+#### The first row indicates how many "coordinates" are used to represent a vertex
+#### From the 2nd row on, each row represents a simplex, and in each row,
+#### (*) the first entry indicates the dimension of the simplex,
+#### (*) in-between the first and last entry (exclusively) are the vertex indices of the simplex.
+#### (*) the last entry indicates the birth time of the simplex,
+
+
+
+function WritePerseusSimplexFile(FS::FiltrationOfSimplicialComplexes, baseFileName::String)
+  # See https://www.sas.upenn.edu/~vnanda/perseus/ for file formet
+         outfile = open("$baseFileName.txt", "w");
+         writedlm(outfile, "1");  # dimension of data points for perseus -- ignore but leave here
+         for i=1:length(FS.faces);
+             writedlm(outfile, [(length(FS.faces[i])-1) collect(FS.faces[i])' (FS.birth[i])  ], ' ');
+         end
+         close(outfile);
 end
