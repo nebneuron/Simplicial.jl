@@ -30,12 +30,12 @@ include("utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl")
 include("utilities/function_show.jl") # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
 
 include("SimplicialComplexes/FiltrationOfSimplicialComplexes.jl")
-
+include("HomologyComputations/PersistenceIntervals.jl")
 
 export CodeWord, emptyset
 export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
-export FiltrationOfSimplicialComplexes, DowkerComplex, Sample, DowkerComplex_obsolete
+export FiltrationOfSimplicialComplexes, PersistenceIntervals, DowkerComplex, Sample, DowkerComplex_obsolete
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
 end

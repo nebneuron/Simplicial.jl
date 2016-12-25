@@ -3,10 +3,11 @@
 
 
 # This is an important choice (from performance perspective)
-CodeWord=Set{Int16}  # We currently encode sets via sparse sets of signed integers -- this optimizes memory usage, but not speed
+TheIntegerType=Int16
+CodeWord=Set{TheIntegerType}  # We currently encode sets via sparse sets of signed integers -- this optimizes memory usage, but not speed
 # We could have used different methods of defining sets in Julia.
 # For example we could have used IntSet, that would have optimized speed over memory...
 # Another sensible option might be the sparse boolean arrays (in this case the subset, in and some other "elementary" functions would have to be re-written to work with this type)
 
-const emptyset=Set{Int16}() # This definition should agree with the CodeWord type
+const emptyset=CodeWord() # This definition should agree with the CodeWord type
 #

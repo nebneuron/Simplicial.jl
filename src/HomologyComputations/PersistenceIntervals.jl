@@ -31,9 +31,9 @@ end
 ##     (i.e. we only compute H_k for k less than or equal to maxdim)
 ## The output is an array,
 ## whose ith entry is the (i-1)-dimensional persistence intervals.
-function Filtration2PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
+function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
     ## This box is transforming a filtered complex into binary expression
-    baseFileName="Temp"
+    baseFileName="Temp";
     FacesMatrix=zeros(Int,length(FS.birth),length(FS.vertices))
     for i=1:length(FS.birth)
         for j=1:length(FS.vertices)
