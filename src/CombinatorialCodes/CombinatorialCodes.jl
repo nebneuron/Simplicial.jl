@@ -23,20 +23,20 @@ type CombinatorialCode
            MaximumWeight=maximum(weights)
            Minimumweight=minimum(weights)
            # next we figure out if there are any duplicate words in the list and populate the list of sets named words
-           words=Set[];
+           words=CodeWord[];
            ThereWereDuplicates=false
            for w= Minimumweight:MaximumWeight
                Ind=find(weights.==w);
                L=length(Ind);
                 if L>0
-               	   CurrentListOfWords=Set[];
+               	   CurrentListOfWords=CodeWord[];
                # if there was more than one word with the same weights we check the repeated words
                	  for j=1:L
                	  	    CurrentSet=CodeWord((ListOfWords[Ind[j]]))
                         CurrentSetIsDuplicated=false
                         for k=1:length(CurrentListOfWords) # check the previous words of the same weight is duplicated, if yes, then discard the CurrentSet
                         	if CurrentListOfWords[k]==CurrentSet
-                        		CurrentSetIsDuplicated=true
+                        		    CurrentSetIsDuplicated=true
                                 ThereWereDuplicates=true
                         		break
                         	end
