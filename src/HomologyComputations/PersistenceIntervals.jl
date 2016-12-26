@@ -1,3 +1,8 @@
+function MySortRows(x::Array{Int64,2},columnnumber::Int)
+  # this function sorts the rows of the matrix x by the elements of the columnnumber-th column
+         return x[sortperm([x[i,columnnumber] for i=1:size(x,1)]),:]
+end
+
 ## To use perseusWin.exe, I change the last part of the code.
 
 ## This function computes the persistence intervals (over F_2) of a filtered complex
@@ -31,7 +36,9 @@ function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
     Intervals=Any[]
     for k=0:maxdim
         try
-            push!(Intervals,    map(Int,readdlm("$baseFileName"*"_$k.txt")) )
+            k_dimensional_persistent_intervals=map(Int,readdlm("$baseFileName"*"_$k.txt"));
+            # We next sort the rows of k_dimensional_persistent_intervals by the birthtimes (the first column)
+            push!(Intervals,  MySortRows(k_dimensional_persistent_intervals,1));
         end
     end
 
