@@ -3,6 +3,7 @@ function BernoulliRandomCode(N,Nwords,p)
 # and then passes the appropriate sets to the constructor of the CombinatorialCode type
 #
 a=Array{Any,1}(Nwords)
+
  for i=1:Nwords
   a[i]=find(rand(N).<=p);
  end

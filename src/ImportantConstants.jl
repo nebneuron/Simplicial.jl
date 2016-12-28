@@ -1,5 +1,5 @@
 # Here we define the type of CodeWord and the related methods for this type
-# This definition determines the behavior and performance of all the other functions and types of Simplicial
+# This definition determines the behavior and performance of all the other functions and types
 
 
 # This is an important choice (from performance perspective)
