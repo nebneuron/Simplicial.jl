@@ -3,6 +3,10 @@ function MySortRows(x::Array{Int64,2},columnnumber::Int)
          return x[sortperm([x[i,columnnumber] for i=1:size(x,1)]),:]
 end
 
+
+
+
+
 ## To use perseusWin.exe, I change the last part of the code.
 
 ## This function computes the persistence intervals (over F_2) of a filtered complex
@@ -12,28 +16,30 @@ end
 ##     (i.e. we only compute H_k for k less than or equal to maxdim)
 ## The output is an array,
 ## whose ith entry is the (i-1)-dimensional persistence intervals.
-function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
-    ## This box is transforming a filtered complex into binary expression
-    baseFileName="Temp";
-    WritePerseusSimplexFile(FS, baseFileName);
+function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim=Inf)
+    """ This function computes Persistance intervals of a Filtered complex
+
+    """
+    if isinf(maxdim); maxdim=length(FS.vertices);end
+    baseFileName="Temp"; WritePerseusSimplexFile(FS, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
-    TheLocationOfPerseusExecutable="/Users/vui1/repositories/Simplicial/src/HomologyComputations/perseus/"
+    TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
     print("Computing simplicial homology. This may take some time and memory..")
     if is_windows()
         run(`perseusWin.exe nmfsimtop $baseFileName.txt $baseFileName`)
     elseif is_linux()
         perseus=TheLocationOfPerseusExecutable*"perseusLin"
-        # run(`chmod +x perseusLin`)
+        run(`chmod +x $(TheLocationOfPerseusExecutable*"perseusLin")`)
     elseif is_apple()
         perseus=TheLocationOfPerseusExecutable*"perseusMac"
         run(`chmod +x $perseus`)
     else
-         error("Unsupported operating system. Cannot run perseus on this machine.")
+         error("Unsupported operating system: currently supported OSs are linux, mac os and windows. Cannot run perseus on this machine.")
     end
      run(`$perseus nmfsimtop $baseFileName.txt $baseFileName`)
      println("..done!")
     ## Read from the result txt files the persistence intervals and store them into the array Intervals
-    Intervals=Any[]
+    Intervals=Any[];
     for k=0:maxdim
         try
             k_dimensional_persistent_intervals=map(Int,readdlm("$baseFileName"*"_$k.txt"));
@@ -54,6 +60,12 @@ function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim)
     end
     rm("$baseFileName.txt")
     rm("$baseFileName"*"_betti.txt")
+
+    # Finally, we replace '-1' with Inf in the interval deaths
+    # The reason why -1 stands for 'utill the end' is the artifact of perseus conventions
+    for i=1:length(Intervals)
+          Intervals[i]= map(x->((x==-1)?Inf:x),Intervals[i])
+    end
 
     ## Return the desired resulting array
     return Intervals
