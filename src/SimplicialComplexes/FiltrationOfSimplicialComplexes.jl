@@ -151,10 +151,13 @@ function FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},Adde
 end
 
 ###########
-function DowkerComplex(A)
-    # This returns the Dowker complex of a rectangular matrix A
-    # Normal usage of this function should be
-    #  FS, GraphDensity=DowkerComplex(A);
+function DowkerComplex(A,maxdensity=1)
+    """ This returns the Dowker complex of a rectangular matrix A
+        Normal usage of this function should be
+        FS, GraphDensity=DowkerComplex(A);
+        or
+        FS, GraphDensity=DowkerComplex(A,maxdensity);
+    """
 
     Nrows, Ncolumns =size(A)
     MaximalPossibleNumberOfEntries=Nrows* Ncolumns
@@ -174,7 +177,11 @@ function DowkerComplex(A)
 
         CurrentTime=1;
         totallength=0;
-for i=1:length(Sorted) ## this is the ith step
+for i=1:length(Sorted) ## this is the main loop
+    CurrentGraphDensity=sum(Sorted.<=Sorted[i])/MaximalPossibleNumberOfEntries; # compute the current graph density
+    if CurrentGraphDensity>maxdensity # quit the main loop once we find out that we exeed the maximal graph density
+       break
+     end
         NewFaces=Array{CodeWord,1}(); # These are the facets that we potentially need to add at the next step of the Dowker complex
           for j=1:Ncolumns;
             push!(NewFaces,CodeWord(find(OrderOfElement[:,j].<=i))); # This is the codeword from the j-th column
@@ -198,9 +205,6 @@ for i=1:length(Sorted) ## this is the ith step
 
         # Now we determine if there were any nonredundant faces. If all faces were redundant, we skip a time step
         if any(NewFaceIsNotRedundant)
-           # compute the current graph density, while allowing for repeating entries in the original matrix A
-           CurrentGraphDensity=sum(Sorted.<=Sorted[i])/MaximalPossibleNumberOfEntries;
-
            for f in NewFaces[NewFaceIsNotRedundant]
              push!(ListOfFaces,f)
              push!(cardinality,length(f))
@@ -211,7 +215,7 @@ for i=1:length(Sorted) ## this is the ith step
            CurrentTime=CurrentTime+1;
         end
 
-     # here we also check if the last face that was put in was the full simplex. If this is the case we need to stop
+     # here we also check if the last face that was put in was the full simplex. If this is the case we need to stop, since no new facets are possible
      if cardinality[totallength]==Nrows
         break
      end
@@ -224,51 +228,50 @@ end
 
 
 
+function Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
+# This Funcion takes a filtration of  simplicial complexes and produces a filtration of their skeletons
+if dim<0; error("The maximal mimension needs to be positive"); end;
+if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-############################################################################################################################
-##### Below is an obsolete (and somewhat incorrect) version of the Dowker complex function that was originally written by Min-Chun
-##### It is left for testing and reference purposes. Do not use.
-function DowkerComplex_obsolete(A::Array{Float64,2})
-    # This returns the Dowker complex of a rectangular matrix A
-    # construct S=FiltrationOfSimplicialComplexes(...)
-
-    ########### Notice: this function omits the trivial empty simplicial complex (i.e. the trivial head of the filtration)
-    Maxes=[maximum(A[:,i]) for i=1:size(A,2)]
-    Minis=[minimum(A[:,i]) for i=1:size(A,2)]
-    Sorted=sort(collect(Set(A)))
-    ListOfFaces=Array{Int,1}[]
-    birth=Int[]
-    for i=1:length(Sorted) ## this is the ith step
-        for j=1:size(A,2) ## this is the jth column
-            if Minis[j]<=Sorted[i]<=Maxes[j]
-                face=Int[]
-                for k=1:size(A,1) ## this is the kth position in the jth column
-                    if A[k,j]<=Sorted[i]
-                        push!(face,k)
-                    end
-                end
-                push!(ListOfFaces,face)
-                push!(birth,i)
-            end
+birth=Int[]; # these are birth times of faces
+ListOfFaces=Array{CodeWord,1}([]);
+IndicesOfTopDimensionalFaces=[];
+# Here we compute theh set of subsets of a given set
+MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),dim+1);
+CurrentIndex=1;
+for i=1:length(FS.faces)
+    this_face=FS.faces[i]
+    this_face_dim=FS.dimensions[i]
+    if this_face_dim<=dim
+       push!(ListOfFaces,this_face);
+       push!(birth, FS.birth[i]);
+       if this_face_dim==dim
+          push!(IndicesOfTopDimensionalFaces,CurrentIndex)
         end
-    end
-    ListOfFaces=map(x->CodeWord(x),ListOfFaces)
-    FiltrationOfSimplicialComplexes(ListOfFaces,birth)
+     CurrentIndex+=1 # make sure we keep track of the current index
+     else
+           # now we compute all the dim-dimensional subsets of FS.birth[i] and add them assuming that they are not already in the previous faces
+            for f in combinations(collect( this_face),dim+1)
+                 CodeWord_of_f=CodeWord(f);
+                 # First, we determine if f is not already equal to one of the previous faces
+                 f_is_not_redundant=true;
+                 for j=1: length(IndicesOfTopDimensionalFaces)
+                      if ListOfFaces[IndicesOfTopDimensionalFaces[j]]==CodeWord_of_f
+                            f_is_not_redundant=false;
+                         break
+                      end
+                 end
+                 if f_is_not_redundant
+                    push!(ListOfFaces,CodeWord_of_f);
+                    push!(birth, FS.birth[i]);
+                    push!(IndicesOfTopDimensionalFaces,CurrentIndex);
+                    CurrentIndex+=1 # make sure we keep track of the current index
+                  end
+                  if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
+            end # for f in combinations(collect( this_face)),dim+1)
+     end # if this_face_dim<=dim
+if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
+end# for i=1:length(FS.faces)
+
+return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
 end
