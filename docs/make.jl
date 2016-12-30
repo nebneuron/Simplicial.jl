@@ -1,0 +1,2 @@
+using Documenter, Simplicial 
+makedocs()
