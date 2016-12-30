@@ -4,10 +4,10 @@ DISCLAIMER: This software is still in development. The documentation is sparse. 
 
 This is a [Julia language](http://julialang.org) implementation of data structures and algorithms for handling abstract simplicial complexes and combinatorial codes. 
 
-The goal of this project is providing a swiss-knife package for manipulating (very large) combinatorial structures with an eye for topological data analysis.
+The goal of this project is to provide a general package for manipulating (very large) combinatorial structures, with an eye towards topological data analysis.
 
 
-This package will wrap  existing engines for homology computations. Currently the persistant homology computation is acomplished via wrappers to the [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html) software. Future plans include wrapping other existing engines.
+This package interfaces with existing software for homology computations, such as [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html). Future plans include wrapping other existing engines.
 
 
 # Installation:
