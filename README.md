@@ -30,7 +30,7 @@ Let's compute the persistent intervals of the Dowker complex of A, in dimension 
 
 
 The module Simplicial defines the following types:
- * The type `CodeWord` is an alias for `Set{Int}`. It is *always* recommended to use it instead of Set{Int}, as the exact data types may change in the future. 
+ * The type `CodeWord` is an alias for `Set{Int16}`. It is *always* recommended to use it instead of Set{Int}, as the exact data types may change in the future. 
  * `CombinatorialCode` for  combinatorial codes.
  * `SimplicialComplex` for simplicial complexes.
  * `FiltrationOfSimplicialComplexes` for increasing sequences of simplicial complexes.
