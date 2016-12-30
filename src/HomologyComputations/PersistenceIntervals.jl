@@ -5,22 +5,22 @@ end
 
 
 
-
-
-## To use perseusWin.exe, I change the last part of the code.
-
-## This function computes the persistence intervals (over F_2) of a filtered complex
-## The inputs are
-## (1) a filtered complex of type FiltrationOfSimplicialComplexes,
-## (2) an upper bound for the computation of considered dimensions H_k
-##     (i.e. we only compute H_k for k less than or equal to maxdim)
-## The output is an array,
-## whose ith entry is the (i-1)-dimensional persistence intervals.
 function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim=Inf)
-    """ This function computes Persistance intervals of a Filtered complex
-
+    """ This function computes Persistance intervals (over F_2) of a Filtered complex
+      The inputs are
+      (1) a filtered complex of type FiltrationOfSimplicialComplexes,
+      (2) an upper bound for the computation of considered dimensions H_k
+       (i.e. we only compute H_k for k less than or equal to maxdim)
+       The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
     """
-    if isinf(maxdim); maxdim=length(FS.vertices);end
+    if isinf(maxdim); maxdim=length(FS.vertices)
+
+    elseif any(FS.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
+           return PersistenceIntervals(Skeleton(FS,maxdim+1),maxdim);
+     end
+
+  
+
     baseFileName="Temp"; WritePerseusSimplexFile(FS, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
     TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
