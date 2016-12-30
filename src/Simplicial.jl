@@ -11,6 +11,7 @@ map(include,
      "CombinatorialCodes/CombinatorialCodes.jl",
      "CombinatorialCodes/BernoulliRandomCode.jl",
      "SimplicialComplexes/SimplicialComplex.jl",
+     "SimplicialComplexes/ExampleSimplicialComplexes.jl", # Some examples of simplicial complexes
      "utilities/is_void_or_irrelevant.jl",          # This defines functions isvoid and isirrelevant on simplicial complexes and codes
      "utilities/function_in.jl",     # This is a simple function that checks a codeword membership in a code.
      "utilities/SC2CC_and_CC2SC.jl", # These are functions that transform between the SimplicialComplex and CombinatorialCode types
@@ -30,8 +31,9 @@ map(include,
 export CodeWord, emptyset
 export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
-export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, DowkerPersistentintervals, Sample 
+export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, DowkerPersistentintervals, Sample
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
 export MaximalDimension
+export TwoTorus, KleinBottle, PoincareHomologyThreeSphere
 end
