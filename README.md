@@ -22,11 +22,11 @@ This package will wrap  existing engines for homology computations. Currently th
 
 Let's create a filtration of Dowker complexes of a matrix A:
 
-`julia> A=rand(5,30); K, GraphDensity=DowkerComplex(A); show(K)`
+`julia> A=rand(10,30); K, GraphDensity=DowkerComplex(A); show(K)`
 
 Let's compute the persistent intervals of the Dowker complex of A, in dimension <=2 and going no further than graph density<=0.7:
 
-`julia> A=rand(10,30); Intervals, GraphDensity= DowkerPersistentintervals(A,0.7,2) `
+`julia>  Intervals, GraphDensity= DowkerPersistentintervals(A,0.7,2); `
 
 
 The module Simplicial defines the following types:
