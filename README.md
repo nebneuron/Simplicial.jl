@@ -1,13 +1,32 @@
 # Package Simplicial
 
-DISCLAIMER: This software is still in development. Use at your own risk!
+DISCLAIMER: This software is still in development. The documentation is sparse. Use at your own risk! Please let us know if you'd like to contribute. 
 
-This is a [Julia language](http://julialang.org) implementation of data structures and algorithms for handling abstract simplicial complexes and combinatorial codes, defined below. To use this package, include the file Simplicial.jl, then use module `Simplicial`.
-Example: 
+This is a [Julia language](http://julialang.org) implementation of data structures and algorithms for handling abstract simplicial complexes and combinatorial codes. 
 
-`julia>Pkg.clone("https://github.com/nebneuron/Simplicial.git")`
+The goal of this project is providing a swiss-knife package for manipulating (very large) combinatorial structures with an eye for topological data analysis.
+
+
+This package will wrap  existing engines for homology computations. Currently the persistant homology computation is acomplished via wrappers to the [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html) software. Future plans include wrapping other existing engines.
+
+
+# Installation:
+
+`julia> Pkg.update()`
+
+`julia> Pkg.clone("https://github.com/nebneuron/Simplicial.git")`
+
+# Usage 
 
 `julia> using Simplicial `
+
+Let's create a filtration of Dowker complexes of a matrix A:
+
+`julia> A=rand(5,30); K, GraphDensity=DowkerComplex(A); show(K)`
+
+Let's compute the persistent intervals of the Dowker complex of A, in dimension <=2 and going no further than graph density<=0.7:
+
+`julia> A=rand(10,30); Intervals, GraphDensity= DowkerPersistentintervals(A,0.7,2) `
 
 
 The module Simplicial defines the following types:
