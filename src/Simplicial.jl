@@ -30,7 +30,7 @@ map(include,
 export CodeWord, emptyset
 export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
-export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, Sample 
+export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, DowkerPersistentintervals, Sample 
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
 export MaximalDimension

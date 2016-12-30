@@ -5,7 +5,7 @@ end
 
 
 
-function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim=Inf)
+function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)
     """ This function computes Persistance intervals (over F_2) of a Filtered complex
       The inputs are
       (1) a filtered complex of type FiltrationOfSimplicialComplexes,
@@ -13,15 +13,15 @@ function PersistenceIntervals(FS::FiltrationOfSimplicialComplexes, maxdim=Inf)
        (i.e. we only compute H_k for k less than or equal to maxdim)
        The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
     """
-    if isinf(maxdim); maxdim=length(FS.vertices)
+    if isinf(maxdim); maxdim=length(FilteredComplex.vertices)-1;
 
-    elseif any(FS.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
-           return PersistenceIntervals(Skeleton(FS,maxdim+1),maxdim);
+    elseif any(FilteredComplex.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
+           return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim);
      end
 
-  
 
-    baseFileName="Temp"; WritePerseusSimplexFile(FS, baseFileName);
+
+    baseFileName="Temp"; WritePerseusSimplexFile(FilteredComplex, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
     TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
     print("Computing simplicial homology. This may take some time and memory..")
@@ -81,12 +81,25 @@ end
 
 
 
-function WritePerseusSimplexFile(FS::FiltrationOfSimplicialComplexes, baseFileName::String)
+function WritePerseusSimplexFile(FilteredComplex::FiltrationOfSimplicialComplexes, baseFileName::String)
   # See https://www.sas.upenn.edu/~vnanda/perseus/ for file formet
          outfile = open("$baseFileName.txt", "w");
          writedlm(outfile, "1");  # dimension of data points for perseus -- ignore but leave here
-         for i=1:length(FS.faces);
-             writedlm(outfile, [(length(FS.faces[i])-1) collect(FS.faces[i])' (FS.birth[i])  ], ' ');
+         for i=1:length(FilteredComplex.faces);
+             writedlm(outfile, [(length(FilteredComplex.faces[i])-1) collect(FilteredComplex.faces[i])' (FilteredComplex.birth[i])  ], ' ');
          end
          close(outfile);
+end
+
+
+
+
+function  DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf)
+  """ This function computes persistent intervals of a Dowker complex of a matrix A
+      maxdensity is a real number in the interval (0,1] that 'truncates' the filtration at the graph density maxdensity
+      maxdim is the maximal dimension of the homology that we want to compute
+  """
+  N_vertices=size(A,1);
+  D, GraphDensity=DowkerComplex(A,maxdensity);
+  return PersistenceIntervals(D, maxdim),  GraphDensity;
 end
