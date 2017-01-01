@@ -34,4 +34,27 @@ function SimplicialComplex(ListOfWords::Array{Array{TheIntegerType,1},1})
             new(facets, dimensions, dim, Nwords, vertices)
         end
     end
+
+function SimplicialComplex(ListOfWords::Array{Array{Int,1},1})
+  if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of the void (or null) Complex
+      new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)
+  elseif (ListOfWords==Any[[]])||(ListOfWords==[emptyset]) #  the irrelevant complex with empty vertex set
+      new([emptyset],[-1],-1,1,emptyset)
+  else
+      ## refine the list of words to a list of sets (to eliminate redundant vertices)
+      facets=map(CodeWord,ListOfWords);
+      DeleteRedundantFacets!(facets);
+      ## union one by one the entries of facets using for loop
+      vertices=emptyset
+      for i=1:length(facets)
+          vertices=union(vertices, facets[i])
+      end
+      ## dimensions is the array of dimensions of each words in facets
+      dimensions=Int[length(facets[i])-1 for i=1:length(facets)]
+      dim=length(facets[end])-1
+      Nwords=length(facets)
+      new(facets, dimensions, dim, Nwords, vertices)
+  end
+end
+
 end
