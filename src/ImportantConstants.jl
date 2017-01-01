@@ -3,7 +3,8 @@
 
 
 # This is an important choice (from performance perspective)
-TheIntegerType=Int16
+TheIntegerType=Int16 # This is the integer type that is used for enumerating the vertices
+
 CodeWord=Set{TheIntegerType}  # We currently encode sets via sparse sets of signed integers -- this optimizes memory usage, but not speed
 # We could have used different methods of defining sets in Julia.
 # For example we could have used IntSet, that would have optimized speed over memory...

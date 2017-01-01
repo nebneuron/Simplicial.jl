@@ -26,7 +26,7 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
     TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
     print("Computing simplicial homology. This may take some time and memory..")
     if is_windows()
-        run(`perseusWin.exe nmfsimtop $baseFileName.txt $baseFileName`)
+        run(`$(TheLocationOfPerseusExecutable*"perseusWin.exe") nmfsimtop $baseFileName.txt $baseFileName`)
     elseif is_linux()
         perseus=TheLocationOfPerseusExecutable*"perseusLin"
         run(`chmod +x $(TheLocationOfPerseusExecutable*"perseusLin")`)

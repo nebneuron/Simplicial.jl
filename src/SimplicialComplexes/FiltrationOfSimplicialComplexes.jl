@@ -49,6 +49,22 @@ end # of the dumb costructor function of FiltrationOfSimplicialComplexes
 
 end
 
+function FiltrationOfSimplicialComplexes(K::SimplicialComplex)::FiltrationOfSimplicialComplexes
+""" This utility function converts a single simplicial complex into the `trivial filtration' of just one complex
+    Usage: TrivialFiltration=FiltrationOfSimplicialComplexes(K);
+
+"""
+F=FiltrationOfSimplicialComplexes(Array{CodeWord, 1}([]),Array{Int,1}([])); # create empty filtration
+F.faces=K.facets; F.dimensions=K.dimensions;  F.vertices=K.vertices;
+F.depth=1; F.birth=ones(Int, length(K.facets))
+return F;
+end
+
+
+
+
+
+
 ##############################################################################################
 ## This function is an enhanced version of FaceBirthpush!
 ## Its input are (1) a Fil of SC, (2) a face to be added, and (3) the birth that the face is being added at.

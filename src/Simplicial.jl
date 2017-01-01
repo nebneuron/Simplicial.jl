@@ -28,7 +28,7 @@ map(include,
       "utilities/function_show.jl" # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
      ])
 
-export CodeWord, emptyset
+export CodeWord, emptyset, TheIntegerType
 export CombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, DowkerPersistentintervals, Sample

@@ -22,7 +22,7 @@ end
 ## a combinatorial code CC::CombinatorialCode
 ## into a simplicial complex SC::SimplicialComplex
 function SimplicialComplex(CC::CombinatorialCode)
-    SC=[]
+    SC=Array{Array{TheIntegerType,1}}([])
     for i=1:CC.Nwords
         push!(SC,collect(CC.words[i]))
     end
