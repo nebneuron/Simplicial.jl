@@ -35,6 +35,7 @@ function SimplicialComplex(ListOfWords::Array{Array{TheIntegerType,1},1})
         end
     end
 
+# The function below is identical to the above, except for the type of the input. In the future one needs to find a more elegant julia solution
 function SimplicialComplex(ListOfWords::Array{Array{Int,1},1})
   if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of the void (or null) Complex
       new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)

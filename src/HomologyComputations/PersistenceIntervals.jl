@@ -1,3 +1,19 @@
+function BettiNumbers(K::SimplicialComplex)::Array{Int,1}
+""" This computes the Betti numbers of the simplicial complex over the field F_2
+    Usage: betti=BettiNumbers(K)
+    Here betti[i] is the dimension of the (i-1)-dimensional homolohy group
+"""
+I=PersistenceIntervals(FiltrationOfSimplicialComplexes(K));
+L=length(I);
+betti=Array{Int,1}(L);
+for i=1:L
+    betti[i]=size(I[i],1);
+end
+return betti
+end
+
+
+
 function MySortRows(x::Array{Int64,2},columnnumber::Int)
   # this function sorts the rows of the matrix x by the elements of the columnnumber-th column
          return x[sortperm([x[i,columnnumber] for i=1:size(x,1)]),:]
