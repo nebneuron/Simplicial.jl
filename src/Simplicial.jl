@@ -10,6 +10,7 @@ map(include,
     ["ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
      "CombinatorialCodes/CombinatorialCodes.jl",
      "CombinatorialCodes/BernoulliRandomCode.jl",
+     "CombinatorialCodes/NeuralRing.jl",
      "SimplicialComplexes/SimplicialComplex.jl",
      "SimplicialComplexes/ExampleSimplicialComplexes.jl", # Some examples of simplicial complexes
      "utilities/is_void_or_irrelevant.jl",          # This defines functions isvoid and isirrelevant on simplicial complexes and codes
