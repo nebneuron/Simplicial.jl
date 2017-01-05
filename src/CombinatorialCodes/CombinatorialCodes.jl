@@ -110,5 +110,5 @@ function BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinat
              end
          B.BinaryMatrix[the_substitution,j]=true
          end
-
+        return B
 end
