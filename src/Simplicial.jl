@@ -33,6 +33,7 @@ export CodeWord, emptyset, TheIntegerType
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, DowkerPersistentintervals, Sample
+export Code2CF
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
 export MaximalDimension
