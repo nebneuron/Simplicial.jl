@@ -40,7 +40,7 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
     elseif any(FilteredComplex.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
            return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim);
      end
-
+    # need to include time as well such as Dates.unix2datetime(time())
     baseFileName="Temp"; WritePerseusSimplexFile(FilteredComplex, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
     TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
