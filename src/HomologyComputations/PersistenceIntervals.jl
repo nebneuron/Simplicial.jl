@@ -1,3 +1,5 @@
+
+
 """
     BettiNumbers(K::SimplicialComplex)::Array{Int,1}
     This computes the Betti numbers of the simplicial complex over the field F_2
@@ -16,7 +18,7 @@ end
 
 
 
-function MySortRows(x::Array{Int64,2},columnnumber::Int)
+function MySortRows(x::SingleDimensionPersistenceIntervalsType,columnnumber::Int)
   # this function sorts the rows of the matrix x by the elements of the columnnumber-th column
          return x[sortperm([x[i,columnnumber] for i=1:size(x,1)]),:]
 end
@@ -30,9 +32,10 @@ end
   (i.e. we only compute H_k for k less than or equal to maxdim)
   The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
 """
-function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)
+function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)::PersistenceIntervalsType
 
-    if isinf(maxdim); maxdim=length(FilteredComplex.vertices)-1;
+    maxdim_in_filtration=maximum(FilteredComplex.dimensions);
+    if isinf(maxdim); maxdim=maxdim_in_filtration;
 
     elseif any(FilteredComplex.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
            return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim);
@@ -56,12 +59,12 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
      run(`$perseus nmfsimtop $baseFileName.txt $baseFileName`)
      println("..done!")
     ## Read from the result txt files the persistence intervals and store them into the array Intervals
-    Intervals=Any[];
+    Intervals=PersistenceIntervalsType(maxdim+1); for i=1:maxdim+1; Intervals[i]=SingleDimensionPersistenceIntervalsType(0,0); end
     for k=0:maxdim
         try
-            k_dimensional_persistent_intervals=map(Int,readdlm("$baseFileName"*"_$k.txt"));
+            k_dimensional_persistent_intervals=readdlm("$baseFileName"*"_$k.txt");
             # We next sort the rows of k_dimensional_persistent_intervals by the birthtimes (the first column)
-            push!(Intervals,  MySortRows(k_dimensional_persistent_intervals,1));
+            Intervals[k+1]= MySortRows(k_dimensional_persistent_intervals,1);
         end
     end
 
@@ -81,7 +84,9 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
     # Finally, we replace '-1' with Inf in the interval deaths
     # The reason why -1 stands for 'utill the end' is the artifact of perseus conventions
     for i=1:length(Intervals)
+          if !isempty(Intervals[i])
           Intervals[i]= map(x->((x==-1)?Inf:x),Intervals[i])
+          end
     end
 
     ## Return the desired resulting array
@@ -112,6 +117,9 @@ end
 
 """
     DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf)
+
+    Usage: Intervals, GraphDensity=DowkerPersistentintervals(A, maxdensity,maxdim);
+
     This function computes persistent intervals of a Dowker complex of a matrix A
     maxdensity is a real number in the interval (0,1] that 'truncates' the filtration at the graph density maxdensity
     maxdim is the maximal dimension of the homology that we want to compute

@@ -29,13 +29,13 @@ map(include,
       "utilities/function_show.jl" # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
      ])
 
-export CodeWord, emptyset, TheIntegerType
+export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, DowkerPersistentintervals, Sample
 export Code2CF
-export  AIMC_minus_C, link_AIMC_minus_C
+export AIMC_minus_C, link_AIMC_minus_C
 export show
 export MaximalDimension, MaximalHomologicalDimension
-export TwoTorus, KleinBottle, PoincareHomologyThreeSphere
+export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
 end
