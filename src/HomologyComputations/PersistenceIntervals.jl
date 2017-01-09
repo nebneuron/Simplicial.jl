@@ -1,8 +1,8 @@
-function BettiNumbers(K::SimplicialComplex)::Array{Int,1}
 """ This computes the Betti numbers of the simplicial complex over the field F_2
     Usage: betti=BettiNumbers(K)
     Here betti[i] is the dimension of the (i-1)-dimensional homology group
 """
+function BettiNumbers(K::SimplicialComplex)::Array{Int,1}
 I=PersistenceIntervals(FiltrationOfSimplicialComplexes(K));
 L=length(I);
 betti=Array{Int,1}(L);
@@ -20,15 +20,15 @@ function MySortRows(x::Array{Int64,2},columnnumber::Int)
 end
 
 
-
+""" This function computes Persistance intervals (over F_2) of a Filtered complex
+  The inputs are
+  (1) a filtered complex of type FiltrationOfSimplicialComplexes,
+  (2) an upper bound for the computation of considered dimensions H_k
+   (i.e. we only compute H_k for k less than or equal to maxdim)
+   The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
+"""
 function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)
-    """ This function computes Persistance intervals (over F_2) of a Filtered complex
-      The inputs are
-      (1) a filtered complex of type FiltrationOfSimplicialComplexes,
-      (2) an upper bound for the computation of considered dimensions H_k
-       (i.e. we only compute H_k for k less than or equal to maxdim)
-       The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
-    """
+
     if isinf(maxdim); maxdim=length(FilteredComplex.vertices)-1;
 
     elseif any(FilteredComplex.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
