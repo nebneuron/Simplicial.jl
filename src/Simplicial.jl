@@ -36,6 +36,6 @@ export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerCo
 export Code2CF
 export  AIMC_minus_C, link_AIMC_minus_C
 export show
-export MaximalDimension
+export MaximalDimension, MaximalHomologicalDimension
 export TwoTorus, KleinBottle, PoincareHomologyThreeSphere
 end

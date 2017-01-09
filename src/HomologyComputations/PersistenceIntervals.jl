@@ -1,4 +1,6 @@
-""" This computes the Betti numbers of the simplicial complex over the field F_2
+"""
+    BettiNumbers(K::SimplicialComplex)::Array{Int,1}
+    This computes the Betti numbers of the simplicial complex over the field F_2
     Usage: betti=BettiNumbers(K)
     Here betti[i] is the dimension of the (i-1)-dimensional homology group
 """
@@ -20,12 +22,13 @@ function MySortRows(x::Array{Int64,2},columnnumber::Int)
 end
 
 
-""" This function computes Persistance intervals (over F_2) of a Filtered complex
+"""
+  This function computes Persistance intervals (over F_2) of a Filtered complex
   The inputs are
   (1) a filtered complex of type FiltrationOfSimplicialComplexes,
   (2) an upper bound for the computation of considered dimensions H_k
-   (i.e. we only compute H_k for k less than or equal to maxdim)
-   The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
+  (i.e. we only compute H_k for k less than or equal to maxdim)
+  The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
 """
 function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)
 
@@ -107,7 +110,9 @@ end
 
 
 
-""" This function computes persistent intervals of a Dowker complex of a matrix A
+"""
+    DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf)
+    This function computes persistent intervals of a Dowker complex of a matrix A
     maxdensity is a real number in the interval (0,1] that 'truncates' the filtration at the graph density maxdensity
     maxdim is the maximal dimension of the homology that we want to compute
 """
