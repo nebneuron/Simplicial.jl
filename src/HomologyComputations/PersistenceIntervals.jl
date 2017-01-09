@@ -35,8 +35,6 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
            return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim);
      end
 
-
-
     baseFileName="Temp"; WritePerseusSimplexFile(FilteredComplex, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
     TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
@@ -88,13 +86,13 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
 end
 
 
-#### The following function transfomrs the information of filtered complex into a fixed format:
-#### The first row indicates how many "coordinates" are used to represent a vertex
-#### From the 2nd row on, each row represents a simplex, and in each row,
-#### (*) the first entry indicates the dimension of the simplex,
-#### (*) in-between the first and last entry (exclusively) are the vertex indices of the simplex.
-#### (*) the last entry indicates the birth time of the simplex,
-
+""" The following function transfomrs the information of filtered complex into a fixed format:
+  The first row indicates how many "coordinates" are used to represent a vertex
+  From the 2nd row on, each row represents a simplex, and in each row,
+  (*) the first entry indicates the dimension of the simplex,
+  (*) in-between the first and last entry (exclusively) are the vertex indices of the simplex.
+  (*) the last entry indicates the birth time of the simplex,
+"""
 
 
 function WritePerseusSimplexFile(FilteredComplex::FiltrationOfSimplicialComplexes, baseFileName::String)
@@ -109,12 +107,11 @@ end
 
 
 
-
+""" This function computes persistent intervals of a Dowker complex of a matrix A
+    maxdensity is a real number in the interval (0,1] that 'truncates' the filtration at the graph density maxdensity
+    maxdim is the maximal dimension of the homology that we want to compute
+"""
 function  DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf)
-  """ This function computes persistent intervals of a Dowker complex of a matrix A
-      maxdensity is a real number in the interval (0,1] that 'truncates' the filtration at the graph density maxdensity
-      maxdim is the maximal dimension of the homology that we want to compute
-  """
   N_vertices=size(A,1);
   D, GraphDensity=DowkerComplex(A,maxdensity);
   return PersistenceIntervals(D, maxdim),  GraphDensity;
