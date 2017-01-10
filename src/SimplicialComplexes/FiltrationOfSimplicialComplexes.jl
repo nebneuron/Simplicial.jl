@@ -1,4 +1,5 @@
-# This is the type that we use for the increasing fitrations of simplicial complexes
+" type FiltrationOfSimplicialComplexes.
+  This is the type that we use for the increasing fitrations of simplicial complexes"
 type FiltrationOfSimplicialComplexes
     faces::Array{CodeWord,1}     # these are all possible faces that appear in the filtration (may include just the `emptyset` if the first complex is the irrelevant complex)
     dimensions::Array{Int,1}     # the dimensions of the faces -- these are the dimensions of the faces (IN THE SAME ORDER)
@@ -178,7 +179,7 @@ end
 
     Here FS is of the type FiltrationOfSimplicialComplexes
     And GraphDensity is an array of real numbers of length =F.depth
-    where each number GraphDensity[i] represents the graph density at the simplicial complex \Delta_i in the filtration  
+    where each number GraphDensity[i] represents the graph density at the simplicial complex \Delta_i in the filtration
 
 """
 function DowkerComplex(A,maxdensity=1)
