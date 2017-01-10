@@ -1,7 +1,28 @@
-# Show a single CodeWord
+" Show a single CodeWord"
 show(c::CodeWord)=(isempty(c)? print("emptyset"):print(sort(collect(c))))
 
-# show a SimplicialComplex
+"""
+    show(pm::PseudoMonomial)
+    This prints a pseudomonomial
+"""
+function show(pm::PseudoMonomial)
+  if isempty(pm.x) && isempty(pm.y)
+     print("1");
+   else
+     for i in sort(collect(pm.x)) print("x_$(i)"); end
+     for j in sort(collect(pm.y)) print("y_$(j)"); end
+   end
+   print(" ");
+end
+
+
+
+
+"""
+    show(K::SimplicialComplex)
+    This prints out an information about a simplicial complex
+
+"""
 function show(K::SimplicialComplex)
 dim=K.dim; number_of_vertices=length(K.vertices);
 print("A $dim-dimensional simplicial complex on $number_of_vertices vertices ");
@@ -12,6 +33,11 @@ end
 
 PrintLine()= println("______________________________");
 
+
+
+"""
+    show(FS::FiltrationOfSimplicialComplexes)
+"""
 function show(FS::FiltrationOfSimplicialComplexes)
  number_of_vertices=length(FS.vertices); depth=FS.depth;
  print("A fitration of $depth simplicial complexes on $number_of_vertices vertices: $(map(Int,sort(collect(FS.vertices))))\n");

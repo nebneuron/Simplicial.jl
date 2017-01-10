@@ -1,10 +1,25 @@
 
 
-# below are constants used in the canonical form computation. In the future, these will be obsolete
+"below are constants used in the canonical form computation. In the future, these will be obsolete"
 const SmallIntegerType=Int8;
 const positive_one= SmallIntegerType(1);
 const negative_one= SmallIntegerType(-1);
 
+" PseudoMonomial is a type for encoding pseudomonomials  "
+immutable  PseudoMonomial
+           x::CodeWord   #
+           y::CodeWord   #
+end
+
+" CanonicalForm is a type used for encoding canonical forms. It is a 1-dimensional array of pseudomonomials"
+const CanonicalForm=Array{PseudoMonomial,1}
+
+function Code2CF(C::CombinatorialCode)::BitArray{2}
+
+  # First, convert to the binary representation:
+  BA=BitArrayOfACombinatorialCode(C)
+  return Code2CF(BA.BinaryMatrix)
+end
 
 
 function Code2CF(C::BitArray{2})::BitArray{2}
