@@ -126,9 +126,9 @@ end
 
 
 
-#
-
-
+"""
+    FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},AddedFace::CodeWord,AssignedBirth::Int)
+"""
 
 ## The function FaceBirthpush!is  used for defining type FiltrationOfSimplicialComplexes
 ## This function is the core of the type FiltrationOfSimplicialComplexes
@@ -166,15 +166,22 @@ function FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},Adde
     end
 end
 
-###########
-function DowkerComplex(A,maxdensity=1)
-    """ This returns the Dowker complex of a rectangular matrix A
-        Normal usage of this function should be
-        FS, GraphDensity=DowkerComplex(A);
-        or
-        FS, GraphDensity=DowkerComplex(A,maxdensity);
-    """
+"""
+    DowkerComplex(A,maxdensity=1)
 
+    This returns the Dowker complex of a rectangular matrix A
+    Normal usage of this function should be
+
+    FS, GraphDensity=DowkerComplex(A);
+    or
+    FS, GraphDensity=DowkerComplex(A,maxdensity);
+
+    Here FS is of the type FiltrationOfSimplicialComplexes
+    And GraphDensity is an array of real numbers of length =F.depth
+    where each number GraphDensity[i] represents the graph density at the simplicial complex \Delta_i in the filtration  
+
+"""
+function DowkerComplex(A,maxdensity=1)
     Nrows, Ncolumns =size(A)
     MaximalPossibleNumberOfEntries=Nrows* Ncolumns
     VectorA=A[:];
@@ -193,7 +200,7 @@ function DowkerComplex(A,maxdensity=1)
 
         CurrentTime=1;
         totallength=0;
-for i=1:length(Sorted) ## this is the main loop
+for i=1:length(Sorted) ## this is the main loop on the unique values of the matrix
     CurrentGraphDensity=sum(Sorted.<=Sorted[i])/MaximalPossibleNumberOfEntries; # compute the current graph density
     if CurrentGraphDensity>maxdensity # quit the main loop once we find out that we exeed the maximal graph density
        break
@@ -202,7 +209,7 @@ for i=1:length(Sorted) ## this is the main loop
           for j=1:Ncolumns;
             push!(NewFaces,CodeWord(find(OrderOfElement[:,j].<=i))); # This is the codeword from the j-th column
           end
-         DeleteRedundantFacets!(NewFaces); # Here we deleteted redundant faces
+        DeleteRedundantFacets!(NewFaces); # Here we deleteted redundant faces
         # Now we are going through the list NewFaces and check if it was not already contained in the previously added facets
         L=length(NewFaces);
         NewFaceIsNotRedundant=trues(L);
@@ -221,12 +228,12 @@ for i=1:length(Sorted) ## this is the main loop
 
         # Now we determine if there were any nonredundant faces. If all faces were redundant, we skip a time step
         if any(NewFaceIsNotRedundant)
+           push!(GraphDensity,CurrentGraphDensity)
            for f in NewFaces[NewFaceIsNotRedundant]
-             push!(ListOfFaces,f)
-             push!(cardinality,length(f))
-             push!(birth,CurrentTime)
-             push!(GraphDensity,CurrentGraphDensity)
-             totallength=totallength+1
+             push!(ListOfFaces,f);
+             push!(cardinality,length(f));
+             push!(birth,CurrentTime);
+             totallength=totallength+1;
            end
            CurrentTime=CurrentTime+1;
         end
@@ -235,17 +242,22 @@ for i=1:length(Sorted) ## this is the main loop
      if cardinality[totallength]==Nrows
         break
      end
-
 end # for i=1:length(Sorted)
+
+# The variable GraphDensity assignes graph density
+
+
 
     return  FiltrationOfSimplicialComplexes(ListOfFaces,birth,CodeWord(1:Nrows)), GraphDensity
 end
-############################
 
 
+"""
+    Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
+    This Funcion takes a filtration of simplicial complexes and produces a filtration of their skeletons
 
+"""
 function Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-# This Funcion takes a filtration of  simplicial complexes and produces a filtration of their skeletons
 if dim<0; error("The maximal mimension needs to be positive"); end;
 if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
 
