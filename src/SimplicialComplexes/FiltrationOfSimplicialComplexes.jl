@@ -203,6 +203,7 @@ function DowkerComplex(A,maxdensity=1)
         totallength=0;
 for i=1:length(Sorted) ## this is the main loop on the unique values of the matrix
     CurrentGraphDensity=sum(Sorted.<=Sorted[i])/MaximalPossibleNumberOfEntries; # compute the current graph density
+    #    CurrentGraphDensity=sum(OrderOfElement.<=i)/MaximalPossibleNumberOfEntries;
     if CurrentGraphDensity>maxdensity # quit the main loop once we find out that we exeed the maximal graph density
        break
      end
