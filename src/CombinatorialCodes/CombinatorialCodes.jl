@@ -115,7 +115,7 @@ function BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinat
          LookUp=Dict{TheIntegerType,Int}(); for i=1: Nvertices; LookUp[OrderedListOfVertexNumbers[i]]=i;end
 
          # First, we initiate the binary mtx with all zeros
-         B=BitArrayOfACombinatorialCode(falses(Nvertices,Nwords), OrderedListOfVertexNumbers);
+         B=BitArrayOfACombinatorialCode(falses(Nwords,Nvertices), OrderedListOfVertexNumbers);
          # now we go through the list of codewords and assign each column
          for j=1: Nwords
              the_word = collect(C.words[j]);
@@ -123,7 +123,16 @@ function BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinat
              for p=1:L
                  the_substitution[p]=LookUp[the_word[p]]
              end
-         B.BinaryMatrix[the_substitution,j]=true
+         B.BinaryMatrix[j,the_substitution]=true
          end
         return B
+end
+
+
+function BitArray2CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
+  # So far we ignore the field B.VertexTranslation
+Nwords,Nvertices=size(BinaryMatrix);
+  ListOfWords=Array{CodeWord,1}(Nwords);
+  for i=1: Nwords; ListOfWords[i]=CodeWord(find(BinaryMatrix[i,:])); end
+return  CombinatorialCode(ListOfWords,CodeWord(collect(1:Nvertices)))
 end
