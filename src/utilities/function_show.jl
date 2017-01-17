@@ -1,5 +1,24 @@
 " Show a single CodeWord"
-show(c::CodeWord)=(isempty(c)? print("emptyset"):print(sort(collect(c))))
+function show(c::CodeWord)
+if isempty(c) print("emptyset")
+  else for i in sort(collect(c)); print(Int(i)); print(" ");end
+end
+end
+
+
+""" Nicely show a combinatorial code
+
+"""
+function show(C::CombinatorialCode)
+  print("This is a code on "); print(length(C.vertices)); print(" vertices: ");  show(C.vertices); println()
+  nwords=C.Nwords
+  println("The code consists of $nwords words:");
+  PrintLine()
+  for c in C.words; show(c); println();end  
+
+end
+
+
 
 """
     show(pm::PseudoMonomial)

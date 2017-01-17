@@ -58,7 +58,10 @@ type CombinatorialCode
         end
 
 
-# The following function is a "brute-force constructor" of a code (added as a convinience)
+"""
+   CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)
+   This function is a "brute-force constructor" of a code (added as a convinience)
+"""
   function CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)
     Nwords=length(words);
     weights=zeros(Int,Nwords);  for i=1:Nwords; weights[i]=length(words[i]) end
@@ -69,6 +72,7 @@ type CombinatorialCode
     if !issubset(collected_vertices,vertices); error(" the union of vertices in the words should be a subset of the vertices field"); end
     new(words,weights,MaximumWeight,Minimumweight,Nwords,vertices)
   end
+
 end
 
 ###############################################################################################
