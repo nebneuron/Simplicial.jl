@@ -64,6 +64,7 @@ type CombinatorialCode
 """
   function CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)
     Nwords=length(words);
+    if Nwords==0; return CombinatorialCode([]); end
     weights=zeros(Int,Nwords);  for i=1:Nwords; weights[i]=length(words[i]) end
     MaximumWeight=maximum(weights) ;   Minimumweight=minimum(weights);
     # perform one sanity check: ensure that  the union of all words is contained in the set of vertices
@@ -80,11 +81,6 @@ end
 
 # This is a function that detects if the code has the empty set:
 HasEmptySet(code::CombinatorialCode)=in(emptyset,code)
-
-# This function detects if the code is NULL, i.e. has no codewords whatsoever
-isNULL(code::CombinatorialCode)=(length(code.words)==0)
-
-
 
 
 
@@ -129,12 +125,10 @@ function BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinat
 end
 
 """
-BitArray2CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
-This function takes a binary matrix and interprets it as a combinatorial code, so that each row is interpreted as a codeword
-
-
+CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
+This function takes a binary matrix and interprets it as a combinatorial code, so that each row is interpreted as a codeword.
 """
-function BitArray2CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
+function CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
   # So far we ignore the field B.VertexTranslation
 Nwords,Nvertices=size(BinaryMatrix);
 if Nwords==0
@@ -142,6 +136,7 @@ if Nwords==0
 else
   ListOfWords=Array{CodeWord,1}(Nwords);
   for i=1: Nwords; ListOfWords[i]=CodeWord(find(BinaryMatrix[i,:])); end
+  sort!(ListOfWords,by=length)
 return  CombinatorialCode(ListOfWords,CodeWord(collect(1:Nvertices)))
 end
 end

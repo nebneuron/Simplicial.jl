@@ -14,7 +14,7 @@ function show(C::CombinatorialCode)
   nwords=C.Nwords
   println("The code consists of $nwords words:");
   PrintLine()
-  for c in C.words; show(c); println();end  
+  for c in C.words; show(c); println();end
 
 end
 
@@ -35,7 +35,24 @@ function show(pm::PseudoMonomial)
 end
 
 
+"""
+    show(pm::PseudoMonomial)
+    This prints a canonical form (a collection of pseudomonomials)
+"""
+function show(CF::CanonicalForm)
+L=length(CF)
+  if L==0
+     println("This canonical form is empty. This means that all possible subsets of vertices are in the code")
+  else
+    println(" This is a canonical form of $L pseudomonomials:")
+     IndI=[]; IndII=[];IndIII=[];  #indices of pseudomonomials of three types
+     
+     for i=1:L
+         show(CF[i]); println(" ");
+     end
 
+  end
+end
 
 """
     show(K::SimplicialComplex)

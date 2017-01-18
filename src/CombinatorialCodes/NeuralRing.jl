@@ -14,34 +14,30 @@ end
 " CanonicalForm is a type used for encoding canonical forms. It is a 1-dimensional array of pseudomonomials"
 const CanonicalForm=Array{PseudoMonomial,1}
 
-function Code2CF(C::CombinatorialCode)::BitArray{2}
-
+"""
+     CanonicalForm(C::CombinatorialCode)::CanonicalForm
+     This computes the canonical form of a neural ideal for the combinatorial code C
+     Example Usage:   CF=CanonicalForm(C)
+"""
+function CanonicalForm(C::CombinatorialCode)::CanonicalForm
   # First, convert to the binary representation:
-  BA=BitArrayOfACombinatorialCode(C)
+  if isvoid(C)
+    error("This code is void, i.e. does not contain any codewords")
+  else
+       BA=BitArrayOfACombinatorialCode(C)
   return Code2CF(BA.BinaryMatrix)
+  end
 end
 
 
-function Code2CF(C::BitArray{2})::BitArray{2}
+"""   This computes the canonical form of a neural ideal for the combinatorial code C, represented by a bit array  whose rows are codewords.
+      The algorithm is an optimized Julia language  version of the matlab code in https://github.com/nebneuron/neural-ideal/blob/master/Code2CF.m
+      that was originally written  by Nora Youngs.
+      For more information about the neural ideal and its uses, see e.g. the paper about the neural ring http://arxiv.org/abs/1212.4201
 
-  """   This computes the canonical form of a neural ideal for the combinatorial code C
-        The algorithm is an optimized Julia language  version of the matlab code in https://github.com/nebneuron/neural-ideal/blob/master/Code2CF.m
-        that was originally written  by Nora Youngs.
-        For more information about the neural ideal and its uses, see e.g. the paper about the neural ring http://arxiv.org/abs/1212.4201
-
-        Usage:   M=Code2CF(Array{Bool,2}(C))
-
-      Here C is a binary matrix whose rows are codewords.
-
-  The polynomials of the canonical form are represented as rows in a binary matrix and should
-  be read as follows: the row has length 2n where in the first n entries
-   a 1 in place i indicates an x_i, and in the second n entries, a 1 in place
-   i indicates a (1-x_j) where j = i-n.  For example, the row
-    [0 1 0 0 1 0 1 1]
-   corresponds to the polynomial x2(1-x1)(1-x3)(1-x4).
 """
 
-
+function Code2CF(C::BitArray{2})::CanonicalForm
 # ----------------------------------------------------------------------
 # Loops through intersecting ideals until we have the canonical form.
 #
@@ -49,9 +45,8 @@ function Code2CF(C::BitArray{2})::BitArray{2}
 # C: a binary matrix whose rows are codewords, of length n
 
 # OUTPUT:
-# CF: canonical form  in pseudo-monomial format (Automatic)
 
-# MAT: the matrix form storing canonical form information. (Optional)
+# M: the matrix form storing canonical form information. (Optional)
 #       Each row represents a pseudo-monomial;  1 in the ith position
 #       (for i <= n) indicates x_i is a factor; 1 in the ith position
 #       (for i>n) indicates (1-x_{i-n}) is a factor.
@@ -60,6 +55,21 @@ function Code2CF(C::BitArray{2})::BitArray{2}
 # analysis (Not Currently Used)
 
 Nrows,Ncolumns=size(C);
+
+if Nrows==0; error("This code is void, i.e. does not contain any codewords"); end
+# Now check if this code consists of exactly one codeword. If so return the appropriate canonical form
+if Nrows==1;
+  CF=CanonicalForm(Ncolumns);
+  for i=1:Ncolumns
+      if C[1,i]
+            CF[i]=PseudoMonomial(CodeWord([]),CodeWord([i]));
+
+      else
+            CF[i]=PseudoMonomial(CodeWord([i]),CodeWord([]));
+      end
+  end
+  return CF
+end
 
 # First, we make a matrix L whose values are =5 off diagonal and =C[1,j] on the j-th element of the main diagonal
 L=fill(SmallIntegerType(5),(Ncolumns,Ncolumns));
@@ -71,20 +81,22 @@ for i=3:Nrows
     I=FinalIntersectIdeals(I,  map(SmallIntegerType, C[i,:])); #compute repeated intersections
 end
 
+# Finally we rewrite the output as an array of pseudomonomials
 a,b=size(I);     # Here we rewrite the final information to
-M=falses(a,2*b); # an easier-to-read matrix format
+CF=CanonicalForm(a);
 for i=1:a
+    x=CodeWord([]); y=CodeWord([]);
     for j=1:b
         if I[i,j]==1
-            M[i,j+b]=true;
+             push!(y,TheIntegerType(j))
         elseif I[i,j]==0
-            M[i,j]=true;
+            push!(x,TheIntegerType(j))
         end
-    end
+    end #   for j=1:b
+    CF[i]=PseudoMonomial(x,y);
 end
-return  M
+return  CF
 end
-
 
 
 function  FinalIntersectIdeals(L::Array{SmallIntegerType,2},r::Array{SmallIntegerType,1})
