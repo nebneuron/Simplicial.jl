@@ -128,11 +128,20 @@ function BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinat
         return B
 end
 
+"""
+BitArray2CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
+This function takes a binary matrix and interprets it as a combinatorial code, so that each row is interpreted as a codeword
 
+
+"""
 function BitArray2CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
   # So far we ignore the field B.VertexTranslation
 Nwords,Nvertices=size(BinaryMatrix);
+if Nwords==0
+   return CombinatorialCode([])
+else
   ListOfWords=Array{CodeWord,1}(Nwords);
   for i=1: Nwords; ListOfWords[i]=CodeWord(find(BinaryMatrix[i,:])); end
 return  CombinatorialCode(ListOfWords,CodeWord(collect(1:Nvertices)))
+end
 end
