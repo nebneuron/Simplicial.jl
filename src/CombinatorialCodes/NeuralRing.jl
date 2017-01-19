@@ -1,5 +1,4 @@
 
-
 "below are constants used in the canonical form computation. In the future, these will be obsolete"
 const SmallIntegerType=Int8;
 const positive_one= SmallIntegerType(1);
@@ -174,8 +173,8 @@ for i=1:w
                                    end
                             end
                         if condition2 # all(the_diff.>=-1) #and there are no extra terms in the old ideal
-                            M=true; # then yes, this is a multiple of something in our list
-                            break; #definitely not going to put it in, so just stop
+                            M=true;   # then yes, this is a multiple of something in our list
+                            break;    # definitely not going to put it in, so just stop
                         end
                     end
                 end
