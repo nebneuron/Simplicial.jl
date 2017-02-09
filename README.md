@@ -95,6 +95,7 @@ Methods for computing the link of a codeword or simplex:
 
 #### `Alexander_dual(SC::SimplicialComplex)`
 returns a new simplicial complex which is the Alexander Dual of SC.
+WARNING: THERE IS CURRENTLY A BUG IN Alexander_dual(SC::SimplicialComplex). DO NOT USE
 
 
 ## Terminology
