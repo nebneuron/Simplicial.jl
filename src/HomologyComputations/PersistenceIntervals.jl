@@ -25,12 +25,15 @@ end
 
 
 """
+  Usage: Intervals=PersistenceIntervals(FilteredComplex,maxdim);
+  
   This function computes Persistance intervals (over F_2) of a Filtered complex
   The inputs are
   (1) a filtered complex of type FiltrationOfSimplicialComplexes,
   (2) an upper bound for the computation of considered dimensions H_k
   (i.e. we only compute H_k for k less than or equal to maxdim)
   The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
+
 """
 function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)::PersistenceIntervalsType
 
