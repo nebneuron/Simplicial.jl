@@ -32,7 +32,7 @@ map(include,
 export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
-export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, DowkerComplex, DowkerPersistentintervals, Sample
+export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF
 export AIMC_minus_C, link_AIMC_minus_C
 export show

@@ -26,7 +26,7 @@ end
 
 """
   Usage: Intervals=PersistenceIntervals(FilteredComplex,maxdim);
-  
+
   This function computes Persistance intervals (over F_2) of a Filtered complex
   The inputs are
   (1) a filtered complex of type FiltrationOfSimplicialComplexes,
@@ -131,4 +131,36 @@ function  DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf)
   N_vertices=size(A,1);
   D, GraphDensity=DowkerComplex(A,maxdensity);
   return PersistenceIntervals(D, maxdim),  GraphDensity;
+end
+
+
+
+
+
+
+
+
+
+"""
+Usage:  Bettis = Intervals2Bettis(Intervals, NumberOfFiltrationSteps, maxdim)
+This function transforms Persistent intervals to Betti Curves
+Here Bettis[d,s]= the betti number \beta_d
+
+"""
+function Intervals2Bettis(Intervals::PersistenceIntervalsType, NumberOfFiltrationSteps::Int, maxdim=Inf)::Matrix{Int}
+    # NumberOfFiltrationSteps=length(Rhos)
+    maxdim=isinf(maxdim)? length(P)-1:maxdim ;
+    Bettis=zeros(Int,maxdim,NumberOfFiltrationSteps);
+    for d=1:maxdim
+        if size(Intervals[d+1],1)!=0
+        for step=1:NumberOfFiltrationSteps
+                  for k=1: size( Intervals[d+1],1)
+                    if (step>=Intervals[d+1][k,1]) &&  (step<=Intervals[d+1][k,2])
+                      Bettis[d, step ]+=1
+                    end
+                  end
+        end # for step=1:NumberOfFiltrationSteps
+        end
+    end #   for d=1:maxdim
+    return Bettis
 end
