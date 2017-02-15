@@ -12,7 +12,7 @@ This package interfaces with existing software for homology computations, such a
 
 # Installation:
 
-`julia> Pkg.update()`
+`julia> Pkg.update(); Pkg.add("Plotly")`
 
 `julia> Pkg.clone("https://github.com/nebneuron/Simplicial.git")`
 
