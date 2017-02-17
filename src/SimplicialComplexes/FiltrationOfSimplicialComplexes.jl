@@ -269,6 +269,7 @@ if dim>MaximalHomologicalDimension; error("This function is currently not design
 
 birth=Int[]; # these are birth times of faces
 ListOfFaces=Array{CodeWord,1}([]);
+DimensionsOfFaces=Array{Int,1}([]);
 IndicesOfTopDimensionalFaces=[];
 # Here we compute theh set of subsets of a given set
 MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),dim+1);
@@ -278,6 +279,7 @@ for i=1:length(FS.faces)
     this_face_dim=FS.dimensions[i]
     if this_face_dim<=dim
        push!(ListOfFaces,this_face);
+       push!(DimensionsOfFaces,length(this_face))
        push!(birth, FS.birth[i]);
        if this_face_dim==dim
           push!(IndicesOfTopDimensionalFaces,CurrentIndex)
@@ -297,11 +299,14 @@ for i=1:length(FS.faces)
                  end
                  if f_is_not_redundant
                     push!(ListOfFaces,CodeWord_of_f);
+                    push!(DimensionsOfFaces,length(CodeWord_of_f))
                     push!(birth, FS.birth[i]);
                     push!(IndicesOfTopDimensionalFaces,CurrentIndex);
                     CurrentIndex+=1 # make sure we keep track of the current index
                   end
-                  if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
+                  if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces
+                    break ;
+                  end # Here we stop if we filled all possible top-dimensional faces
             end # for f in combinations(collect( this_face)),dim+1)
      end # if this_face_dim<=dim
 if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
