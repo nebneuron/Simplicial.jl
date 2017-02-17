@@ -1,6 +1,6 @@
 __precompile__(true)
 module Simplicial
-using Combinatorics 
+using Combinatorics
 import Base.in # since we define a new method for the function in, we need to load all the old methods -- this is an oddity of the current version of julia
 import Base.==
 import Base.show
@@ -33,7 +33,7 @@ map(include,
 export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
-export FiltrationOfSimplicialComplexes, Skeleton, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
+export FiltrationOfSimplicialComplexes, Skeleton, Dirty_Skeleton, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF
 export AIMC_minus_C, link_AIMC_minus_C
 export show
