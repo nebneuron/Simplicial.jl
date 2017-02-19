@@ -31,6 +31,7 @@ Let's compute the persistent intervals of the Dowker complex of A, in dimension 
 Let's plot the Betti curves for these persistent intervals:
 
 `julia> using Plotly`
+
 `julia> PlotBettiCurves(Intervals,GraphDensity,2)`
 
 The module Simplicial defines the following types:
