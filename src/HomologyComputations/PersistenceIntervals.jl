@@ -35,16 +35,14 @@ end
   The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
 
 """
-function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf, dirty=false)::PersistenceIntervalsType
+function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)::PersistenceIntervalsType
 
     maxdim_in_filtration=maximum(FilteredComplex.dimensions);
     if isinf(maxdim); maxdim=maxdim_in_filtration;
 
     elseif any(FilteredComplex.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
-          if !dirty return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim)
-          else      return PersistenceIntervals(Dirty_Skeleton(FilteredComplex,maxdim+1),maxdim )
-          end
-     end
+         return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim)
+    end
     # need to include time as well such as Dates.unix2datetime(time())
     baseFileName="Temp"; WritePerseusSimplexFile(FilteredComplex, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files

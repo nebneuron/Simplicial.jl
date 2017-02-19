@@ -259,11 +259,70 @@ end
 
 
 
+
 """
     Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
     This Funcion takes a filtration of simplicial complexes and produces a filtration of their skeletons
+
 """
 function Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
+if dim<=0; error("The maximal mimension needs to be positive"); end;
+if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
+MaxDimOfFS= maximum(FS.dimensions);
+standard_combinations=Array{Array{Any,1}}(MaxDimOfFS); for d=1: MaxDimOfFS standard_combinations[d] =[]; end
+
+birth=Int[]; # these are birth times of faces
+ListOfFaces=Array{CodeWord,1}([]);
+NumberOfTopDimensionalFaces=0;
+# Here we compute theh set of subsets of a given set
+MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),dim+1);
+AllCombinations=map(CodeWord,collect(combinations(sort(collect(FS.vertices)),dim+1))); # These are all possible dim-dimensional faces
+DoesNotHaveThisFace=trues(length(AllCombinations));  # This keps track of which of all possible faces are in the skeleton
+
+
+for i=1:length(FS.faces)
+    this_face_dim=FS.dimensions[i]
+    this_face=FS.faces[i]
+ if this_face_dim<=dim
+       push!(ListOfFaces,this_face);
+       push!(birth, FS.birth[i]);
+       if this_face_dim==dim
+          NumberOfTopDimensionalFaces+=1
+          # Now, also make sure we keep track of this in DoesNotHaveThisFace
+          for j=1: MaximalPossibleNumberOfTopDimensionalFaces;
+            if AllCombinations[j]==this_face;
+            DoesNotHaveThisFace[j]=false; break;
+            end;
+          end
+        end  # if this_face_dim==dim
+  else # i.e. if this face has higher dimension and we now need to determine what dim-dimensional faces it contains
+
+      # Now we cycle through those dim-dimensional faces indexed in DoesNotHaveThisFace and check if it is contained in the current face
+      for k=1:MaximalPossibleNumberOfTopDimensionalFaces
+          if  DoesNotHaveThisFace[k]
+              if  issubset(AllCombinations[k],this_face)
+                DoesNotHaveThisFace[k]=false # we now put this face to the skeleton
+                push!(ListOfFaces,AllCombinations[k])
+                push!(birth, FS.birth[i]);
+                NumberOfTopDimensionalFaces+=1
+              end
+          end
+      end
+  end # if this_face_dim<=dim
+if NumberOfTopDimensionalFaces>= MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
+end# for i=1:length(FS.faces)
+
+return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
+end
+
+
+##################################### Obsolete versions of functions that are left for reference 
+"""
+    Skeleton_OLD(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
+    This Function takes a filtration of simplicial complexes and produces a filtration of their skeletons
+    This implementation is "naive", old and very inefficient on large skeleta
+"""
+function Skeleton_OLD(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
 if dim<0; error("The maximal mimension needs to be positive"); end;
 if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
 
@@ -307,127 +366,6 @@ for i=1:length(FS.faces)
                   if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces
                     break ;
                   end # Here we stop if we filled all possible top-dimensional faces
-            end # for f in combinations(collect( this_face)),dim+1)
-     end # if this_face_dim<=dim
-if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
-end# for i=1:length(FS.faces)
-
-return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
-end
-
-
-
-
-
-
-
-
-
-
-
-"""
-    Skeleton2(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-    This Funcion takes a filtration of simplicial complexes and produces a filtration of their skeletons
-
-"""
-function Skeleton2(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-if dim<=0; error("The maximal mimension needs to be positive"); end;
-if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
-MaxDimOfFS= maximum(FS.dimensions);
-standard_combinations=Array{Array{Any,1}}(MaxDimOfFS); for d=1: MaxDimOfFS standard_combinations[d] =[]; end
-
-birth=Int[]; # these are birth times of faces
-ListOfFaces=Array{CodeWord,1}([]);
-IndicesOfTopDimensionalFaces=[];
-# Here we compute theh set of subsets of a given set
-MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),dim+1);
-CurrentIndex=1;
-for i=1:length(FS.faces)
-    this_face_dim=FS.dimensions[i]
-    if this_face_dim<=dim
-       push!(ListOfFaces,FS.faces[i]);
-       push!(birth, FS.birth[i]);
-       if this_face_dim==dim
-          push!(IndicesOfTopDimensionalFaces,CurrentIndex)
-       end  # if this_face_dim==dim
-     CurrentIndex+=1 # make sure we keep track of the current index
-   else # i.e. if this face has higher dimension
-           # now we compute all the dim-dimensional subsets of FS.birth[i] and add them assuming that they are not already in the previous faces
-           this_face=Int.(collect(FS.faces[i]));
-          # here we check if standard_combinations was already created. If not we create it
-            if isempty(standard_combinations[this_face_dim])
-               standard_combinations[this_face_dim]=collect(combinations(collect(1:this_face_dim+1),dim+1));
-            end
-
-            # for f in combinations(collect( this_face),dim+1)
-            for f=1:length(standard_combinations[this_face_dim])
-                 CodeWord_of_f=CodeWord( this_face[standard_combinations[this_face_dim][f]])
-                 # First, we determine if f is not already equal to one of the previous faces
-                 f_is_not_redundant=true;
-                 for j=1: length(IndicesOfTopDimensionalFaces)
-                      if ListOfFaces[IndicesOfTopDimensionalFaces[j]]==CodeWord_of_f
-                            f_is_not_redundant=false;
-                         break
-                      end
-                 end
-                 if f_is_not_redundant
-                    push!(ListOfFaces,CodeWord_of_f);
-                    push!(birth, FS.birth[i]);
-                    push!(IndicesOfTopDimensionalFaces,CurrentIndex);
-                    CurrentIndex+=1 # make sure we keep track of the current index
-                  end
-                  if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
-            end # for f in combinations(collect( this_face)),dim+1)
-     end # if this_face_dim<=dim
-if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
-end# for i=1:length(FS.faces)
-
-return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
-end
-
-
-
-
-
-
-
-
-
-
-"""
-    Dirty_Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-    Normally the SKeleton funcion takes a filtration of simplicial complexes and produces a filtration of their skeletons
-    However, here we allow repeting simplices...
-    This is to dramatically speed-up computation. Perseus will correct the issue of redundant facets..
-"""
-function Dirty_Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-if dim<0; error("The maximal mimension needs to be positive"); end;
-if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
-
-birth=Int[]; # these are birth times of faces
-ListOfFaces=Array{CodeWord,1}([]);
-IndicesOfTopDimensionalFaces=[];
-# Here we compute theh set of subsets of a given set
-MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),dim+1);
-CurrentIndex=1;
-for i=1:length(FS.faces)
-    this_face=FS.faces[i]
-    this_face_dim=FS.dimensions[i]
-    if this_face_dim<=dim
-       push!(ListOfFaces,this_face);
-       push!(birth, FS.birth[i]);
-       if this_face_dim==dim
-          push!(IndicesOfTopDimensionalFaces,CurrentIndex)
-        end
-     CurrentIndex+=1 # make sure we keep track of the current index
-     else
-           # now we compute all the dim-dimensional subsets of FS.birth[i] and add them assuming that they are not already in the previous faces
-            for f in combinations(collect(this_face),dim+1)
-                 CodeWord_of_f=CodeWord(f);
-                    push!(ListOfFaces,CodeWord_of_f);
-                    push!(birth, FS.birth[i]);
-                    push!(IndicesOfTopDimensionalFaces,CurrentIndex);
-                    CurrentIndex+=1 # make sure we keep track of the current index
             end # for f in combinations(collect( this_face)),dim+1)
      end # if this_face_dim<=dim
 if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
