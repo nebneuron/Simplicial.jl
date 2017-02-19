@@ -28,6 +28,10 @@ Let's compute the persistent intervals of the Dowker complex of A, in dimension 
 
 `julia>  Intervals, GraphDensity= DowkerPersistentintervals(A,0.7,2); `
 
+Let's plot the Betti curves for these persistent intervals:
+
+`julia> using Plotly`
+`julia> PlotBettiCurves(Intervals,GraphDensity,2)`
 
 The module Simplicial defines the following types:
  * The type `CodeWord` is an alias for `Set{Int16}`. It is *always* recommended to use it instead of Set{Int}, as the exact data types may change in the future. 
