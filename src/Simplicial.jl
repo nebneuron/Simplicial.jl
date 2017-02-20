@@ -1,6 +1,7 @@
 __precompile__(true)
 module Simplicial
 using Combinatorics
+using Plotly
 import Base.in # since we define a new method for the function in, we need to load all the old methods -- this is an oddity of the current version of julia
 import Base.==
 import Base.show

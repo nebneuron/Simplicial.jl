@@ -10,7 +10,7 @@ function PlotBettiCurves(Intervals::PersistenceIntervalsType,GraphDensity::Vecto
     Bettis = Intervals2Bettis(Intervals, length(GraphDensity), maxdim)
     Curves=Array{Any}(maxdim);
     for d=1:maxdim
-        Curves[d]=scatter(;x=GraphDensity, y=Bettis[d,:], mode="lines", name="beta_$d")
+        Curves[d]=Plotly.scatter(;x=GraphDensity, y=Bettis[d,:], mode="lines", name="beta_$d")
     end
 
     layout = [
@@ -28,5 +28,5 @@ function PlotBettiCurves(Intervals::PersistenceIntervalsType,GraphDensity::Vecto
       ]
     ]
 
-    plot([Curves[d] for d=1:maxdim])
+    Plotly.plot([Curves[d] for d=1:maxdim])
 end

@@ -309,14 +309,18 @@ for i=1:length(FS.faces)
           end
       end
   end # if this_face_dim<=dim
-if NumberOfTopDimensionalFaces>= MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
+    if NumberOfTopDimensionalFaces== MaximalPossibleNumberOfTopDimensionalFaces;
+        print_with_color(:blue, "Warning: the entire $dim-dimensional skeleton was filled  \n") ;break ;
+      elseif NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces
+             error("something went wrong: NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces")
+    end # Here we stop if we filled all possible top-dimensional faces
 end# for i=1:length(FS.faces)
 
 return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
 end
 
 
-##################################### Obsolete versions of functions that are left for reference 
+##################################### Obsolete versions of functions that are left for reference
 """
     Skeleton_OLD(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
     This Function takes a filtration of simplicial complexes and produces a filtration of their skeletons
