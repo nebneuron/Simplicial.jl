@@ -27,8 +27,9 @@ map(include,
      "utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl",
      "SimplicialComplexes/FiltrationOfSimplicialComplexes.jl",
      "HomologyComputations/PersistenceIntervals.jl",
-      "utilities/function_show.jl", # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
-      "plotting/PlottingFunctions.jl"
+     "utilities/function_show.jl", # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
+     "plotting/PlottingFunctions.jl",
+     "utilities/fvector.jl"
      ])
 
 export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
@@ -41,4 +42,5 @@ export show
 export MaximalDimension, MaximalHomologicalDimension
 export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
 export PlotBettiCurves
+export hvector
 end
