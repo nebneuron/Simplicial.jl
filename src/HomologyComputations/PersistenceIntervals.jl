@@ -25,7 +25,7 @@ end
 
 
 """
-  Usage: Intervals=PersistenceIntervals(FilteredComplex,maxdim);
+  Usage: Intervals=PersistenceIntervals(FilteredComplex,maxdim,baseFileName);
 
   This function computes Persistance intervals (over F_2) of a Filtered complex
   The inputs are
@@ -35,7 +35,7 @@ end
   The output is an array, whose ith entry is the (i-1)-dimensional persistence intervals.
 
 """
-function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf)::PersistenceIntervalsType
+function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, maxdim=Inf, baseFileName::String="Temp")::PersistenceIntervalsType
 
     maxdim_in_filtration=maximum(FilteredComplex.dimensions);
     if isinf(maxdim); maxdim=maxdim_in_filtration;
@@ -44,7 +44,7 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
          return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim)
     end
     # need to include time as well such as Dates.unix2datetime(time())
-    baseFileName="Temp"; WritePerseusSimplexFile(FilteredComplex, baseFileName);
+    WritePerseusSimplexFile(FilteredComplex, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
     TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
     print("Computing simplicial homology. This may take some time and memory..")
@@ -119,7 +119,7 @@ end
 
 
 """
-    DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf)
+    DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf,baseFileName="Temp")
 
     Usage: Intervals, GraphDensity=DowkerPersistentintervals(A, maxdensity,maxdim);
 
@@ -127,10 +127,10 @@ end
     maxdensity is a real number in the interval (0,1] that 'truncates' the filtration at the graph density maxdensity
     maxdim is the maximal dimension of the homology that we want to compute
 """
-function  DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf)
+function  DowkerPersistentintervals(A,maxdensity=1,maxdim=Inf,baseFileName::String="Temp")
   N_vertices=size(A,1);
   D, GraphDensity=DowkerComplex(A,maxdensity);
-  return PersistenceIntervals(D, maxdim),  GraphDensity;
+  return PersistenceIntervals(D, maxdim, baseFileName),  GraphDensity;
 end
 
 
