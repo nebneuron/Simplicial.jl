@@ -41,7 +41,7 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
     if isinf(maxdim); maxdim=maxdim_in_filtration;
 
     elseif any(FilteredComplex.dimensions.>maxdim+1) # i.e. if any of the facets' dimensions  exeeds one that is necessary to compute H_k for k<=maxdim
-         return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim)
+         return PersistenceIntervals(Skeleton(FilteredComplex,maxdim+1),maxdim,baseFileName)
     end
     # need to include time as well such as Dates.unix2datetime(time())
     WritePerseusSimplexFile(FilteredComplex, baseFileName);
