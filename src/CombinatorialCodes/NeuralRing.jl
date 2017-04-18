@@ -10,6 +10,23 @@ immutable  PseudoMonomial
            y::CodeWord   #
 end
 
+"""
+function PseudoMonomialType(p::PseudoMonomial)::Int
+This function returns the type of a pseudomonomial
+according to the classification in the neural ring paper
+
+
+"""
+function PseudoMonomialType(p::PseudoMonomial)::Int
+ l1=isempty(p.x); l2= isempty(p.y)
+ if l1 && l2;  return 0; end
+ if l1 && !l2; return 3; end
+ if !l1 && l2; return 1
+ else return 2
+ end
+end
+
+
 " CanonicalForm is a type used for encoding canonical forms. It is a 1-dimensional array of pseudomonomials"
 const CanonicalForm=Array{PseudoMonomial,1}
 

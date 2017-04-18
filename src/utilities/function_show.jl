@@ -40,13 +40,14 @@ end
     This prints a canonical form (a collection of pseudomonomials)
 """
 function show(CF::CanonicalForm)
-L=length(CF)
+L=length(CF);
+
   if L==0
      println("This canonical form is empty. This means that all possible subsets of vertices are in the code")
   else
     println(" This is a canonical form of $L pseudomonomials:")
      IndI=[]; IndII=[];IndIII=[];  #indices of pseudomonomials of three types
-     
+
      for i=1:L
          show(CF[i]); println(" ");
      end

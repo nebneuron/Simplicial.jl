@@ -36,7 +36,7 @@ export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimen
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, HasEmptySet, isvoid, isirrelevant, in, ==
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
-export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF
+export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF, PseudoMonomialType
 export AIMC_minus_C, link_AIMC_minus_C
 export show
 export MaximalDimension, MaximalHomologicalDimension
