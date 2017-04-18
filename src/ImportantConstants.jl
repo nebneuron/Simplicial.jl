@@ -21,5 +21,6 @@ const MaximalHomologicalDimension=8;
 
 
 "  PersistenceIntervalsType=Array{Array{Real,2},1} is a type used for keeping track of persistent intervals "
-const SingleDimensionPersistenceIntervalsType=Matrix
+
+const SingleDimensionPersistenceIntervalsType=Matrix{Float64}
 const PersistenceIntervalsType=Array{SingleDimensionPersistenceIntervalsType,1}
