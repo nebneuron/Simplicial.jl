@@ -143,13 +143,14 @@ end
 
 """
 Usage:  Bettis = Intervals2Bettis(Intervals, NumberOfFiltrationSteps, maxdim)
-This function transforms Persistent intervals to Betti Curves
-Here Bettis[d,s]= the betti number \beta_d
+This function transforms Persistent intervals to Betti Curves. Beta_0 is discarded.
+The output is therefore Bettis[d,s]= the betti number \beta_d
+
 
 """
-function Intervals2Bettis(Intervals::PersistenceIntervalsType, NumberOfFiltrationSteps::Int, maxdim=Inf)::Matrix{Int}
+function Intervals2Bettis(Intervals::PersistenceIntervalsType, NumberOfFiltrationSteps::Int, maxdim::Int=-2)::Matrix{Int}
     # NumberOfFiltrationSteps=length(Rhos)
-    maxdim=isinf(maxdim)? length(P)-1:maxdim ;
+    if maxdim==-2 ; maxdim=length(Intervals)-1 ;end
     Bettis=zeros(Int,maxdim,NumberOfFiltrationSteps);
     for d=1:maxdim
         if size(Intervals[d+1],1)!=0
