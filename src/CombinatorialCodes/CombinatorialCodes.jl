@@ -140,3 +140,16 @@ else
 return  CombinatorialCode(ListOfWords,CodeWord(collect(1:Nvertices)))
 end
 end
+
+
+"""
+This function takes a combinatorial code and computes `the transpose of a code`
+Usage: C1=transpose(C)
+or, (same result)
+       C1=C'
+"""
+
+function transpose(CC::CombinatorialCode)::CombinatorialCode
+          BA=BitArrayOfACombinatorialCode(CC);
+          return CombinatorialCode(BA.BinaryMatrix')
+end
