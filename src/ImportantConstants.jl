@@ -13,29 +13,9 @@ CodeWord=Set{TheIntegerType}  # We currently encode sets via sparse sets of sign
 # Another sensible option might be the sparse boolean arrays (in this case the subset, in and some other "elementary" functions would have to be re-written to work with this type)
 
 
-"DirectedCodeword is the type that encodes (ordered) sequences of vertices"
-DirectedCodeword=Vector{TheIntegerType}
-
-"The function issubsequence deternimes if the sequence a is a subsequence of sequence b"
-
-function issubsequence(a::DirectedCodeword,b::DirectedCodeword)::Bool
-    if isempty(a)
-       return true
-    else
-        # here the variable a_membership indicates if the appropriate member of b is a member of a.
-        # The reason for this akward loop is to preserve the ordering
-        a_membership=falses(length(b)); for i=1:length(b);  a_membership[i]=in(b[i],a);end
-        return (a==b[a_membership])
-    end
-end
-
-
-
-
-
 " emptyset is the representation of the emptyset of the type CodeWord, i.e. emptyset=CodeWord([]) "
 const emptyset=CodeWord([]) # This definition should agree with the CodeWord type
-const emptydirectedset=DirectedCodeword([])
+
 
 " MaximalHomologicalDimension=8 This is the maximal homological dimension allowed by certain memory-intensive  methods that are computing too many faces. This is used as a precaution against crushing when demanding too much memory"
 const MaximalHomologicalDimension=8;

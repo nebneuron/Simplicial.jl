@@ -25,6 +25,3 @@ end
 ## delete words[i], where i are the indices found above
 deleteat!(facets, redundant_word_indexes)
 end
-
-
- 

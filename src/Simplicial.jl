@@ -24,7 +24,8 @@ map(include,
      "HomologyComputations/PersistenceIntervals.jl",
      "utilities/function_show.jl", # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
      "plotting/PlottingFunctions.jl",
-     "utilities/fvector.jl"
+     "utilities/fvector.jl",
+     "DirectedComplexes/DirectedComplex.jl"
      ])
 export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, transpose, HasEmptySet, isvoid, isirrelevant, in, ==
@@ -38,5 +39,5 @@ export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
 export PlotBettiCurves
 export hvector
 # definitions related to directed complexes
-export DirectedCodeword, issubsequence
+export DirectedCodeword, issubsequence, DirectedComplex
 end
