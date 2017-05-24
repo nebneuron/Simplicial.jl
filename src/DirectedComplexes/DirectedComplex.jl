@@ -15,18 +15,17 @@ function issubsequence(a::DirectedCodeword,b::DirectedCodeword)::Bool
     end
 end
 
+
+
+
+
 type DirectedComplex
     facets::Array{DirectedCodeword,1}  # the maximal faces ordered by the weights (in the increasing order)
     dimensions::Array{Int,1} # the dimensions of the facets
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
     Nwords::Int  # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
-
-     ## this is the constructor for the SimplicialComplex type.
-     ## It takes a list of Integer arrays, where each array represents a facet
-     ## facets are checked for inclusions
-     ## An input looks like ListOfSequences=Any[[1,2,3],[2,3,4],[3,1,5],[1,2,4],[2,2,3,3]].
-
+"  this is the constructor for the DirectedComplex type.  "
      function DirectedComplex(ListOfSequences::Array{DirectedCodeword,1})
              if isempty(ListOfSequences)||(ListOfSequences==Any[]) # This is the case of the void (or null) Complex
                  new(Array{DirectedCodeword}(0),Array{Int}(0),-2,0,emptyset)
@@ -45,7 +44,6 @@ type DirectedComplex
                                end
                           end
                  end
-
                  ## delete words[i], where i are the indices found above
                  deleteat!(facets, redundant_word_indexes)
                  ## union one by one the entries of facets using for loop
