@@ -27,20 +27,4 @@ deleteat!(facets, redundant_word_indexes)
 end
 
 
-"""
-The following function takes a collection of facets together with a (large) face F and
-
-"""
-
-function FindNonRedundantSubFaces(facets::Array{CodeWord,1},DimensionsOfFaces::Array{Int,1}, F::CodeWord, dim::Int)::Array{CodeWord,1}
-
-  if length(facets)!=length(DimensionsOfFaces)
-    error("wrong array lengths")
-  end
-
-  for f in combinations(collect( this_face),dim+1)
-
-  end
-
-
-end
+ 
