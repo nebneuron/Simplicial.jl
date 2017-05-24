@@ -2,7 +2,7 @@
 "DirectedCodeword is the type that encodes (ordered) sequences of vertices"
 DirectedCodeword=Vector{TheIntegerType}
 const emptydirectedset=DirectedCodeword([])
-"The function issubsequence deternimes if the sequence a is a subsequence of sequence b"
+"The function issubsequence determines if the sequence a is a subsequence of sequence b"
 
 function issubsequence(a::DirectedCodeword,b::DirectedCodeword)::Bool
     if isempty(a)
@@ -14,8 +14,6 @@ function issubsequence(a::DirectedCodeword,b::DirectedCodeword)::Bool
         return (a==b[a_membership])
     end
 end
-
-
 
 type DirectedComplex
     facets::Array{DirectedCodeword,1}  # the maximal faces ordered by the weights (in the increasing order)
