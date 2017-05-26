@@ -25,7 +25,7 @@ type DirectedComplex
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
     Nwords::Int  # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
-"  this is the constructor for the DirectedComplex type.  "
+"This is the constructor for the DirectedComplex type."
      function DirectedComplex(ListOfSequences::Array{DirectedCodeword,1})
              if isempty(ListOfSequences)||(ListOfSequences==Any[]) # This is the case of the void (or null) Complex
                  new(Array{DirectedCodeword}(0),Array{Int}(0),-2,0,emptyset)
@@ -54,4 +54,41 @@ type DirectedComplex
                  new(facets, dimensions, dim, length(facets),vertices)
              end
          end
+end
+
+
+
+
+"""
+  function  Matrix2Permutations(A::Matrix)::Matrix
+  This utility function takes a matrix A of real numbers and returns the matrix RowOrdering of integers, so that
+  RowOrdering[i,j] = the order of the element A[i,j] in the i-th row of A
+  Usage: RowOrdering=Matrix2Permutations(A);
+"""
+function  Matrix2Permutations(A::Union{Matrix{Float64},Matrix{Int}})::Matrix{Int}
+ Nrows, Ncolumns =size(A);
+ RowOrdering = zeros(Int,Nrows, Ncolumns);
+ for i=1: Nrows
+ Theithrow=A[i,:];
+ Sorted=sort(unique(Theithrow));
+ N_UniqueElements=length(Sorted);
+   for k=1:N_UniqueElements
+       RowOrdering[i,Theithrow.==Sorted[k]]=k;
+   end # for k=1:N_UniqueElements
+ end# for i=1: Nrows
+return RowOrdering
+end # function  Matrix2Permutations(A)
+
+
+
+
+"""
+This function takes a matrix (of integers or Floats and produces a directed complex )
+
+"""
+
+function DirectedComplex(A::Union{Matrix{Float64},Matrix{Int}})::DirectedComplex
+  Nrows, Ncolumns =size(A);
+  RowOrdering=Matrix2Permutations(A);
+  return DirectedComplex([DirectedCodeword(RowOrdering[i,:]) for i=1:size(A,1)])
 end

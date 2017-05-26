@@ -39,5 +39,5 @@ export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
 export PlotBettiCurves
 export hvector
 # definitions related to directed complexes
-export DirectedCodeword, issubsequence, DirectedComplex
+export DirectedCodeword, issubsequence, DirectedComplex, Matrix2Permutations
 end
