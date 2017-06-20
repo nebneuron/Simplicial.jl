@@ -47,7 +47,7 @@ type DirectedComplex
                  ## delete words[i], where i are the indices found above
                  deleteat!(facets, redundant_word_indexes)
                  ## union one by one the entries of facets using for loop
-                 vertices=emptyset; for i=1:length(facets); union!(vertices, facets[i]); end
+                 vertices=CodeWord([]); for i=1:length(facets); union!(vertices, facets[i]); end
                  ## dimensions is the array of dimensions of each words in facets
                  dimensions=Int[length(facets[i])-1 for i=1:length(facets)]
                  dim=length(facets[end])-1
