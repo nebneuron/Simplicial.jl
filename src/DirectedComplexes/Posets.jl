@@ -88,3 +88,37 @@ for m=1:P.Nelements[k_ind];
 end
 return d
 end
+
+
+
+
+"""
+beta=BettiNumbers(D::DirectedComplex)
+This function returns the Betti numbers of the reduced (!!) homology of a (so far only pure) directed complex
+
+This is a very crude way to compute directed homology -- this does not use any tricks,
+just the definition and the built-in rank function that may fail to work properly on large enough matrices.
+Use with caution. Works as prescribed on small enough complexes.
+
+Here the length of beta is equal to P.dim+1,
+beta[1] is 0-th Betti number  and beta[P.dim+1] is the P.dim-dimensional Betti number
+
+
+"""
+function BettiNumbers(D::DirectedComplex)::Vector{Int}
+         P=GradedPoset(D);
+         beta=zeros(Int,P.dim+1);
+
+         rank_d_n=rank(full(BoundaryOperator(P,0)));
+         for n=0:P.dim;
+             dim_C_n= P.Nelements[n+2];
+             if n<P.dim
+                rank_d_nplus1=rank(full(BoundaryOperator(P,n+1)));
+                beta[n+1]=dim_C_n-rank_d_n - rank_d_nplus1
+                rank_d_n=rank_d_nplus1
+             else
+                  beta[P.dim+1]=dim_C_n-rank_d_n
+             end
+          end
+return beta
+end
