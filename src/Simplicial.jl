@@ -25,7 +25,7 @@ map(include,
      "utilities/function_show.jl", # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
      "plotting/PlottingFunctions.jl",
      "utilities/fvector.jl",
-     "DirectedComplexes/DirectedComplex.jl"
+     "DirectedComplexes/DirectedComplex.jl", "DirectedComplexes/Posets.jl"
      ])
 export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, transpose, HasEmptySet, isvoid, isirrelevant, in, ==
@@ -40,4 +40,5 @@ export PlotBettiCurves
 export hvector
 # definitions related to directed complexes
 export DirectedCodeword, issubsequence, DirectedComplex, Matrix2Permutations
+export GradedPoset, BoundaryOperator
 end

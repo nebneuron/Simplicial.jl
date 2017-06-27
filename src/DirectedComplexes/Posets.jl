@@ -1,39 +1,90 @@
 
-
 type GradedPoset
-    boundaryelements::Array{Array{Int,1},1}   # this is a list of lists each list enumerates the boundary one step down
-    dimensions::Array{Int,1} # this is the list of dimensions of the graded poset. This can not be smaller then -1 (corresponding to the empty set)
-    dim::Int   # the maximun of dimensions
-    Nelements::Array{Int,1}  # total number of facets in teach dimension
+  dimensions::Array{Int,1} # this is the list of dimensions of the graded poset. This can not be smaller then -1 (corresponding to the empty set)
+  dim::Int   # the maximun of dimensions
+  Nelements::Array{Int,1}  # total number of facets in teach dimension
+  boundaries::Array{Array{Array{Int,1},1},1}   # this is a list of lists each list enumerates the boundary one step down
+  negativesigns::Array{Array{BitArray,1},1}
+# here boundaries[i][j] is an array of boundaries of the j-th element in i-th dimension
+# here negativesigns[i][j] is an array that indicates if the appropriate boundaary has negative signs
+"This is the constructor for theGradedPoset type from the  DirectedComplex type.
+The way it works, it starts at the top sequences, and iteratively takes the subsequences
+"
+   function GradedPoset(D::DirectedComplex,verbose=false)
+   dimensions=collect(-1:D.dim); Ndimensions=length(dimensions);
+   boundaries=Array{Array{Array{Int,1},1},1}(Ndimensions); #
+   negativesigns=Array{Array{BitArray,1},1}(Ndimensions);
+   for i=1:Ndimensions; boundaries[i]=[]; negativesigns[i]=[] end
+   Nelements=ones(Int,Ndimensions);
+   # set everything for the 0-dimensional things
+   Nelements[2]=length(D.vertices);
+   negativesigns[2]=Array{BitArray,1}(Nelements[2]);
+   boundaries[2]=Array{Array{Int,1},1}(Nelements[2]);
+  for i=1:Nelements[2]; negativesigns[2][i]=falses(1); boundaries[2][i]=ones(Int,1);end
+# For now we assume that the directed complex is pure, i.e. all the maximal sequences have the same length
+ dim =D.dimensions[1]; if !all(D.dimensions.==dim); error(" This function currently can only handle pure complexes"); end
+ currentsequences=copy(D.facets);
+  for curdimecounter=Ndimensions:-1:3
+    currentlength=curdimecounter-1;
+    Nelements[curdimecounter]=length(currentsequences)
+    boundaries[curdimecounter]=Array{Array{Int,1},1}(Nelements[curdimecounter]);
+    negativesigns[curdimecounter]=Array{BitArray,1}(Nelements[curdimecounter]);
+    boundarysequences=Array{Array{Int,1},1}();
+      for m=1: length(currentsequences)
+        boundaries[curdimecounter][m]=zeros(Int, length(currentsequences[m]));
+        negativesigns[curdimecounter][m]=falses(length(currentsequences[m]));
+        # here we produce the subsequences of currentsequences[m]
+        subsequences=collect(combinations(currentsequences[m],currentlength-1));
+        hasnegativesign=iseven(currentlength);
+            for i=1:currentlength
+                was_encountered_before=false;
+            for s=1:length(boundarysequences)
+               if boundarysequences[s]==subsequences[i];
+                    was_encountered_before=true
+                    ith_place=s
+                    break
+               end # if
+            end   #for s=1:length(boundarysequences)
+              if !was_encountered_before
+                push!(boundarysequences,subsequences[i]); # the actual sequence
+                ith_place=length(boundarysequences);
+              end
+      boundaries[curdimecounter][m][i]=ith_place;
+      negativesigns[curdimecounter][m][i]=hasnegativesign;
+      hasnegativesign=!hasnegativesign;
+    end # for i=1:currentlength
+end #   for m=1: length(currentsequences)
+
+# this is diagnostic printing:
+if verbose
+ print_with_color(:red, "in length $(currentlength)"); println(" there are $(Nelements[curdimecounter]) sequences:")
+  for m=1: length(currentsequences); print("sequence $m : ");println(currentsequences[m]);end
+   println("with the following boundary sequences:")
+for m=1: length(boundarysequences); print_with_color(:blue, "sequence $m : "); println(boundarysequences[m]);end
+end
 
 
-"This is the constructor for the DirectedComplex type."
-     function GradedPoset(D::DirectedComplex)
-             if isempty(ListOfSequences)||(ListOfSequences==Any[]) # This is the case of the void (or null) Complex
-                 new(Array{DirectedCodeword}(0),Array{Int}(0),-2,0,emptyset)
-             elseif ListOfSequences==[DirectedCodeword([])]  #  the irrelevant complex with empty vertex set
-                 new(ListOfSequences,[-1],-1,1,emptyset)
-             else
-                 # First, we sort the facets by legth:
-                 facets=sort(ListOfSequences, by=length); Nfacets=length(facets)
-                 # After ordering by length, check from first to last whether it is included in some later sequence
-                 redundant_word_indexes=[]
-                 for i=1:Nfacets
-                          for j=i+1:Nfacets
-                               if  issubsequence(facets[i],facets[j])
-                                   push!(redundant_word_indexes, i)
-                                   break
-                               end
-                          end
-                 end
-                 ## delete words[i], where i are the indices found above
-                 deleteat!(facets, redundant_word_indexes)
-                 ## union one by one the entries of facets using for loop
-                 vertices=emptyset; for i=1:length(facets); union!(vertices, facets[i]); end
-                 ## dimensions is the array of dimensions of each words in facets
-                 dimensions=Int[length(facets[i])-1 for i=1:length(facets)]
-                 dim=length(facets[end])-1
-                 new(facets, dimensions, dim, length(facets),vertices)
-             end
-         end
+
+
+currentsequences=boundarysequences;
+end   # for currentdimensioncounter=Ndimensions:-1:2
+   new(dimensions,D.dim, Nelements,boundaries,negativesigns)
+  end
+end
+
+
+
+
+
+function BoundaryOperator(P::GradedPoset,k)::SparseMatrixCSC{Int64,Int64}
+assert(issubset([k, k-1],P.dimensions))
+k_ind=findfirst(P.dimensions.==k)
+d=spzeros(Int, P.Nelements[k_ind-1],P.Nelements[k_ind]);
+
+for m=1:P.Nelements[k_ind];
+    for j=1:length(P.boundaries[k_ind][m])
+      d[P.boundaries[k_ind][m][j],m]=(P.negativesigns[k_ind][m][j])? -1 : 1 ;
+    end
+end
+return d
 end
