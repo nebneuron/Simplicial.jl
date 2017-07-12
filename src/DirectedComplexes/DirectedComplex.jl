@@ -67,7 +67,7 @@ end
 """
 function  Matrix2Permutations(A::Matrix)::Matrix{Int}
     RowOrdering = zeros(Int,size(A));
-    for i=1: Nrows; RowOrdering[i,:]=invperm(sortperm(A[i,:])) ; end 
+    for i=1: size(A,1); RowOrdering[i,:]=invperm(sortperm(A[i,:])) ; end 
     return RowOrdering
 end # function  Matrix2Permutations(A)
 
