@@ -65,19 +65,14 @@ end
   RowOrdering[i,j] = the order of the element A[i,j] in the i-th row of A
   Usage: RowOrdering=Matrix2Permutations(A);
 """
-function  Matrix2Permutations(A::Union{Matrix{Float64},Matrix{Int}})::Matrix{Int}
- Nrows, Ncolumns =size(A);
- RowOrdering = zeros(Int,Nrows, Ncolumns);
- for i=1: Nrows
- Theithrow=A[i,:];
- Sorted=sort(unique(Theithrow));
- N_UniqueElements=length(Sorted);
-   for k=1:N_UniqueElements
-       RowOrdering[i,Theithrow.==Sorted[k]]=k;
-   end # for k=1:N_UniqueElements
- end# for i=1: Nrows
-return RowOrdering
+function  Matrix2Permutations(A::Matrix)::Matrix{Int}
+    RowOrdering = zeros(Int,size(A));
+    for i=1: Nrows; RowOrdering[i,:]=invperm(sortperm(A[i,:])) ; end 
+    return RowOrdering
 end # function  Matrix2Permutations(A)
+
+
+
 
 
 
