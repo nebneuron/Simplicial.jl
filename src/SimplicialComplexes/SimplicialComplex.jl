@@ -59,3 +59,22 @@ function SimplicialComplex(ListOfWords::Vector)
 # end
 
 end
+
+#################
+# ITERATION
+#################
+function start(SC::SimplicialComplex)
+  return 1
+end
+function next(SC::SimplicialComplex, state)
+  return (SC.facets[state], state+1)
+end
+function done(SC::SimplicialComplex, state)
+  return state > length(SC.facets)
+end
+function eltype(::SimplicialComplex)
+  return CodeWord
+end
+function length(SC::SimplicialComplex)
+  return length(SC.facets)
+end
