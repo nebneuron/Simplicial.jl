@@ -67,23 +67,3 @@ end
 #         CombinatorialCode(Any(Codeword_test))
 #     end
 # end
-<<<<<<< HEAD
-=======
-
-"""
-    link(C::CombinatorialCode, sigma, tau=[])
-
-Computes the link of `C` with respect to `sigma`. If `tau` is nonempty, only
-returns codewords disjoint from tau. If no codewords `c` satisfy `sigma ⊆ c` and
-`tau ∩ c = ∅`, prints a warning message and does not return any value.
-
-"""
-function link(C::CombinatorialCode, sigma, tau=[])
-  new_words = filter(c -> issubset(sigma, c) && (isempty(tau) || isempty(intersect(tau, c))), C)
-  if isempty(new_words)
-    println("ERROR!! $sigma is not a sub-codeword, and/or ($sigma,$tau) is a combinatorial relation")
-  else
-    return CombinatorialCode([setdiff(c, sigma) for c in new_words])
-  end
-end
->>>>>>> nebneuron/master
