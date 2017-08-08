@@ -75,6 +75,9 @@ end
 function eltype(::SimplicialComplex)
   return CodeWord
 end
+function eltype(::Type{SimplicialComplex})
+  return CodeWord
+end
 function length(SC::SimplicialComplex)
   return length(SC.facets)
 end

@@ -93,6 +93,9 @@ end
 function eltype(::CombinatorialCode)
   return CodeWord
 end
+function eltype(::Type{CombinatorialCode})
+  return CodeWord
+end
 function length(CC::CombinatorialCode)
   return length(CC.words)
 end
