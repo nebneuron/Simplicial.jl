@@ -10,6 +10,7 @@ map(include,
      "CombinatorialCodes/NeuralRing.jl",
      "SimplicialComplexes/SimplicialComplex.jl",
      "SimplicialComplexes/ExampleSimplicialComplexes.jl", # Some examples of simplicial complexes
+     "utilities/cham.jl",
      "utilities/is_void_or_irrelevant.jl",          # This defines functions isvoid and isirrelevant on simplicial complexes and codes
      "utilities/function_in.jl",     # This is a simple function that checks a codeword membership in a code.
      "utilities/SC2CC_and_CC2SC.jl", # These are functions that transform between the SimplicialComplex and CombinatorialCode types
@@ -40,6 +41,7 @@ export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
 export PlotBettiCurves
 export hvector
 export start, next, done, eltype, length
+export cham
 # definitions related to directed complexes
 export DirectedCodeword, issubsequence, DirectedComplex, Matrix2Permutations
 export GradedPoset, BoundaryOperator
