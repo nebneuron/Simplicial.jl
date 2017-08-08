@@ -78,6 +78,29 @@ end
 
 ###############################################################################################
 
+#################
+# ITERATION
+#################
+function start(CC::CombinatorialCode)
+  return 1
+end
+function next(CC::CombinatorialCode, state)
+  return (CC.words[state], state+1)
+end
+function done(CC::CombinatorialCode, state)
+  return state > length(CC.words)
+end
+function eltype(::CombinatorialCode)
+  return CodeWord
+end
+function eltype(::Type{CombinatorialCode})
+  return CodeWord
+end
+function length(CC::CombinatorialCode)
+  return length(CC.words)
+end
+
+
 
 # This is a function that detects if the code has the empty set:
 HasEmptySet(code::CombinatorialCode)=in(emptyset,code)
