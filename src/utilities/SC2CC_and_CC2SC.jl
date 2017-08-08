@@ -8,7 +8,7 @@
 function CombinatorialCode(SC::SimplicialComplex)
     CC=[]
     for i=1:SC.Nwords
-        for j=1:length(SC.facets[i])
+        for j=0:length(SC.facets[i])
             Subsets_of_ithfacet=collect(combinations(collect(SC.facets[i]), j))
             append!(CC, Subsets_of_ithfacet)
         end
