@@ -16,12 +16,12 @@ function link(SC::SimplicialComplex, sigma::Set{Int})
     ## else do setdiff for each collected facet, giving link
     if Simplex_test==[]
         println("ERROR!! $sigma is not a simplex.")
-    else
-        for i=1:length(Simplex_test)
-            Simplex_test[i]=collect(setdiff(Simplex_test[i],sigma))
-        end
-        SimplicialComplex(Any(Simplex_test))
     end
+
+    for i=1:length(Simplex_test)
+        Simplex_test[i]=collect(setdiff(Simplex_test[i],sigma))
+    end
+    SimplicialComplex(Simplex_test)
 end
 
 #####################################################################################################
@@ -61,7 +61,6 @@ function link(C::CombinatorialCode, sigma, tau=[])
   new_words = filter(c -> issubset(sigma, c) && (isempty(tau) || isempty(intersect(tau, c))), C)
   if isempty(new_words)
     println("ERROR!! $sigma is not a sub-codeword, and/or ($sigma,$tau) is a combinatorial relation")
-  else
-    return CombinatorialCode([setdiff(c, sigma) for c in new_words])
   end
+  return CombinatorialCode([setdiff(c, sigma) for c in new_words])
 end
