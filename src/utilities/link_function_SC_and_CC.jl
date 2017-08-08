@@ -2,7 +2,26 @@
 ## The following two function are the link functions for simplicial complexes and combinatorialcodes
 ####################################################################################################
 
-## this function computes the link of a simplex in a simplicial complex
+"""
+    link(C::CombinatorialCode, sigma, tau=[])
+
+Computes the link of `C` with respect to `sigma`. If `tau` is nonempty, only
+returns codewords disjoint from tau. If no codewords `c` satisfy `sigma ⊆ c` and
+`tau ∩ c = ∅`, prints a warning message.
+
+    link(K::SimplicialComplex, sigma)
+
+Computes the link of `K` with respect to `sigma`. If no facets of `K` contain
+`sigma`, prints a warning message.
+
+"""
+function link(C::CombinatorialCode, sigma, tau=[])
+  new_words = filter(c -> issubset(sigma, c) && (isempty(tau) || isempty(intersect(tau, c))), C)
+  if isempty(new_words)
+    println("ERROR!! $sigma is not a sub-codeword, and/or ($sigma,$tau) is a combinatorial relation")
+  end
+  return CombinatorialCode([setdiff(c, sigma) for c in new_words])
+end
 function link(SC::SimplicialComplex, sigma::Set{Int})
     ## build an array Simplex_test, if sigma is contained in a facet, push the facet into the array
     Simplex_test=[]
@@ -16,12 +35,12 @@ function link(SC::SimplicialComplex, sigma::Set{Int})
     ## else do setdiff for each collected facet, giving link
     if Simplex_test==[]
         println("ERROR!! $sigma is not a simplex.")
-    else
-        for i=1:length(Simplex_test)
-            Simplex_test[i]=collect(setdiff(Simplex_test[i],sigma))
-        end
-        SimplicialComplex(Any(Simplex_test))
     end
+
+    for i=1:length(Simplex_test)
+        Simplex_test[i]=collect(setdiff(Simplex_test[i],sigma))
+    end
+    SimplicialComplex(Simplex_test)
 end
 
 #####################################################################################################
@@ -48,20 +67,3 @@ end
 #         CombinatorialCode(Any(Codeword_test))
 #     end
 # end
-
-"""
-    link(C::CombinatorialCode, sigma, tau=[])
-
-Computes the link of `C` with respect to `sigma`. If `tau` is nonempty, only
-returns codewords disjoint from tau. If no codewords `c` satisfy `sigma ⊆ c` and
-`tau ∩ c = ∅`, prints a warning message and does not return any value.
-
-"""
-function link(C::CombinatorialCode, sigma, tau=[])
-  new_words = filter(c -> issubset(sigma, c) && (isempty(tau) || isempty(intersect(tau, c))), C)
-  if isempty(new_words)
-    println("ERROR!! $sigma is not a sub-codeword, and/or ($sigma,$tau) is a combinatorial relation")
-  else
-    return CombinatorialCode([setdiff(c, sigma) for c in new_words])
-  end
-end
