@@ -23,15 +23,19 @@ function cham(BC::BitArrayOfACombinatorialCode, nu::BitVector)::Vector{Tuple{Vec
     candidate_combinations = [combinations(S, binomial(wt,k-1)) for (k,S) in enumerate(indices_by_weight)]
     for tp in Iterators.product(candidate_combinations...)
       test_indices = vcat(tp...)
-      Σ = all(C[test_indices,:],1) # the intersection of the 2^n codewords selected for testing
+      Σ = all(BC.BinaryMatrix[test_indices,:],1)[:] # the intersection of the 2^n codewords selected for testing
       sz = sum(Σ)
-      if all((BC.BinaryMatrix[test_indices] * .~nu) .== sz)
-        push!(chambers,())
+      if all((BC.BinaryMatrix[test_indices,:] * .~nu) .== sz)
+        # each of the candidate codewords has the same pattern outside of nu.
+        push!(chambers,(BC.VertexTranslation[Σ .& .~nu], BC.VertexTranslation[.~Σ .& .~nu]))
       end
     end
-  else
-    return chambers
   end
+  return chambers
 end
 function cham(C::CombinatorialCode, nu)
+  BC = BitArrayOfACombinatorialCode(C)
+  bit_nu = falses(length(BC.VertexTranslation))
+  bit_nu[indexin(nu, BC.VertexTranslation)] = true
+  return cham(BC, bit_nu)
 end
