@@ -93,24 +93,33 @@ end
 
 
 """
-beta=BettiNumbers(D::DirectedComplex)
+beta=BettiNumbers(D::DirectedComplex,maximaldimension=Inf)
+
 This function returns the Betti numbers of the reduced (!!) homology of a (so far only pure) directed complex
 
 This is a very crude way to compute directed homology -- this does not use any tricks,
 just the definition and the built-in rank function that may fail to work properly on large enough matrices.
 Use with caution. Works as prescribed on small enough complexes.
 
-Here the length of beta is equal to P.dim+1,
+Here the length of beta is equal to maximaldimension+1,
 beta[1] is 0-th Betti number  and beta[P.dim+1] is the P.dim-dimensional Betti number
-
+maximaldimension is an optional parameter to restrict the maximal possible dimension of homology to compute
 
 """
-function BettiNumbers(D::DirectedComplex)::Vector{Int}
+function BettiNumbers(D::DirectedComplex, maximaldimension=Inf)::Vector{Int}
          P=GradedPoset(D);
-         beta=zeros(Int,P.dim+1);
+         if maximaldimension==Inf
+            maxdim=P.dim
+        elseif maximaldimension>P.dim
+               error("maximaldimension exeeds the poset P.dim ")
+        else
+             maxdim=maximaldimension
+        end
+
+         beta=zeros(Int,maxdim+1);
 
          rank_d_n=rank(full(BoundaryOperator(P,0)));
-         for n=0:P.dim;
+         for n=0:maxdim;
              dim_C_n= P.Nelements[n+2];
              if n<P.dim
                 rank_d_nplus1=rank(full(BoundaryOperator(P,n+1)));
