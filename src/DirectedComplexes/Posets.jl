@@ -11,7 +11,8 @@ The way it works, it starts at the top sequences, and iteratively takes the subs
 "
 
 function GradedPoset(D::DirectedComplex,verbose=false)
-  dimensions=collect(-1:D.dim); Ndimensions=length(dimensions);
+  dimensions=collect(-1:D.dim);
+  Ndimensions=length(dimensions);
   boundaries=Array{Array{Array{Int,1},1},1}(Ndimensions); #this makes me cry
   negativesigns=Array{Array{BitArray,1},1}(Ndimensions);
   for i = 1:Ndimensions;
@@ -28,12 +29,10 @@ function GradedPoset(D::DirectedComplex,verbose=false)
     boundaries[2][i] = ones(Int,1);
   end
 
- dim = D.dimensions[1];
-# if !all(D.dimensions.==dim);
-#   error(" This function currently can only handle pure complexes");
-# end
+ dim = D.dimensions[end]; #in D the facets are ordered by incredinng length
  currentfacets = find(D.dimensions.== dim)
  currentsequences = copy(D.facets[currentfacets]);
+  println(currentsequences)
  for curdimecounter = Ndimensions:-1:3 #curdimecounter is dimension+2 or length+1
    currentlength = curdimecounter-1;
    Nelements[curdimecounter] = length(currentsequences) #count all sequences of the current dimension
@@ -41,7 +40,6 @@ function GradedPoset(D::DirectedComplex,verbose=false)
    negativesigns[curdimecounter] = Array{BitArray,1}(Nelements[curdimecounter]);
    #boundarysequences is the collection of all sequences that we get as boundaries
    boundarysequences = Array{Array{Int,1},1}();
-
    for m = 1:length(currentsequences)
      boundaries[curdimecounter][m] = zeros(Int, length(currentsequences[m]));
      negativesigns[curdimecounter][m] = falses(length(currentsequences[m]));
@@ -84,11 +82,12 @@ function GradedPoset(D::DirectedComplex,verbose=false)
    #Notice that the constructor of DirectedComplex gets rid of redundqant sequences, so none of the facets appear as boundaries of anything higher-dimensional.
    #i.e. there will be no repeate rows!
 
-   currentfacets = find(D.dimensions.== curdimecounter-2)
-   push!(currentsequences,D.facets[currentfacets])
+   currentfacets = find(D.dimensions.== currentlength-2)
+   if !isempty(currentfacets)
+     append!(currentsequences,D.facets[currentfacets])
+   end
  end # for currentdimensioncounter=Ndimensions:-1:2
- new(dimensions,D.dim, Nelements,boundaries,negativesigns)
-end
+new(dimensions,D.dim, Nelements,boundaries,negativesigns)
 end
 
 
