@@ -4,7 +4,7 @@ type GradedPoset
   Nelements::Array{Int,1}  # total number of facets in teach dimension
   boundaries::Array{Array{Array{Int,1},1},1}   # this is a list of lists each list enumerates the boundary one step down
   negativesigns::Array{Array{BitArray,1},1}
-end  
+end
 # here boundaries[i][j] is an array of boundaries of the j-th element in i-th dimension
 # here negativesigns[i][j] is an array that indicates if the appropriate boundaary has negative signs
 "This is the constructor for theGradedPoset type from the  DirectedComplex type.
@@ -14,7 +14,7 @@ The way it works, it starts at the top sequences, and iteratively takes the subs
 function GradedPoset(D::DirectedComplex,verbose=false)
   dimensions=collect(-1:D.dim);
   Ndimensions=length(dimensions);
-  boundaries=Array{Array{Array{Int,1},1},1}(Ndimensions); #this makes me cry
+  boundaries=Array{Array{Array{Int,1},1},1}(Ndimensions);
   negativesigns=Array{Array{BitArray,1},1}(Ndimensions);
   for i = 1:Ndimensions;
     boundaries[i] = [];
@@ -30,7 +30,8 @@ function GradedPoset(D::DirectedComplex,verbose=false)
     boundaries[2][i] = ones(Int,1);
   end
 
- dim = D.dimensions[end]; #in D the facets are ordered by incredinng length
+##in D the facets are ordered by increasinginng length but we want to start with the biggest
+ dim = D.dimensions[end];
  currentfacets = find(D.dimensions.== dim)
  currentsequences = copy(D.facets[currentfacets]);
  for curdimecounter = Ndimensions:-1:3 #curdimecounter is dimension+2 or length+1
@@ -40,15 +41,17 @@ function GradedPoset(D::DirectedComplex,verbose=false)
    negativesigns[curdimecounter] = Array{BitArray,1}(Nelements[curdimecounter]);
    #boundarysequences is the collection of all sequences that we get as boundaries
    boundarysequences = Array{Array{Int,1},1}();
+
    for m = 1:length(currentsequences)
      boundaries[curdimecounter][m] = zeros(Int, length(currentsequences[m]));
      negativesigns[curdimecounter][m] = falses(length(currentsequences[m]));
      # here we produce the subsequences of currentsequences[m]
-     subsequences = collect(combinations(currentsequences[m],currentlength-1)); #why on earth would we want this to be an ARRAY
+     subsequences = collect(combinations(currentsequences[m],currentlength-1));
      hasnegativesign = iseven(currentlength);
      for i = 1:currentlength
        was_encountered_before = false;
-       for s = 1:length(boundarysequences) #painful
+       # check for duplicate boundaries
+       for s = 1:length(boundarysequences)
          if boundarysequences[s] == subsequences[i];
            was_encountered_before = true
            ith_place = s
@@ -59,6 +62,8 @@ function GradedPoset(D::DirectedComplex,verbose=false)
          push!(boundarysequences,subsequences[i]); # the actual sequence
          ith_place = length(boundarysequences);
        end
+       # ith place is now either the place where subsequence[i] was encountered before
+       # or the last place in the array of boundary sequences
        boundaries[curdimecounter][m][i] = ith_place;
        negativesigns[curdimecounter][m][i] = hasnegativesign;
        hasnegativesign = !hasnegativesign;
