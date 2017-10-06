@@ -21,7 +21,7 @@ end
 
 type DirectedComplex
     facets::Array{DirectedCodeword,1}  # the maximal faces ordered by the weights (in the increasing order)
-    dimensions::Array{Int,1} # the dimensions of the facets
+    dimensions::Array{Int,1} # the dimensions of the facets (ith dimension corresponds to the ith facet in facets)
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
     Nwords::Int  # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
@@ -67,7 +67,7 @@ end
 """
 function  Matrix2Permutations(A::Matrix)::Matrix{Int}
     RowOrdering = zeros(Int,size(A));
-    for i=1: size(A,1); RowOrdering[i,:]=invperm(sortperm(A[i,:])) ; end 
+    for i=1: size(A,1); RowOrdering[i,:]=invperm(sortperm(A[i,:])) ; end
     return RowOrdering
 end # function  Matrix2Permutations(A)
 
