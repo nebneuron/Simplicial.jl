@@ -4,7 +4,7 @@ type GradedPoset
   Nelements::Array{Int,1}  # total number of facets in teach dimension
   boundaries::Array{Array{Array{Int,1},1},1}   # this is a list of lists each list enumerates the boundary one step down
   negativesigns::Array{Array{BitArray,1},1}
-end
+
 # here boundaries[i][j] is an array of boundaries of the j-th element in i-th dimension
 # here negativesigns[i][j] is an array that indicates if the appropriate boundaary has negative signs
 "This is the constructor for theGradedPoset type from the  DirectedComplex type.
@@ -94,7 +94,8 @@ function GradedPoset(D::DirectedComplex,verbose=false)
  end # for currentdimensioncounter=Ndimensions:-1:2
 new(dimensions,D.dim, Nelements,boundaries,negativesigns)
 end
-
+end
+  
 function BoundaryOperator(P::GradedPoset,k)::SparseMatrixCSC{Int64,Int64}
 assert(issubset([k, k-1],P.dimensions))
 k_ind=findfirst(P.dimensions.==k)
