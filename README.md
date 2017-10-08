@@ -2,8 +2,6 @@
 
 This package provides data structures and algorithms for combinatorial topology. Currently, it can handle   abstract simplicial complexes, directed complexes, and combinatorial codes. The package is written in [Julia language](http://julialang.org).  The long-term goal of this project is to be a *"swiss-knife"*  for manipulating (*very* *large*) combinatorial structures, with an eye towards topological data analysis.
 
-
-
 DISCLAIMER: This software is still in development. The documentation is currently rather sparse. Use at your own risk! Please let us know if you'd like to contribute. 
 
 
