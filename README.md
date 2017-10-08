@@ -1,10 +1,11 @@
 # Package Simplicial
 
-DISCLAIMER: This software is still in development. The documentation is sparse. Use at your own risk! Please let us know if you'd like to contribute. 
+This package provides data structures and algorithms for combinatorial topology. Currently, it can handle   abstract simplicial complexes, directed complexes, and combinatorial codes. The package is written in [Julia language](http://julialang.org).  The long-term goal of this project is to be a *"swiss-knife"*  for manipulating (*very* *large*) combinatorial structures, with an eye towards topological data analysis.
 
-This is a [Julia language](http://julialang.org) implementation of data structures and algorithms for handling abstract simplicial complexes and combinatorial codes. 
 
-The goal of this project is to provide a general package for manipulating (*very* *large*) combinatorial structures, with an eye towards topological data analysis.
+
+DISCLAIMER: This software is still in development. The documentation is currently rather sparse. Use at your own risk! Please let us know if you'd like to contribute. 
+
 
 
 This package interfaces with existing software for homology computations, such as [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html).  In the future, Simplicial will interface with other TDA software.
