@@ -136,7 +136,7 @@ function BettiNumbers(D::DirectedComplex, maximaldimension=Inf)::Vector{Int}
          if maximaldimension == Inf
             maxdim = D.dim;
         elseif maximaldimension > D.dim
-               error("maximaldimension exeeds the poset P.dim ")
+               error("maximaldimension exeeds the poset D.dim ")
         else
              maxdim = maximaldimension
         end
