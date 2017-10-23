@@ -11,11 +11,19 @@ type GradedPoset
 The way it works, it starts at the top sequences, and iteratively takes the subsequences
 "
 
-function GradedPoset(D::DirectedComplex,verbose=false)
-  dimensions=collect(-1:D.dim);
-  Ndimensions=length(dimensions);
-  boundaries=Array{Array{Array{Int,1},1},1}(Ndimensions);
-  negativesigns=Array{Array{BitArray,1},1}(Ndimensions);
+function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
+  if maximaldimension == Inf
+     maxdim = D.dim;
+  elseif maximaldimension > D.dim
+        error("maximaldimension exeeds the dimension of the directed complex D ")
+  else
+      maxdim = maximaldimension
+  end
+
+  dimensions = collect(-1:D.dim);
+  Ndimensions = length(dimensions);
+  boundaries = Array{Array{Array{Int,1},1},1}(Ndimensions);
+  negativesigns = Array{Array{BitArray,1},1}(Ndimensions);
   for i = 1:Ndimensions;
     boundaries[i] = [];
     negativesigns[i] = []
@@ -29,47 +37,51 @@ function GradedPoset(D::DirectedComplex,verbose=false)
     negativesigns[2][i] = falses(1);
     boundaries[2][i] = ones(Int,1);
   end
-
-##in D the facets are ordered by increasinginng length but we want to start with the biggest
  dim = D.dimensions[end];
- currentfacets = find(D.dimensions.== dim)
- currentsequences = copy(D.facets[currentfacets]);
- for curdimecounter = Ndimensions:-1:3 #curdimecounter is dimension+2 or length+1
+ previoussequences = Array{Array{Int,1},1}(length(D.vertices))
+ vert = collect(D.vertices)
+ for i = 1:length(D.vertices);
+   previoussequences[i] = [vert[i]];
+ end
+##
+ for curdimecounter = 3:maxdim #curdimecounter is dimension+2 or length+1
+   currentsequences = Array{Array{Int,1},1}();
    currentlength = curdimecounter-1;
+   for m = 1:length(D.facets)
+     if length(D.facets[m]) >= currentlength
+      append!(currentsequences,collect(combinations(D.facets[m],currentlength)))
+    end
+   end
+   currentsequences = unique(currentsequences)
    Nelements[curdimecounter] = length(currentsequences) #count all sequences of the current dimension
-   boundaries[curdimecounter] = Array{Array{Int,1},1}(Nelements[curdimecounter]);
-   negativesigns[curdimecounter] = Array{BitArray,1}(Nelements[curdimecounter]);
-   #boundarysequences is the collection of all sequences that we get as boundaries
-   boundarysequences = Array{Array{Int,1},1}();
 
-   for m = 1:length(currentsequences)
-     boundaries[curdimecounter][m] = zeros(Int, length(currentsequences[m]));
-     negativesigns[curdimecounter][m] = falses(length(currentsequences[m]));
-     # here we produce the subsequences of currentsequences[m]
-     subsequences = collect(combinations(currentsequences[m],currentlength-1));
-     hasnegativesign = iseven(currentlength);
-     for i = 1:currentlength
-       was_encountered_before = false;
-       # check for duplicate boundaries
-       for s = 1:length(boundarysequences)
-         if boundarysequences[s] == subsequences[i];
-           was_encountered_before = true
-           ith_place = s
+   boundaries[curdimecounter] = Array{Array{Int,1},1}(Nelements[curdimecounter]);
+
+   negativesigns[curdimecounter] = Array{BitArray,1}(Nelements[curdimecounter]);
+
+   # now we have previoussequences -- n-1 chains, and currentsequences -- n chains
+   # it is guaranteed that all the boundaries of currentsequences are already in previoussequences
+   # so we'll go through all the sequences
+   # and in each sequence drop one element at a time and find this sequence in previoussequences
+   for i in 1:length(currentsequences)
+     boundaries[curdimecounter][i] = zeros(Int, length(currentsequences[i]));
+     negativesigns[curdimecounter][i] = falses(length(currentsequences[i]));
+     for j in 1:length(currentsequences[i])
+      # miss the jth elements (Julia automatically handles "j-1 and j+1 out-of-range" issues here)
+      #every sequence in currentsequences has length currentlength
+       boundary = cat(1,currentsequences[i][1:j-1], currentsequences[i][j+1:currentlength])
+       for k in 1:length(previoussequences) #go through previoussequences and find the current boundary
+         if previoussequences[k] == boundary
+           boundaries[curdimecounter][i][j] = k #boundaries[curdimecounter][i] has currentlength elements
            break
-         end # if
-       end   #for s=1:length(boundarysequences)
-       if !was_encountered_before
-         push!(boundarysequences,subsequences[i]); # the actual sequence
-         ith_place = length(boundarysequences);
-       end
-       # ith place is now either the place where subsequence[i] was encountered before
-       # or the last place in the array of boundary sequences
-       boundaries[curdimecounter][m][i] = ith_place;
-       negativesigns[curdimecounter][m][i] = hasnegativesign;
-       hasnegativesign = !hasnegativesign;
-     end # for i=1:currentlength
-   end #   for m=1: length(currentsequences)
-  # this is diagnostic printing:
+         end
+       end #for k in 1:length(previoussequences)
+
+       #Since Julia indexes from 1, dropping the first (and third, fifth etc) element should not have the negative sign
+       negativesigns[curdimecounter][i][j] = iseven(j)
+     end # for j in 1:length(currentsequences[i])
+   end # for i in 1:length(currentsequences)
+
    if verbose
      print_with_color(:red, "in length $(currentlength)"); println(" there are $(Nelements[curdimecounter]) sequences:")
      for m = 1:length(currentsequences);
@@ -77,25 +89,18 @@ function GradedPoset(D::DirectedComplex,verbose=false)
        println(currentsequences[m]);
      end
      println("with the following boundary sequences:")
-     for m = 1: length(boundarysequences);
+     for m = 1: length(previoussequences);
        print_with_color(:blue, "sequence $m : ");
-       println(boundarysequences[m]);
+       println(previoussequences[m]);
      end
    end
-   currentsequences = boundarysequences;
-   #now we also add the facets of the correct lower dimension.
-   #Notice that the constructor of DirectedComplex gets rid of redundqant sequences, so none of the facets appear as boundaries of anything higher-dimensional.
-   #i.e. there will be no repeate rows!
+   previoussequences = currentsequences
 
-   currentfacets = find(D.dimensions.== currentlength-2)
-   if !isempty(currentfacets)
-     append!(currentsequences,D.facets[currentfacets])
-   end
- end # for currentdimensioncounter=Ndimensions:-1:2
+ end # for currentdimensioncounter= 3:Ndimensions
 new(dimensions,D.dim, Nelements,boundaries,negativesigns)
 end
 end
-  
+
 function BoundaryOperator(P::GradedPoset,k)::SparseMatrixCSC{Int64,Int64}
 assert(issubset([k, k-1],P.dimensions))
 k_ind=findfirst(P.dimensions.==k)
@@ -127,15 +132,15 @@ maximaldimension is an optional parameter to restrict the maximal possible dimen
 
 """
 function BettiNumbers(D::DirectedComplex, maximaldimension=Inf)::Vector{Int}
-         P=GradedPoset(D);
-         if maximaldimension==Inf
-            maxdim=P.dim
-        elseif maximaldimension>P.dim
+
+         if maximaldimension == Inf
+            maxdim = D.dim;
+        elseif maximaldimension > D.dim
                error("maximaldimension exeeds the poset P.dim ")
         else
-             maxdim=maximaldimension
+             maxdim = maximaldimension
         end
-
+        P=GradedPoset(D, maxdim+1);
          beta=zeros(Int,maxdim+1);
 
          rank_d_n=rank(full(BoundaryOperator(P,0)));
