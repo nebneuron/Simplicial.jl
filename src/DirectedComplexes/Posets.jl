@@ -10,6 +10,7 @@ type GradedPoset
 "This is the constructor for theGradedPoset type from the  DirectedComplex type.
 The way it works, it starts at the top sequences, and iteratively takes the subsequences
 "
+ 
 
 function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
   if maximaldimension == Inf
@@ -82,6 +83,7 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
      end # for j in 1:length(currentsequences[i])
    end # for i in 1:length(currentsequences)
 
+
    if verbose
      print_with_color(:red, "in length $(currentlength)"); println(" there are $(Nelements[curdimecounter]) sequences:")
      for m = 1:length(currentsequences);
@@ -89,6 +91,7 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
        println(currentsequences[m]);
      end
      println("with the following boundary sequences:")
+
      for m = 1: length(previoussequences);
        print_with_color(:blue, "sequence $m : ");
        println(previoussequences[m]);
@@ -101,6 +104,10 @@ new(dimensions,D.dim, Nelements,boundaries,negativesigns)
 end
 end
 
+
+  end # GradedPoset
+  
+  
 function BoundaryOperator(P::GradedPoset,k)::SparseMatrixCSC{Int64,Int64}
 assert(issubset([k, k-1],P.dimensions))
 k_ind=findfirst(P.dimensions.==k)
