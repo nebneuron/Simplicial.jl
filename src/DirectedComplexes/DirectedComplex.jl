@@ -1,4 +1,3 @@
-
 "DirectedCodeword is the type that encodes (ordered) sequences of vertices"
 DirectedCodeword=Vector{TheIntegerType}
 const emptydirectedset=DirectedCodeword([])
