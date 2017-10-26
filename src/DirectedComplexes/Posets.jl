@@ -162,6 +162,6 @@ function BettiNumbers(D::DirectedComplex, maximaldimension=Inf)::Vector{Int}
  if (maximaldimension == Inf) || (maximaldimension == D.dim)
     return beta
  else
-    return beta[1:maximaldimension]   
+    return beta[1:maximaldimension+1]
  end   
 end
