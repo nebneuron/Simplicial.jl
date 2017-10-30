@@ -84,5 +84,5 @@ This function takes a matrix (of integers or Floats and produces a directed comp
 function DirectedComplex(A::Union{Matrix{Float64},Matrix{Int}})::DirectedComplex
   Nrows, Ncolumns =size(A);
   RowOrdering=Matrix2Permutations(A);
-  return DirectedComplex([DirectedCodeword(RowOrdering[i,:]) for i=1:size(A,1)])
+  return DirectedComplex([DirectedCodeword(RowOrdering[i,:]) for i=1:size(RowOrdering,1)])
 end
