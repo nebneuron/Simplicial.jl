@@ -1,7 +1,7 @@
 "DirectedCodeword is the type that encodes (ordered) sequences of vertices"
 DirectedCodeword=Vector{TheIntegerType}
 const emptydirectedset=DirectedCodeword([])
-"The function issubsequence determines if the sequence a is a subsequence of sequence b"
+" issubsequence(a,b) The function issubsequence determines if the sequence a is a subsequence of sequence b"
 
 function issubsequence(a::DirectedCodeword,b::DirectedCodeword)::Bool
     if isempty(a)
