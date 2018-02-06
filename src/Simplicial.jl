@@ -30,7 +30,7 @@ map(include,
      "DirectedComplexes/DirectedComplex.jl", "DirectedComplexes/Posets.jl"
      ])
 export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
-export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, transpose, HasEmptySet, isvoid, isirrelevant, in, ==
+export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, transpose, HasEmptySet, isvoid, isirrelevant, in, ==, <=
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF, PseudoMonomialType
