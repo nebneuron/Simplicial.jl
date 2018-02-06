@@ -34,7 +34,7 @@ return current_a_element_found_in_b
 end # function <=
 
 " The following name added for compartibility with the older code" 
-issubsequence=(a::DirectedCodeword,b::DirectedCodeword)=(<=(a,b))::Bool
+issubsequence(a::DirectedCodeword,b::DirectedCodeword)=(<=(a,b))::Bool
 
 
 
