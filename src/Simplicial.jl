@@ -22,6 +22,8 @@ map(include,
      "utilities/function_Bicomplex.jl",
      "utilities/void_and_irrelevant_complexes_and_codes.jl",
      "utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl",
+     "utilities/subset_of_a_sequence.jl",  
+     "utilities/IntersectionsOfSequences.jl",  
      "SimplicialComplexes/FiltrationOfSimplicialComplexes.jl",
      "HomologyComputations/PersistenceIntervals.jl",
      "utilities/function_show.jl", # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
