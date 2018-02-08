@@ -43,6 +43,6 @@ export hvector
 export start, next, done, eltype, length
 export cham
 # definitions related to directed complexes
-export DirectedCodeword, issubsequence, DirectedComplex, Matrix2Permutations
+export DirectedCodeword, issubsequence, DirectedComplex, Matrix2Permutations, EmptyDirectedCodeword
 export GradedPoset, BoundaryOperator
 end
