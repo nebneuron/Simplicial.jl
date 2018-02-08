@@ -1,6 +1,6 @@
 "DirectedCodeword is the type that encodes (ordered) sequences of vertices"
 DirectedCodeword=Vector{TheIntegerType}
-const EmptyDirectedCodeword=DirectedCodeword([])
+const EmptyDirectedCodeword=DirectedCodeword(0);
 " issubsequence(a,b) a.k.a. <=(a,b)  determines if the sequence a is a subsequence of sequence b"
 
 
