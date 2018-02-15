@@ -12,7 +12,6 @@ map(include,
      "SimplicialComplexes/ExampleSimplicialComplexes.jl", # Some examples of simplicial complexes
      "utilities/cham.jl",
      "utilities/is_void_or_irrelevant.jl",          # This defines functions isvoid and isirrelevant on simplicial complexes and codes
-     "utilities/function_in.jl",     # This is a simple function that checks a codeword membership in a code.
      "utilities/SC2CC_and_CC2SC.jl", # These are functions that transform between the SimplicialComplex and CombinatorialCode types
      "utilities/CC_and_SC_compare_functions.jl",
      "SimplicialComplexes/Alexander_dual_function.jl",
@@ -28,7 +27,8 @@ map(include,
      "plotting/PlottingFunctions.jl",
      "utilities/fvector.jl",
      "DirectedComplexes/DirectedComplex.jl", "DirectedComplexes/Posets.jl",  
-     "utilities/subset_of_a_sequence.jl", "utilities/IntersectionsOfSequences.jl"
+     "utilities/subset_of_a_sequence.jl", "utilities/IntersectionsOfSequences.jl",
+      "utilities/function_in.jl"
      ])
 export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
 export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, transpose, HasEmptySet, isvoid, isirrelevant, in, ==, <=
