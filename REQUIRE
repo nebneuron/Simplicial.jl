@@ -4,6 +4,6 @@
 # If no REQUIRE file is present, it means there are no requirements.
 
 
-julia 0.6
+julia 0.5
 Combinatorics
 LightGraphs
