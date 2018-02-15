@@ -15,7 +15,7 @@ function IntersectionsOfSequences(seqs:: Array{DirectedCodeword,1})::Array{Direc
   for i=1:NVertices
       for j=i+1:NVertices
           comp = [(findfirst(ar, V[i]) < findfirst(ar, V[j])) for ar in seqs]
-          if all(comp) || all(.!comp)
+          if all(comp) || all( map(!,comp))
             add_edge!(G, i, j);
           end
       end
