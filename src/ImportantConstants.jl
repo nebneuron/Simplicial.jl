@@ -39,9 +39,28 @@ Simplicial Complexes.
 """
 abstract type AbstractFiniteSetCollection end
 
+################################################################################
+### Generic method implementations
+################################################################################
+
 # generic, inefficient equality operator. Depends on iteration functions defined
 # for C1 and C2
 ==(C1::AbstractFiniteSetCollection, C2::AbstractFiniteSetCollection) = Set(collect(C1)) == Set(collect(C2))
+
+"""
+    matrix_form(collection)
+
+A `BitMatrix` with one row for every element of `collection`. Each row is a
+logical index to the array `vertices(C)`.
+"""
+function matrix_form(C::AbstractFiniteSetCollection)
+    V = vertices(C)
+    M = falses(length(C), length(V))
+    for (i,c) in enumerate(C)
+        M[i,indexin(c, V)] = true
+    end
+    return M
+end
 
 ################################################################################
 ### Iteration over maximal sets
