@@ -1,5 +1,99 @@
-###################### This is the type that defines combinatorial codes
-type CombinatorialCode
+
+export AbstractCombinatorialCode,
+       CombinatorialCode, HasEmptySet, BitArrayOfACombinatorialCode, transpose
+
+"""
+    abstract type AbstractCombinatorialCode
+
+The abstract parent class for concrete implements of _combinatorial codes_.
+"""
+abstract type AbstractCombinatorialCode <: AbstractFiniteSetCollection end
+
+################################################################################
+### Generic implementations of basic operations
+################################################################################
+
+function show(io::IO, C::AbstractCombinatorialCode)
+    println(io, "Code on [$(length(vertices(C)))] ($(eltype(vertices(C)))) with $(length(C)) codewords")
+end
+
+
+################################################################################
+### BinaryMatrixCode
+################################################################################
+"""
+    BinaryMatrixCode{T<:Integer}
+
+A collection of subsets of [n] = {1,...,n}. Codewords are stored as binary row
+vectors in a `BitMatrix`. The parameter `T` specifies the type of codewords
+returned by iteration; codewords are represented as `Vector{T}` objects. When
+`T` is not explicitly defined anywhere, default value is `Int`.
+
+Objects of type `BinaryMatrixCode` are _immutable_, so in particular, any
+operation which changes a code will construct a new object.
+
+# Constructors
+
+`BinaryMatrixCode([Int], itr)` Assumes the argument is an iterable
+collection, where each element is itself an iterable collection, containing only
+positive integers. Also, `length(unique(itr))` must return a finite integer. If
+
+`BinaryMatrixCode([Int], binary_matrix)` Accepts a `BitMatrix` or `Matrix{Bool}`
+argument and interprets rows as codewords.
+
+"""
+struct BinaryMatrixCode{T<:Integer} <: AbstractCombinatorialCode
+    C::BitMatrix
+    max_idx::Vector{Int} # which codewords are maximal
+end
+function BinaryMatrixCode(::Type{T}, LL) where {T <: Integer}
+    # For now, a naive constructor:
+    n = maximum(map(maximum, filter(c -> length(c) > 0, LL)))
+    uLL = unique(LL)
+    C = list_to_bitmatrix(uLL, 1:n)
+    C = sortrows(C, lt=isless_GrRevLex) # sortrows so identical codes are stored the same way.
+    # now perform a naive O(m^2 + matrix multiplication) check for which words
+    # are maximal. subset_rows is defined in util.jl
+    max_idx = find(subset_rows(C) .== 0)
+    return BinaryMatrixCode{T}(C, max_idx)
+end
+BinaryMatrixCode(LL) = BinaryMatrixCode(Int, LL)
+function BinaryMatrixCode(B::Union{BitMatrix,Matrix{Bool}})
+    uB = unique(B, 1)
+    uB = sortrows(uB, lt=isless_GrRevLex)
+    max_idx = find(subset_rows(uB) .== 0)
+    return BinaryMatrixCode(uB, max_idx)
+end
+function BinaryMatrixCode(CC::AbstractFiniteSetCollection)
+    return BinaryMatrixCode(collect(CC))
+end
+
+### REQUIRED FUNCTIONS: BinaryMatrixCode
+
+# CombinatorialCode(::Type{BinaryMatrixCode}, args...) = BinaryMatrixCode(args...)
+
+vertices(CC::BinaryMatrixCode{T}) where {T} = Vector{T}(1:size(CC.C,2))
+
+### OVERRIDE FUNCTIONS: BinaryMatrixCode
+
+# since BMC is immutable, so long as every constructor applies the same sorting
+# to the rows, this is enough of a check.
+==(C1::BinaryMatrixCode, C2::BinaryMatrixCode) = C1.C == C2.C
+
+function in(sigma::Union{BitVector,Vector{Bool}}, CC::BinaryMatrixCode)
+    for i = 1:size(CC.C,1)
+        if CC.C[i,:] == sigma
+            return true
+        end
+    end
+    return false
+end
+in(sigma, CC::BinaryMatrixCode) = in(set_to_binary(sigma, CC), CC)
+
+################################################################################
+### CombinatorialCode
+################################################################################
+type CombinatorialCode <: AbstractCombinatorialCode
   words::Array{CodeWord,1}   # the codewords, these are ordered by the weights (in the increasing order)
   weights::Array{Int,1} # the sizes of the codewords in the same order as the words
   MaximumWeight::Int  #
@@ -58,10 +152,10 @@ type CombinatorialCode
   end
 
 
-"""
-   CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)
-   This function is a "brute-force constructor" of a code (added as a convinience)
-"""
+  """
+     CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)
+     This function is a "brute-force constructor" of a code (added as a convinience)
+  """
   function CombinatorialCode(words::Array{CodeWord,1}, vertices::CodeWord)
     Nwords=length(words);
     if Nwords==0; return CombinatorialCode([]); end
@@ -76,34 +170,28 @@ type CombinatorialCode
 
 end
 
-###############################################################################################
+### REQUIRED FUNCTIONS: CombinatorialCode
 
-#################
-# ITERATION
-#################
-function start(CC::CombinatorialCode)
-  return 1
-end
-function next(CC::CombinatorialCode, state)
-  return (CC.words[state], state+1)
-end
-function done(CC::CombinatorialCode, state)
-  return state > length(CC.words)
-end
-function eltype(::CombinatorialCode)
-  return CodeWord
-end
-function eltype(::Type{CombinatorialCode})
-  return CodeWord
-end
-function length(CC::CombinatorialCode)
-  return length(CC.words)
-end
+#TODO rename CC and create CombinatorialCode function
 
+vertices(CC::CombinatorialCode) = CC.vertices
 
+### OTHER FUNCTIONS: CombinatorialCode
 
 # This is a function that detects if the code has the empty set:
 HasEmptySet(code::CombinatorialCode)=in(emptyset,code)
+
+### ITERATION: CombinatorialCode
+###### Iteration over all codewords
+start(CC::CombinatorialCode) = 1
+next(CC::CombinatorialCode, state) = (CC.words[state], state+1)
+done(CC::CombinatorialCode, state) = state > length(CC.words)
+eltype(::CombinatorialCode) = CodeWord
+eltype(::Type{CombinatorialCode}) = CodeWord
+length(CC::CombinatorialCode) = length(CC.words)
+
+###### Iteration over maximal codewords
+#TODO figure out maximal codeword iteration
 
 
 
@@ -171,7 +259,6 @@ Usage: C1=transpose(C)
 or, (same result)
        C1=C'
 """
-
 function transpose(CC::CombinatorialCode)::CombinatorialCode
           BA=BitArrayOfACombinatorialCode(CC);
           return CombinatorialCode(BA.BinaryMatrix')

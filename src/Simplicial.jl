@@ -7,7 +7,8 @@ import Base: in, ==, <=, show, push!, transpose,
              start, next, done, eltype, length
 
 map(include,
-    ["ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
+    [joinpath("utilities","auxiliaryoperations.jl"),
+     "ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
      "CombinatorialCodes/CombinatorialCodes.jl",
      "CombinatorialCodes/BernoulliRandomCode.jl",
      "CombinatorialCodes/NeuralRing.jl",
@@ -32,8 +33,10 @@ map(include,
      "utilities/fvector.jl",
      "DirectedComplexes/DirectedComplex.jl", "DirectedComplexes/Posets.jl"
      ])
-export CodeWord, emptyset, TheIntegerType, PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType
-export CombinatorialCode, BitArrayOfACombinatorialCode, BernoulliRandomCode, transpose, HasEmptySet, isvoid, isirrelevant, in, ==
+
+# For ease of reading/updating, export statements are being moved to the files
+# where the types/methods are defined.
+export BernoulliRandomCode, isvoid, isirrelevant, in, ==
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF, PseudoMonomialType
