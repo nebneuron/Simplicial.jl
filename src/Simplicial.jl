@@ -1,8 +1,11 @@
 __precompile__(true)
 module Simplicial
-using Combinatorics 
-import Base.in, Base.==, Base.<=, Base.show, Base.push!, Base.transpose
-import Base: start, next, done, eltype, length
+
+using Combinatorics, IterTools
+
+import Base: in, ==, <=, show, push!, transpose,
+             start, next, done, eltype, length
+
 map(include,
     ["ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
      "CombinatorialCodes/CombinatorialCodes.jl",
