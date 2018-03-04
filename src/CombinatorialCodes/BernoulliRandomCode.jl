@@ -1,3 +1,5 @@
+export BernoulliRandomCode
+
 """
 function BernoulliRandomCode(N,Nwords,p)::CombinatorialCode
 This function creates a boolean N x Nwords matrix of i.i.d. Bernoulli entries with probalbility p

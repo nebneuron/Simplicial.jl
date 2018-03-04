@@ -36,7 +36,7 @@ map(include,
 
 # For ease of reading/updating, export statements are being moved to the files
 # where the types/methods are defined.
-export BernoulliRandomCode, isvoid, isirrelevant, in, ==
+export isvoid, isirrelevant, in, ==
 export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF, PseudoMonomialType
