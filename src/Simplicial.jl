@@ -26,7 +26,7 @@ map(include,
      "utilities/function_show.jl", # This is a function for dysplaying the underlying objects. Currently needs to be expanded to all the types
      "plotting/PlottingFunctions.jl",
      "utilities/fvector.jl",
-     "DirectedComplexes/DirectedComplex.jl", "DirectedComplexes/Posets.jl",  
+     "DirectedComplexes/DirectedComplex.jl", "DirectedComplexes/Posets.jl",  "utilities/EulerCharacteristic.jl",
      "utilities/subset_of_a_sequence.jl", "utilities/IntersectionsOfSequences.jl",
       "utilities/function_in.jl"
      ])
@@ -45,5 +45,5 @@ export start, next, done, eltype, length
 export cham
 # definitions related to directed complexes
 export DirectedCodeword, issubsequence, subset_of_a_sequence, IntersectionsOfSequences, DirectedComplex, Matrix2Permutations, EmptyDirectedCodeword
-export GradedPoset, BoundaryOperator
+export GradedPoset, BoundaryOperator, EulerCharacteristic
 end
