@@ -36,8 +36,8 @@ map(include,
 
 # For ease of reading/updating, export statements are being moved to the files
 # where the types/methods are defined.
-export isvoid, isirrelevant, in, ==
-export SimplicialComplex, BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
+export in, ==
+export BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF, PseudoMonomialType
 export AIMC_minus_C, link_AIMC_minus_C

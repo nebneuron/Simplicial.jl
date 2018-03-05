@@ -24,8 +24,8 @@ end
 """
     BinaryMatrixCode{T<:Integer}
 
-A collection of subsets of [n] = {1,...,n}. Codewords are stored as binary row
-vectors in a `BitMatrix`. The parameter `T` specifies the type of codewords
+A collection of subsets of ``[n] = {1,...,n}``. Codewords are stored as binary
+row vectors in a `BitMatrix`. The parameter `T` specifies the type of codewords
 returned by iteration; codewords are represented as `Vector{T}` objects. When
 `T` is not explicitly defined anywhere, default value is `Int`.
 
@@ -36,7 +36,7 @@ operation which changes a code will construct a new object.
 
 `BinaryMatrixCode([Int], itr)` Assumes the argument is an iterable
 collection, where each element is itself an iterable collection, containing only
-positive integers. Also, `length(unique(itr))` must return a finite integer. If
+positive integers. Also, `length(unique(itr))` must return a finite integer.
 
 `BinaryMatrixCode([Int], binary_matrix)` Accepts a `BitMatrix` or `Matrix{Bool}`
 argument and interprets rows as codewords.
@@ -74,7 +74,7 @@ end
 
 vertices(CC::BinaryMatrixCode{T}) where {T} = Vector{T}(1:size(CC.C,2))
 
-### OVERRIDE FUNCTIONS: BinaryMatrixCode
+### OTHER FUNCTIONS: BinaryMatrixCode
 
 # since BMC is immutable, so long as every constructor applies the same sorting
 # to the rows, this is enough of a check.
@@ -90,9 +90,25 @@ function in(sigma::Union{BitVector,Vector{Bool}}, CC::BinaryMatrixCode)
 end
 in(sigma, CC::BinaryMatrixCode) = in(set_to_binary(sigma, CC), CC)
 
+link(C::BinaryMatrixCode, sigma, tau=[]) = BinaryMatrixCode([setdiff(c, sigma) for c in filter(x -> issubset(sigma, x) && (isempty(tau) || isempty(intersect(tau, x))), C)])
+
 ################################################################################
 ### CombinatorialCode
 ################################################################################
+"""
+    CombinatorialCode
+
+A collection of subsets of ``[n] = {1,...,n}``. Codewords are stored as
+[`CodeWord`](@ref) objects in an array.
+
+# Constructors
+
+    CombinatorialCode(ListOfWords::Vector, [vertices::CodeWord])
+
+`ListOfWords` must be a vector of iterable objects (such as `Vector`s)
+containing positive integers. Repeated codewords will be discarded.
+
+"""
 type CombinatorialCode <: AbstractCombinatorialCode
   words::Array{CodeWord,1}   # the codewords, these are ordered by the weights (in the increasing order)
   weights::Array{Int,1} # the sizes of the codewords in the same order as the words
@@ -167,7 +183,6 @@ type CombinatorialCode <: AbstractCombinatorialCode
     if !issubset(collected_vertices,vertices); error(" the union of vertices in the words should be a subset of the vertices field"); end
     new(words,weights,MaximumWeight,Minimumweight,Nwords,vertices)
   end
-
 end
 
 ### REQUIRED FUNCTIONS: CombinatorialCode
@@ -180,6 +195,26 @@ vertices(CC::CombinatorialCode) = CC.vertices
 
 # This is a function that detects if the code has the empty set:
 HasEmptySet(code::CombinatorialCode)=in(emptyset,code)
+
+isvoid(code::CombinatorialCode)=(length(code.words)==0)
+
+isirrelevant(code::CombinatorialCode)=(code.words==[emptyset])
+
+"""
+    link(code, sigma, tau=[])
+
+Compute the link of the "on" set `sigma` and the "off" set `tau` in `code`,
+defined by
+
+``link_{σ,τ}(C) = {ρ ⊆ [n] : ρ ∩ σ = ρ ∩ τ = ∅, ρ ∪ σ ∈ C}``
+"""
+function link(C::CombinatorialCode, sigma, tau=[])
+  new_words = filter(c -> issubset(sigma, c) && (isempty(tau) || isempty(intersect(tau, c))), C)
+  if isempty(new_words)
+    println("ERROR!! $sigma is not a sub-codeword, and/or ($sigma,$tau) is a combinatorial relation")
+  end
+  return CombinatorialCode([setdiff(c, sigma) for c in new_words])
+end
 
 ### ITERATION: CombinatorialCode
 ###### Iteration over all codewords

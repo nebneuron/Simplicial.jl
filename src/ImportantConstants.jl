@@ -2,7 +2,8 @@
 # This definition determines the behavior and performance of all the other functions and types
 export CodeWord, emptyset, TheIntegerType,
        PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType,
-       AbstractFiniteSetCollection, MaximalSetIterator, facets, max
+       AbstractFiniteSetCollection, MaximalSetIterator, facets, max,
+       isvoid, isirrelevant
 
 # This is an important choice (from performance perspective)
 "  TheIntegerType is the integer type that is used for enumerating the vertices of combinatorial codes and simplicial complexes"
@@ -61,6 +62,20 @@ function matrix_form(C::AbstractFiniteSetCollection)
     end
     return M
 end
+
+"""
+    isvoid(collection)
+
+`true` if the collection has no elements
+"""
+isvoid(C::AbstractFiniteSetCollection) = length(C) == 0
+
+"""
+    isirrelevant
+
+`true` if the collection contains only the empty set.
+"""
+isirrelevant(C::AbstractFiniteSetCollection) = length(C) == 1 && [] in C
 
 ################################################################################
 ### Iteration over maximal sets
