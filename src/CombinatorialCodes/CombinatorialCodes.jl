@@ -64,9 +64,6 @@ function BinaryMatrixCode(B::Union{BitMatrix,Matrix{Bool}})
     max_idx = find(subset_rows(uB) .== 0)
     return BinaryMatrixCode(uB, max_idx)
 end
-function BinaryMatrixCode(CC::AbstractFiniteSetCollection)
-    return BinaryMatrixCode(collect(CC))
-end
 
 ### REQUIRED FUNCTIONS: BinaryMatrixCode
 
