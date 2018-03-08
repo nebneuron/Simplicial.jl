@@ -15,12 +15,12 @@ map(include,
      "SimplicialComplexes/SimplicialComplex.jl",
      "SimplicialComplexes/ExampleSimplicialComplexes.jl", # Some examples of simplicial complexes
      "utilities/cham.jl",
-     "utilities/is_void_or_irrelevant.jl",          # This defines functions isvoid and isirrelevant on simplicial complexes and codes
-     "utilities/function_in.jl",     # This is a simple function that checks a codeword membership in a code.
+     # "utilities/is_void_or_irrelevant.jl",          # This defines functions isvoid and isirrelevant on simplicial complexes and codes
+     # "utilities/function_in.jl",     # This is a simple function that checks a codeword membership in a code.
      "utilities/SC2CC_and_CC2SC.jl", # These are functions that transform between the SimplicialComplex and CombinatorialCode types
-     "utilities/CC_and_SC_compare_functions.jl",
+     # "utilities/CC_and_SC_compare_functions.jl", # == operator defined together with types
      "SimplicialComplexes/Alexander_dual_function.jl",
-     "utilities/link_function_SC_and_CC.jl",
+     # "utilities/link_function_SC_and_CC.jl",
      "utilities/del_function_SC_and_CC.jl",
      "utilities/DeleteRedundantFacets!.jl",
      "utilities/function_Bicomplex.jl",

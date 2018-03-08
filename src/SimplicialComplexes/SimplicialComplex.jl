@@ -17,7 +17,8 @@ AASC`, follow these steps:
 
  1. Define `vertices(K::NewType)` to return a vector of the vertex type of
  `NewType`.
- 2. Define the methods for iterating over the _facets_ of `K`, using the
+ 2. Define `SimplicialComplex(::Type{NewType}, args...; kwargs...) = NewType(args...; kwargs...)`
+ 3. Define the methods for iterating over the _facets_ of `K`, using the
  following method signatures:
      * `start(maxK::MaximalSetIterator{NewType})`
      * `next(maxK::MaximalSetIterator{NewType}, state)`
@@ -41,6 +42,20 @@ methods/features is handled automatically (though perhaps inefficiently):
 
 """
 abstract type AbstractAbstractSimplicialComplex <: AbstractFiniteSetCollection end
+
+"""
+    SimplicialComplex([CompressedFacetList], args...; kwargs...)
+
+Construct a simplicial complex of the specified Julia type from the given arguments. By default, this uses the [`FacetList`](@ref) type.
+
+This function serves two purposes: the first is user experience;
+`SimplicialComplex` is easier to remember and more meaningful to the average
+user than the names of concrete objects (which typically refer to details of how
+the object is stored in memory). The second is to make generic methods easier to
+write, minimizing the amount of work necessary to implement a new object type.
+See [`AbstractAbstractSimplicialComplex`](@ref) for more details.
+"""
+SimplicialComplex(args...; kwargs...) = SimplicialComplex(CompressedFacetList, args...; kwargs...)
 
 ################################################################################
 ### generic implementation of basic operations
@@ -84,6 +99,79 @@ function link(K::AbstractAbstractSimplicialComplex, sigma)
     end
     return SimplicialComplex(typeof(K), newFacets)
 end
+
+"""
+    del(K, tau)
+
+The deletion of `tau` from `K`. This is the set faces in `K` which are _not_
+cofaces of `tau`. For "deletion" to mean "faces which do not intersect `tau`",
+compute the complement of `tau` in `K`'s vertex set and use `res` to restrict to
+that set.
+
+``del_τ(K) = {σ ∈ K : τ ⊏̸ σ}``
+"""
+function del(K::AbstractAbstractSimplicialComplex, tau)
+    return SimplicialComplex(typeof(K), map(F -> setdiff(F, tau), facets(K)))
+end
+
+"""
+    res(K, Vprime)
+
+The restriction of `K` to `Vprime`.
+
+``res_{V'}(K) = {σ ∈ K : σ ⊆ V'} = {σ ∩ V' : σ ∈ K}``
+"""
+function res(K::AbstractAbstractSimplicialComplex, Vprime)
+    return SimplicialComplex(typeof(K), map(F -> intersect(F,Vprime), facets(K)))
+end
+
+"""
+    add(K::AbstractAbstractSimplicialComplex, sigma)
+
+Add face `sigma` to simplicial complex `K`
+"""
+function add(sigma, K::AbstractAbstractSimplicialComplex)
+    if sigma in K
+        return K
+    else
+        return SimplicialComplex(typeof(K), chain([sigma], facets(K)))
+    end
+end
+
+function in(sigma, K::AbstractAbstractSimplicialComplex)
+    for f in facets(K)
+        if issubset(sigma, f)
+            return true
+        end
+    end
+    return false
+end
+
+### ITERATION: generic iteration over _all_ faces of a complex
+function length(K::AbstractAbstractSimplicialComplex)
+    ans = 0
+    for Fs in combinations(collect(facets(K)))
+        ans += (-1)^(length(Fs)-1) * 2^length(intersect(Fs...))
+    end
+    return ans
+end
+function start(K::AbstractAbstractSimplicialComplex)
+    # maxK = [K.vertices[K.facets[i,:]] for i = 1:size(K.facets,1)]
+    # maxK = collect(facets(K))
+    all_combos = map(combinations,facets(K))
+    V = eltype(vertices(K))
+    # combinations() does not include the empty set, so we'll add it in below
+
+    # Warning! This is grossly inefficient. Don't use with overly large
+    # complexes, or write your own, more efficient method!
+    itr = distinct(chain([Vector{V}(0)], all_combos...))
+    return (itr, start(itr))
+end
+function next(K::AbstractAbstractSimplicialComplex, state)
+    (f, st) = next(state[1], state[2])
+    return (f, (state[1], st))
+end
+done(K::AbstractAbstractSimplicialComplex, state) = done(state[1], state[2])
 
 ################################################################################
 ### type SimplicialComplex
