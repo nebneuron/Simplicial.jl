@@ -24,8 +24,9 @@ AASC`, follow these steps:
      * `next(maxK::MaximalSetIterator{NewType}, state)`
      * `done(maxK::MaximalSetIterator{NewType}, state)`
 
-For more information, see the Iteration section of the Julia documentation and
-the [`MaximalSetIterator`](@ref) type.
+For more information, see the [Iteration
+section](https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1)
+of the Julia documentation and the [`MaximalSetIterator`](@ref) type.
 
 With these functions defined, a generic implementation of the following
 methods/features is handled automatically (though perhaps inefficiently):
@@ -179,6 +180,91 @@ function next(K::AbstractAbstractSimplicialComplex, state)
     return (f, (state[1], st))
 end
 done(K::AbstractAbstractSimplicialComplex, state) = done(state[1], state[2])
+
+################################################################################
+### type CompressedFacetList
+################################################################################
+
+"""
+    CompressedFacetList{T}
+
+A simplicial complex, stored as a `BitMatrix` representing a list of its facets.
+Low storage, high computation time (generally). The vertices are of type `T`.
+
+# Constructors
+
+    CompressedFacetList(itr, V=union(itr...); sort_V=false)
+    CompressedFacetList(C::AbstractFiniteSetCollection; sort_V=false)
+
+Uses the maximal elements of `itr` or `C` as facets. Optionally, `V` can be specified
+(if not all vertices necessarily appear as faces). If `sort_V` is true, will
+apply `sort!` to `V`.
+
+
+
+"""
+struct CompressedFacetList{T} <: AbstractAbstractSimplicialComplex
+    vertices::Vector{T}
+    facets::BitMatrix # rows as facets
+
+    ### CONSTRUCTORS: CompressedFacetList
+    # Enforce sorting of facets
+    CompressedFacetList(V::Vector{T}, B::BitMatrix) where {T} = new(V, sortrows(B, lt=isless_GrRevLex))
+    #
+    function CompressedFacetList(Fs, V=collect(union(Fs...)); sort_V=false)
+        uFs = unique(Fs)
+        # V = union(uFs...)
+        if sort_V
+            sort!(V)
+        end
+        B = list_to_bitmatrix(uFs, V)
+        max_idx = subset_rows(B) .== 0
+        B = B[max_idx, :]
+        B = sortrows(B, lt=isless_GrRevLex)
+        new(V,B)
+    end
+    CompressedFacetList(C::AbstractFiniteSetCollection; sort_V=false) = CompressedFacetList(facets(C), vertices(C); sort_V=sort_V)
+    function CompressedFacetList(CC::BinaryMatrixCode)
+        V = collect(vertices(CC))
+        B = CC.C[CC.max_idx,:]
+        new(V,B)
+    end
+end
+
+### REQUIRED FUNCTIONS: CompressedFacetList
+
+SimplicialComplex(::Type{T}, args...; kwargs...) where {T<:CompressedFacetList} = CompressedFacetList(args...; kwargs...)
+
+vertices(K::CompressedFacetList) = K.vertices
+
+### OTHER FUNCTIONS: CompressedFacetList
+
+==(K1::CompressedFacetList, K2::CompressedFacetList) = vertices(K1) == vertices(K2) && K1.facets == K2.facets
+
+function in(sigma::Union{BitVector,Vector{Bool}}, K::CompressedFacetList)
+    wt = dot(sigma,sigma)
+    intersections = K.facets * sigma
+    return any(intersections .== wt)
+end
+in(sigma, K::CompressedFacetList) = in(set_to_binary(sigma, K), K)
+
+### ITERATION: CompressedFacetList
+###### Iteration over all faces: CompressedFacetList
+eltype(::Type{CompressedFacetList{T}}) where {T} = Vector{T}
+function length(K::CompressedFacetList)
+    ans = 0
+    for s in combinations(1:size(K.facets,1))
+        ans += (-1)^(length(s) - 1) * 2^(sum(all(K.facets[s,:], 1)))
+    end
+    return ans
+end
+
+###### Iteration over facets: CompressedFacetList
+length(maxK::MaximalSetIterator{CompressedFacetList{T}}) where {T} = size(maxK.collection.facets,1)
+start{T}(maxK::MaximalSetIterator{CompressedFacetList{T}}) = 1
+next{T}(maxK::MaximalSetIterator{CompressedFacetList{T}}, state) = (maxK.collection.vertices[maxK.collection.facets[state,:]], state+1)
+done{T}(maxK::MaximalSetIterator{CompressedFacetList{T}}, state) = state > size(maxK.collection.facets,1)
+
 
 ################################################################################
 ### type FacetList
