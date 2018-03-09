@@ -21,7 +21,7 @@ map(include,
      # "utilities/CC_and_SC_compare_functions.jl", # == operator defined together with types
      "SimplicialComplexes/Alexander_dual_function.jl",
      # "utilities/link_function_SC_and_CC.jl",
-     "utilities/del_function_SC_and_CC.jl",
+     # "utilities/del_function_SC_and_CC.jl",
      "utilities/DeleteRedundantFacets!.jl",
      "utilities/function_Bicomplex.jl",
      "utilities/void_and_irrelevant_complexes_and_codes.jl",

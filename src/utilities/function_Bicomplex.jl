@@ -2,7 +2,7 @@
 """ This function computes the bicomplex of a combinatorial code
 Usage: BDelta= Bicomplex(C);
 """
-function Bicomplex(CC::CombinatorialCode)::SimplicialComplex
+function Bicomplex(CC::CombinatorialCode)
     ## Collect the union of original codewords and its complement's dual
   NewWords=  Array{Array{Int,1},1}([]);
     for i=1:CC.Nwords

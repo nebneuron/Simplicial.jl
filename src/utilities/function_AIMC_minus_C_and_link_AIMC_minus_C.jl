@@ -12,8 +12,9 @@ end
 ## where sigma are simplices in AIMC_minus_C(C)
 function link_AIMC_minus_C(C::Array{Any,1})
     links=[]
+    K = SimplicialComplex(C)
     for i=1:length(AIMC_minus_C(C).words)
-        push!(links,link(SimplicialComplex(C),(AIMC_minus_C(C).words)[i]))
+        push!(links,link(K,(AIMC_minus_C(C).words)[i]))
     end
     links
 end

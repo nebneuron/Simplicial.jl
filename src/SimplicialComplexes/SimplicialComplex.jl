@@ -1,7 +1,7 @@
 
 export AbstractAbstractSimplicialComplex, SimplicialComplex,
        dim, dimension, link, del, res, void,
-       CompressedFacetList
+       FacetList, FacetMatrix
 
 """
     abstract type AbstractAbstractSimplicialComplex
@@ -44,9 +44,13 @@ methods/features is handled automatically (though perhaps inefficiently):
 abstract type AbstractAbstractSimplicialComplex <: AbstractFiniteSetCollection end
 
 """
-    SimplicialComplex([CompressedFacetList], args...; kwargs...)
+    SimplicialComplex([FacetList], args...; kwargs...)
 
-Construct a simplicial complex of the specified Julia type from the given arguments. By default, this uses the [`FacetList`](@ref) type.
+Construct a simplicial complex of the specified Julia type from the given
+arguments. By default, this uses the [`FacetList`](@ref) type. For small
+complexes, the specific type doesn't matter, but when the number of vertices,
+dimension, and/or number of facets gets large, there are tradeoffs in size in
+memory for performance of various operations.
 
 This function serves two purposes: the first is user experience;
 `SimplicialComplex` is easier to remember and more meaningful to the average
@@ -55,14 +59,15 @@ the object is stored in memory). The second is to make generic methods easier to
 write, minimizing the amount of work necessary to implement a new object type.
 See [`AbstractAbstractSimplicialComplex`](@ref) for more details.
 """
-SimplicialComplex(args...; kwargs...) = SimplicialComplex(CompressedFacetList, args...; kwargs...)
+SimplicialComplex(args...; kwargs...) = SimplicialComplex(FacetList, args...; kwargs...)
 
 ################################################################################
 ### generic implementation of basic operations
 ################################################################################
 function show(io::IO, K::AbstractAbstractSimplicialComplex)
     println(io, typeof(K))
-    println(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices")
+    println(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
+    println(io, "    V = {$(join(vertices(K), ", "))}")
     println(io, "max K = {$(join(facets(K),", "))}")
 end
 
@@ -73,7 +78,8 @@ end
 
 The dimension of `K`, defined as the maximum size of a face of `K` minus 1. If
 `K` is the void complex (i.e. `K` has no faces), returns `-2` (for type
-stability reasons; mathematically a sensible value would be `-Inf`).
+stability (this function always returns an `Int`); mathematically a sensible
+value would be `-Inf`).
 """
 dim(K::AbstractAbstractSimplicialComplex) = void(K) ? -2 : maximum(map(length, facets(K))) - 1
 """
@@ -84,21 +90,13 @@ Alias for [`dim`](@ref)
 const dimension = dim
 
 """
-    link(K, sigma)
+    link(K::SimplicialComplex, sigma)
 
 The link of `sigma` in `K`.
 
 ``link_σ(K) = {τ ∈ K : σ ∩ τ = ∅, σ ∪ τ ∈ K}``
 """
-function link(K::AbstractAbstractSimplicialComplex, sigma)
-    newFacets = Vector()
-    for F in facets(K)
-        if issubset(sigma, F)
-            push!(newFacets, setdiff(F,sigma))
-        end
-    end
-    return SimplicialComplex(typeof(K), newFacets)
-end
+link(K::AbstractAbstractSimplicialComplex, sigma) = SimplicialComplex(typeof(K), [setdiff(F, sigma) for F in filter(x -> issubset(sigma, x), facets(K))])
 
 """
     del(K, tau)
@@ -111,7 +109,17 @@ that set.
 ``del_τ(K) = {σ ∈ K : τ ⊏̸ σ}``
 """
 function del(K::AbstractAbstractSimplicialComplex, tau)
-    return SimplicialComplex(typeof(K), map(F -> setdiff(F, tau), facets(K)))
+    new_facets = Vector{eltype(K)}()
+    for F in facets(K)
+        if issubset(tau, F)
+            for t in tau
+                push!(new_facets, setdiff(F, [t]))
+            end
+        else
+            push!(new_facets,F)
+        end
+    end
+    return SimplicialComplex(typeof(K), new_facets)
 end
 
 """
@@ -128,7 +136,8 @@ end
 """
     add(K::AbstractAbstractSimplicialComplex, sigma)
 
-Add face `sigma` to simplicial complex `K`
+Add face `sigma` to simplicial complex `K`. If `sigma` is already a face of `K`,
+returns `K`.
 """
 function add(sigma, K::AbstractAbstractSimplicialComplex)
     if sigma in K
@@ -156,11 +165,9 @@ function length(K::AbstractAbstractSimplicialComplex)
     return ans
 end
 function start(K::AbstractAbstractSimplicialComplex)
-    # maxK = [K.vertices[K.facets[i,:]] for i = 1:size(K.facets,1)]
-    # maxK = collect(facets(K))
     all_combos = map(combinations,facets(K))
-    V = eltype(vertices(K))
     # combinations() does not include the empty set, so we'll add it in below
+    V = eltype(vertices(K))
 
     # Warning! This is grossly inefficient. Don't use with overly large
     # complexes, or write your own, more efficient method!
@@ -174,21 +181,21 @@ end
 done(K::AbstractAbstractSimplicialComplex, state) = done(state[1], state[2])
 
 ################################################################################
-### type SimplicialComplex
+### type FacetList
 ################################################################################
 
-type SimplicialComplex
+type FacetList
     facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
     dimensions::Array{Int,1} # the dimensions of the facets
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
     Nwords::Int  # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
     vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
 
-     ## this is the constructor for the SimplicialComplex type.
+     ## this is the constructor for the FacetList type.
      ## It takes a list of Integer arrays, where each array represents a facet
      ## facets are checked for inclusions
      ## An input looks like ListOfWords=Any[[1,2,3],[2,3,4],[3,1,5],[1,2,4],[2,2,3,3]].
-    function SimplicialComplex(ListOfWords::Vector)
+    function FacetList(ListOfWords::Vector)
         if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of the void (or null) Complex
             new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)
         elseif (ListOfWords==Any[[]])||(ListOfWords==[emptyset]) #  the irrelevant complex with empty vertex set
@@ -211,17 +218,19 @@ type SimplicialComplex
     end
 end
 
-### REQUIRED FUNCTIONS: SimplicialComplex
+### REQUIRED FUNCTIONS: FacetList
 
-vertices(K::SimplicialComplex) = K.vertices
+SimplicialComplex(::Type{T}, args...; kwargs...) where {T<:FacetList} = FacetList(args...; kwargs...)
 
-### OTHER FUNCTIONS: SimplicialComplex
+vertices(K::FacetList) = K.vertices
 
-isvoid(K::SimplicialComplex)=(isempty(K.facets))
+### OTHER FUNCTIONS: FacetList
 
-isirrelevant(K::SimplicialComplex)=(K.facets==[emptyset])
+isvoid(K::FacetList)=(isempty(K.facets))
 
-function link(SC::SimplicialComplex, sigma::Set{Int})
+isirrelevant(K::FacetList)=(K.facets==[emptyset])
+
+function link(SC::FacetList, sigma::Set{Int})
     ## build an array Simplex_test, if sigma is contained in a facet, push the facet into the array
     Simplex_test=[]
     for i=1:SC.Nwords
@@ -239,15 +248,15 @@ function link(SC::SimplicialComplex, sigma::Set{Int})
     for i=1:length(Simplex_test)
         Simplex_test[i]=collect(setdiff(Simplex_test[i],sigma))
     end
-    SimplicialComplex(Simplex_test)
+    SimplicialComplex(FacetList, Simplex_test)
 end
 
-### ITERATION: SimplicialComplex
-###### Iteration over all faces: SimplicialComplex
-eltype(::Type{SimplicialComplex}) = CodeWord
+### ITERATION: FacetList
+###### Iteration over all faces: FacetList
+eltype(::Type{FacetList}) = CodeWord
 
-###### Iteration over facets: SimplicialComplex
-length(maxK::MaximalSetIterator{SimplicialComplex}) = length(maxK.collection.facets)
-start(maxK::MaximalSetIterator{SimplicialComplex}) = 1
-next(maxK::MaximalSetIterator{SimplicialComplex}) = (maxK.collection.facets[state], state+1)
-done(maxK::MaximalSetIterator{SimplicialComplex}) = state > length(maxK.collection.facets)
+###### Iteration over facets: FacetList
+length(maxK::MaximalSetIterator{FacetList}) = length(maxK.collection.facets)
+start(maxK::MaximalSetIterator{FacetList}) = 1
+next(maxK::MaximalSetIterator{FacetList}) = (maxK.collection.facets[state], state+1)
+done(maxK::MaximalSetIterator{FacetList}) = state > length(maxK.collection.facets)
