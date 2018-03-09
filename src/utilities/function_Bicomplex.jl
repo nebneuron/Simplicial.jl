@@ -10,3 +10,12 @@ function Bicomplex(CC::CombinatorialCode)
     end
     return SimplicialComplex(NewWords)
 end
+
+"""
+    polar_complex([FacetList], C)
+
+Constructs the polar complex ``Γ(C)`` for the given code.
+"""
+function polar_complex(::Type{T}, C::AbstractCombinatorialCode) where {T<:AbstractAbstractSimplicialComplex}
+end
+polar_complex(C::AbstractCombinatorialCode) = polar_complex(FacetList, C)

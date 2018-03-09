@@ -270,6 +270,11 @@ done{T}(maxK::MaximalSetIterator{CompressedFacetList{T}}, state) = state > size(
 ### type FacetList
 ################################################################################
 
+"""
+    FacetList
+
+Stores an abstract simplicial complex by storing a list of its facets.
+"""
 type FacetList
     facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
     dimensions::Array{Int,1} # the dimensions of the facets

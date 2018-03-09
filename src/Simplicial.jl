@@ -17,7 +17,7 @@ map(include,
      "utilities/cham.jl",
      # "utilities/is_void_or_irrelevant.jl",          # This defines functions isvoid and isirrelevant on simplicial complexes and codes
      # "utilities/function_in.jl",     # This is a simple function that checks a codeword membership in a code.
-     "utilities/SC2CC_and_CC2SC.jl", # These are functions that transform between the SimplicialComplex and CombinatorialCode types
+     # "utilities/SC2CC_and_CC2SC.jl", # These are functions that transform between the SimplicialComplex and CombinatorialCode types
      # "utilities/CC_and_SC_compare_functions.jl", # == operator defined together with types
      "SimplicialComplexes/Alexander_dual_function.jl",
      # "utilities/link_function_SC_and_CC.jl",
@@ -39,7 +39,6 @@ map(include,
 export in, ==
 export BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
-export  SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF, PseudoMonomialType
 export AIMC_minus_C, link_AIMC_minus_C
 export show
 export MaximalDimension, MaximalHomologicalDimension
