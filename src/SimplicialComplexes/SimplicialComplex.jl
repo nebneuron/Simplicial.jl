@@ -1,5 +1,6 @@
 
 export AbstractAbstractSimplicialComplex, SimplicialComplex,
+       vertices,
        dim, dimension, link, del, res, void,
        FacetList, FacetMatrix
 
@@ -24,9 +25,8 @@ AASC`, follow these steps:
      * `next(maxK::MaximalSetIterator{NewType}, state)`
      * `done(maxK::MaximalSetIterator{NewType}, state)`
 
-For more information, see the [Iteration
-section](https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1)
-of the Julia documentation and the [`MaximalSetIterator`](@ref) type.
+For more information, see the [Iteration](https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1)
+in the Julia documentation and the [`MaximalSetIterator`](@ref) type.
 
 With these functions defined, a generic implementation of the following
 methods/features is handled automatically (though perhaps inefficiently):
@@ -72,7 +72,7 @@ function show(io::IO, K::AbstractAbstractSimplicialComplex)
     println(io, "max K = {$(join(collect(facets(K)),", "))}")
 end
 
-==(K1::AbstractAbstractSimplicialComplex, K2::AbstractAbstractSimplicialComplex) = Set(facets(K1)) == Set(facets(K2))
+==(K1::AbstractAbstractSimplicialComplex, K2::AbstractAbstractSimplicialComplex) = Set(map(Set,facets(K1))) == Set(map(Set,facets(K2)))
 
 """
     dim(K)
@@ -110,16 +110,18 @@ that set.
 ``del_τ(K) = {σ ∈ K : τ ⊏̸ σ}``
 """
 function del(K::AbstractAbstractSimplicialComplex, tau)
-    new_facets = Vector{eltype(K)}()
-    for F in facets(K)
-        if issubset(tau, F)
-            for t in tau
-                push!(new_facets, setdiff(F, [t]))
-            end
-        else
-            push!(new_facets,F)
-        end
-    end
+    # #BUG might need to cast _elements_ of tau to appropriate type...
+    # new_facets = Vector{eltype(K)}()
+    # for F in facets(K)
+    #     if issubset(tau, F)
+    #         for t in tau
+    #             push!(new_facets, setdiff(F, [t]))
+    #         end
+    #     else
+    #         push!(new_facets,F)
+    #     end
+    # end
+    new_facets = vcat([issubset(tau, F) ? [setdiff(F,t) for t in tau] : [F] for F in facets(K)]...)
     return SimplicialComplex(typeof(K), new_facets)
 end
 
@@ -220,9 +222,8 @@ struct FacetMatrix{T} <: AbstractAbstractSimplicialComplex
     end
 end
 function FacetMatrix(Fs, V=collect(union(Fs...)); sort_V=false)
-    T = typeof(V)
+    T = eltype(V)
     uFs = unique(Fs)
-    # V = union(uFs...)
     V = collect(V) # ensure V is an array
     if sort_V
         sort!(V)
@@ -231,7 +232,7 @@ function FacetMatrix(Fs, V=collect(union(Fs...)); sort_V=false)
     max_idx = subset_rows(B) .== 0
     B = B[max_idx, :]
     B = sortrows(B, lt=isless_GrRevLex)
-    new{T}(V,B)
+    FacetMatrix{T}(V,B)
 end
 function FacetMatrix(C::AbstractFiniteSetCollection; sort_V=false)
     #TODO this can be handled better using kwargs for inner constructor
@@ -239,9 +240,9 @@ function FacetMatrix(C::AbstractFiniteSetCollection; sort_V=false)
 end
 function FacetMatrix(CC::BinaryMatrixCode)
     V = collect(vertices(CC))
-    T = typeof(V)
+    T = eltype(V)
     B = CC.C[CC.max_idx,:]
-    new{T}(V,B)
+    FacetMatrix{T}(V,B)
 end
 
 ### REQUIRED FUNCTIONS: FacetMatrix
@@ -252,7 +253,8 @@ vertices(K::FacetMatrix) = K.vertices
 
 ### OTHER FUNCTIONS: FacetMatrix
 
-==(K1::FacetMatrix, K2::FacetMatrix) = vertices(K1) == vertices(K2) && K1.facets == K2.facets
+# ==(K1::FacetMatrix, K2::FacetMatrix) = vertices(K1) == vertices(K2) && K1.facets == K2.facets
+# no guarantee that vertex sets are sorted the same way
 
 function in(sigma::Union{BitVector,Vector{Bool}}, K::FacetMatrix)
     wt = dot(sigma,sigma)
@@ -286,7 +288,8 @@ done{T}(maxK::MaximalSetIterator{FacetMatrix{T}}, state) = state > size(maxK.col
 """
     FacetList
 
-Stores an abstract simplicial complex by storing a list of its facets.
+Stores an abstract simplicial complex on vertex set ``{1,..,n}`` by storing a
+list of its facets.
 """
 type FacetList <: AbstractAbstractSimplicialComplex
     facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
