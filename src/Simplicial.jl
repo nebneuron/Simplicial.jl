@@ -1,7 +1,7 @@
 __precompile__(true)
 module Simplicial
 
-using Combinatorics, IterTools, Iterators
+using Combinatorics, IterTools
 
 import Base: in, ==, <=, show, push!, transpose,
              start, next, done, eltype, length,

@@ -49,7 +49,7 @@ redundant faces; to get unique rows from the result `B`, use `unique(B, 1)`
 function list_to_bitmatrix(L, V=collect(union(L...)))
     B = falses(length(L), length(V))
     for (i, l) in enumerate(L)
-        B[i, indexin(l, V)] = true
+        B[i, indexin(collect(l), V)] = true
     end
     return B
 end
