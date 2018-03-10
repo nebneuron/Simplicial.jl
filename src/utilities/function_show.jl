@@ -1,8 +1,13 @@
 " Show a single CodeWord"
 function show(io::IO, c::CodeWord)
-if isempty(c) print("emptyset")
-  else for i in sort(collect(c)); print(Int(i)); print(" ");end
-end
+  if isempty(c)
+    print(io, "emptyset")
+  else
+    print(io, join(sort(collect(c)), " "))
+  end
+# if isempty(c) print("emptyset")
+#   else for i in sort(collect(c)); print(Int(i)); print(" ");end
+# end
 end
 
 

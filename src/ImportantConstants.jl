@@ -46,7 +46,7 @@ abstract type AbstractFiniteSetCollection end
 
 # generic, inefficient equality operator. Depends on iteration functions defined
 # for C1 and C2
-==(C1::AbstractFiniteSetCollection, C2::AbstractFiniteSetCollection) = Set(C1) == Set(C2)
+==(C1::AbstractFiniteSetCollection, C2::AbstractFiniteSetCollection) = Set(map(Set,C1)) == Set(map(Set,C2))
 
 """
     matrix_form(collection)

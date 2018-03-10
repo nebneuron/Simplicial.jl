@@ -313,28 +313,37 @@ end
 
 ### ITERATION: CodeWordList
 ###### Iteration over all codewords
-start(CC::CodeWordList) = 1
-next(CC::CodeWordList, state) = (CC.words[state], state+1)
-done(CC::CodeWordList, state) = state > length(CC.words)
 eltype(::CodeWordList) = CodeWord
 eltype(::Type{CodeWordList}) = CodeWord
 length(CC::CodeWordList) = length(CC.words)
+start(CC::CodeWordList) = 1
+next(CC::CodeWordList, state) = (CC.words[state], state+1)
+done(CC::CodeWordList, state) = state > length(CC.words)
 
 ###### Iteration over maximal codewords
 function length(maxC::MaximalSetIterator{CodeWordList})
-    C = maxC.collection
-    return length(filter(c -> (length(filter(x -> issubset(c, x), C)) == 0),C))
+    C = maxC.collection.words
+    s = 0 # number of words which are subsets of another word
+    for c1 in C
+        for c2 in C
+            if c1 != c2 && issubset(c1, c2)
+                s += 1
+                break # exit inner loop as soon as we find a set containing c1
+            end
+        end
+    end
+    return length(C) - s
 end
 function start(maxC::MaximalSetIterator{CodeWordList})
     C = maxC.collection
-    itr = filter(c -> (length(filter(x -> issubset(c, x), C)) == 0),C)
+    itr = filter(c1 -> all(map(c2 -> (c1 == c2) || !issubset(c1, c2),C)),C)
     return (itr, start(itr))
 end
 function next(maxC::MaximalSetIterator{CodeWordList}, state)
     (c, st) = next(state[1], state[2])
     return (c, (state[1], st))
 end
-done(maxC::MaximalSetIterator{CodeWordList}, state) = done(sate[1], state[2])
+done(maxC::MaximalSetIterator{CodeWordList}, state) = done(state[1], state[2])
 
 
 

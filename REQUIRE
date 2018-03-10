@@ -8,3 +8,4 @@ julia 0.5
 Combinatorics
 Plotly
 IterTools
+Iterators
