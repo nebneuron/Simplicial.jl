@@ -39,7 +39,7 @@ const CanonicalForm=Array{PseudoMonomial,1}
      This computes the canonical form of a neural ideal for the combinatorial code C
      Example Usage:   CF=CanonicalForm(C)
 """
-function CanonicalForm(C::CombinatorialCode)::CanonicalForm
+function CanonicalForm(C::AbstractCombinatorialCode)::CanonicalForm
     # First, convert to the binary representation:
     if isvoid(C)
         error("This code is void, i.e. does not contain any codewords")

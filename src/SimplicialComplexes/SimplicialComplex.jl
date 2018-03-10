@@ -69,7 +69,7 @@ function show(io::IO, K::AbstractAbstractSimplicialComplex)
     println(io, typeof(K))
     println(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
     println(io, "    V = {$(join(vertices(K), ", "))}")
-    println(io, "max K = {$(join(facets(K),", "))}")
+    println(io, "max K = {$(join(collect(facets(K)),", "))}")
 end
 
 ==(K1::AbstractAbstractSimplicialComplex, K2::AbstractAbstractSimplicialComplex) = Set(facets(K1)) == Set(facets(K2))
@@ -82,7 +82,7 @@ The dimension of `K`, defined as the maximum size of a face of `K` minus 1. If
 stability (this function always returns an `Int`); mathematically a sensible
 value would be `-Inf`).
 """
-dim(K::AbstractAbstractSimplicialComplex) = void(K) ? -2 : maximum(map(length, facets(K))) - 1
+dim(K::AbstractAbstractSimplicialComplex) = isvoid(K) ? -2 : maximum(map(length, facets(K))) - 1
 """
     dimension(K)
 
@@ -200,35 +200,37 @@ Uses the maximal elements of `itr` or `C` as facets. Optionally, `V` can be spec
 (if not all vertices necessarily appear as faces). If `sort_V` is true, will
 apply `sort!` to `V`.
 
-
-
 """
 struct CompressedFacetList{T} <: AbstractAbstractSimplicialComplex
     vertices::Vector{T}
     facets::BitMatrix # rows as facets
 
-    ### CONSTRUCTORS: CompressedFacetList
-    # Enforce sorting of facets
-    CompressedFacetList(V::Vector{T}, B::BitMatrix) where {T} = new(V, sortrows(B, lt=isless_GrRevLex))
-    #
-    function CompressedFacetList(Fs, V=collect(union(Fs...)); sort_V=false)
-        uFs = unique(Fs)
-        # V = union(uFs...)
-        if sort_V
-            sort!(V)
-        end
-        B = list_to_bitmatrix(uFs, V)
-        max_idx = subset_rows(B) .== 0
-        B = B[max_idx, :]
-        B = sortrows(B, lt=isless_GrRevLex)
-        new(V,B)
+    # inner constructor to enforce sorting of facets
+    function CompressedFacetList{T}(V::Vector{T}, B::BitMatrix) where {T}
+        new{T}(V, sortrows(B, lt=isless_GrRevLex))
     end
-    CompressedFacetList(C::AbstractFiniteSetCollection; sort_V=false) = CompressedFacetList(facets(C), vertices(C); sort_V=sort_V)
-    function CompressedFacetList(CC::BinaryMatrixCode)
-        V = collect(vertices(CC))
-        B = CC.C[CC.max_idx,:]
-        new(V,B)
+end
+function CompressedFacetList(Fs, V=collect(union(Fs...)); sort_V=false)
+    T = typeof(V)
+    uFs = unique(Fs)
+    # V = union(uFs...)
+    if sort_V
+        sort!(V)
     end
+    B = list_to_bitmatrix(uFs, V)
+    max_idx = subset_rows(B) .== 0
+    B = B[max_idx, :]
+    B = sortrows(B, lt=isless_GrRevLex)
+    new{T}(V,B)
+end
+function CompressedFacetList(C::AbstractFiniteSetCollection; sort_V=false)
+    CompressedFacetList(facets(C), vertices(C); sort_V=sort_V)
+end
+function CompressedFacetList(CC::BinaryMatrixCode)
+    V = collect(vertices(CC))
+    T = typeof(V)
+    B = CC.C[CC.max_idx,:]
+    new{T}(V,B)
 end
 
 ### REQUIRED FUNCTIONS: CompressedFacetList
@@ -275,7 +277,7 @@ done{T}(maxK::MaximalSetIterator{CompressedFacetList{T}}, state) = state > size(
 
 Stores an abstract simplicial complex by storing a list of its facets.
 """
-type FacetList
+type FacetList <: AbstractAbstractSimplicialComplex
     facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
     dimensions::Array{Int,1} # the dimensions of the facets
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
@@ -349,5 +351,5 @@ eltype(::Type{FacetList}) = CodeWord
 ###### Iteration over facets: FacetList
 length(maxK::MaximalSetIterator{FacetList}) = length(maxK.collection.facets)
 start(maxK::MaximalSetIterator{FacetList}) = 1
-next(maxK::MaximalSetIterator{FacetList}) = (maxK.collection.facets[state], state+1)
-done(maxK::MaximalSetIterator{FacetList}) = state > length(maxK.collection.facets)
+next(maxK::MaximalSetIterator{FacetList}, state) = (maxK.collection.facets[state], state+1)
+done(maxK::MaximalSetIterator{FacetList}, state) = state > length(maxK.collection.facets)

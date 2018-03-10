@@ -4,11 +4,12 @@ module Simplicial
 using Combinatorics, IterTools
 
 import Base: in, ==, <=, show, push!, transpose,
-             start, next, done, eltype, length
+             start, next, done, eltype, length,
+             max
 
 map(include,
-    [joinpath("utilities","auxiliaryoperations.jl"),
-     "ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
+    ["ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
+     joinpath("utilities","auxiliaryoperations.jl"),
      "CombinatorialCodes/CombinatorialCodes.jl",
      "CombinatorialCodes/BernoulliRandomCode.jl",
      "CombinatorialCodes/NeuralRing.jl",

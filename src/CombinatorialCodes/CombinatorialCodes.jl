@@ -70,12 +70,21 @@ Compute the deletion of `sigma` from `code`, defined by
 del(C::AbstractCombinatorialCode, tau) = CombinatorialCode(typeof(C)), [setdiff(c, tau) for c in C]
 
 """
-    matrix_form(C::CombinatorialCode, [sort_by=identity, lt=isless_GrRevLex])
+    matrix_form(C::CombinatorialCode, [by=identity, lt=isless_GrRevLex])
 
 A `BitMatrix` representation of a code, with rows as codewords. Optional
 arguments are passed to `sortrows` to ensure consistent ordering of codewords.
 """
-matrix_form(C::AbstractCombinatorialCode) = sortrows(list_to_bitmatrix(C, vertices(C)); by=sort_by, lt=lt)
+matrix_form(C::AbstractCombinatorialCode; by=identity, lt=isless_GrRevLex) = sortrows(list_to_bitmatrix(C, vertices(C)), by=by, lt=lt)
+
+"""
+    transpose(C::AbstractCombinatorialCode, [by=identity, lt=isless_GrRevLex])
+
+The code obtained by transposing the matrix form of a code.
+
+Usage: `C1 = transpose(C)` or `C1 = C'`
+"""
+transpose(C::AbstractCombinatorialCode; by=identity, lt=isless_GrRevLex) = CombinatorialCode(typeof(C), transpose(matrix_form(C, by=by, lt=lt)))
 
 ################################################################################
 ### BinaryMatrixCode
@@ -266,6 +275,18 @@ type CodeWordList <: AbstractCombinatorialCode
         CodeWordList([V[bin[i,:]] for i = 1:size(bin,1)])
     end
 end
+function CodeWordList(BinaryMatrix::BitArray{2})::CombinatorialCode
+      # So far we ignore the field B.VertexTranslation
+    Nwords,Nvertices=size(BinaryMatrix);
+    if Nwords==0
+       return CombinatorialCode([])
+    else
+      ListOfWords=Array{CodeWord,1}(Nwords);
+      for i=1: Nwords; ListOfWords[i]=CodeWord(find(BinaryMatrix[i,:])); end
+      sort!(ListOfWords,by=length)
+    return  CombinatorialCode(ListOfWords,CodeWord(collect(1:Nvertices)))
+    end
+end
 
 ### REQUIRED FUNCTIONS: CodeWordList
 
@@ -354,33 +375,4 @@ function BitArrayOfACombinatorialCode(C::CodeWordList)::BitArrayOfACombinatorial
          B.BinaryMatrix[j,the_substitution]=true
          end
         return B
-end
-
-"""
-CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
-This function takes a binary matrix and interprets it as a combinatorial code, so that each row is interpreted as a codeword.
-"""
-function CombinatorialCode(BinaryMatrix::BitArray{2})::CombinatorialCode
-  # So far we ignore the field B.VertexTranslation
-Nwords,Nvertices=size(BinaryMatrix);
-if Nwords==0
-   return CombinatorialCode([])
-else
-  ListOfWords=Array{CodeWord,1}(Nwords);
-  for i=1: Nwords; ListOfWords[i]=CodeWord(find(BinaryMatrix[i,:])); end
-  sort!(ListOfWords,by=length)
-return  CombinatorialCode(ListOfWords,CodeWord(collect(1:Nvertices)))
-end
-end
-
-
-"""
-This function takes a combinatorial code and computes `the transpose of a code`
-Usage: C1=transpose(C)
-or, (same result)
-       C1=C'
-"""
-function transpose(CC::CombinatorialCode)::CombinatorialCode
-          BA=BitArrayOfACombinatorialCode(CC);
-          return CombinatorialCode(BA.BinaryMatrix')
 end

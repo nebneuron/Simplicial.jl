@@ -1,22 +1,22 @@
 " Show a single CodeWord"
-function show(c::CodeWord)
+function show(io::IO, c::CodeWord)
 if isempty(c) print("emptyset")
   else for i in sort(collect(c)); print(Int(i)); print(" ");end
 end
 end
 
 
-""" Nicely show a combinatorial code
-
-"""
-function show(C::CombinatorialCode)
-  print("This is a code on "); print(length(C.vertices)); print(" vertices: ");  show(C.vertices); println()
-  nwords=C.Nwords
-  println("The code consists of $nwords words:");
-  PrintLine()
-  for c in C.words; show(c); println();end
-
-end
+# """ Nicely show a combinatorial code
+#
+# """
+# function show(C::CombinatorialCode)
+#   print("This is a code on "); print(length(C.vertices)); print(" vertices: ");  show(C.vertices); println()
+#   nwords=C.Nwords
+#   println("The code consists of $nwords words:");
+#   PrintLine()
+#   for c in C.words; show(c); println();end
+#
+# end
 
 
 
@@ -24,7 +24,7 @@ end
     show(pm::PseudoMonomial)
     This prints a pseudomonomial
 """
-function show(pm::PseudoMonomial)
+function show(io::IO, pm::PseudoMonomial)
   if isempty(pm.x) && isempty(pm.y)
      print("1");
    else
@@ -39,7 +39,7 @@ end
     show(pm::PseudoMonomial)
     This prints a canonical form (a collection of pseudomonomials)
 """
-function show(CF::CanonicalForm)
+function show(io::IO, CF::CanonicalForm)
 L=length(CF);
 
   if L==0
@@ -55,18 +55,18 @@ L=length(CF);
   end
 end
 
-"""
-    show(K::SimplicialComplex)
-    This prints out an information about a simplicial complex
-
-"""
-function show(K::SimplicialComplex)
-dim=K.dim; number_of_vertices=length(K.vertices);
-print("A $dim-dimensional simplicial complex on $number_of_vertices vertices ");
-show(K.vertices); println();
-println("This complex has ", length(K.facets), " facets:")
-show(map(sort,map(collect,K.facets)))
-end
+# """
+#     show(K::SimplicialComplex)
+#     This prints out an information about a simplicial complex
+#
+# """
+# function show(K::SimplicialComplex)
+# dim=K.dim; number_of_vertices=length(K.vertices);
+# print("A $dim-dimensional simplicial complex on $number_of_vertices vertices ");
+# show(K.vertices); println();
+# println("This complex has ", length(K.facets), " facets:")
+# show(map(sort,map(collect,K.facets)))
+# end
 
 PrintLine()= println("______________________________");
 
@@ -75,7 +75,7 @@ PrintLine()= println("______________________________");
 """
     show(FS::FiltrationOfSimplicialComplexes)
 """
-function show(FS::FiltrationOfSimplicialComplexes)
+function show(io::IO, FS::FiltrationOfSimplicialComplexes)
  number_of_vertices=length(FS.vertices); depth=FS.depth;
  print("A fitration of $depth simplicial complexes on $number_of_vertices vertices: $(map(Int,sort(collect(FS.vertices))))\n");
  PrintLine()
