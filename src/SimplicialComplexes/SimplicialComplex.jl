@@ -18,8 +18,15 @@ AASC`, follow these steps:
 
  1. Define `vertices(K::NewType)` to return a vector of the vertex type of
  `NewType`.
- 2. Define `SimplicialComplex(::Type{NewType}, args...; kwargs...) = NewType(args...; kwargs...)`
- 3. Define the methods for iterating over the _facets_ of `K`, using the
+
+ 2. Define a constructor `NewType(F, V)` where `F` is a collection of faces and
+ `V` is a collection of vertices (such that each element of `F` is a subset of
+ `V`).
+
+ 3. Define `SimplicialComplex(::Type{NewType}, args...; kwargs...) =
+ NewType(args...; kwargs...)`
+
+ 4. Define the methods for iterating over the _facets_ of `K`, using the
  following method signatures:
      * `start(maxK::MaximalSetIterator{NewType})`
      * `next(maxK::MaximalSetIterator{NewType}, state)`
@@ -210,7 +217,7 @@ struct FacetMatrix{T} <: AbstractAbstractSimplicialComplex
     # inner constructor to enforce removal of redundant facets and sorting of
     # facets
     function FacetMatrix{T}(V::Vector{T}, B::BitMatrix; check_facets=true, sort_facets=true) where {T}
-        #TODO enforce unique vertices
+        #TODO enforce unique vertices?
         if check_facets
             max_idx = subset_rows(B) .== 0
             B = B[max_idx,:]
@@ -290,6 +297,14 @@ done{T}(maxK::MaximalSetIterator{FacetMatrix{T}}, state) = state > size(maxK.col
 
 Stores an abstract simplicial complex on vertex set ``{1,..,n}`` by storing a
 list of its facets.
+
+# Constructors
+
+    FacetList(ListOfWords::Vector, vertices=CodeWord(union(ListOfWords...)))
+
+Uses the maximal elements of `ListOfWords` as facets. Optional argument
+`vertices` can specify vertex set if some vertices do not appear as faces.
+
 """
 type FacetList <: AbstractAbstractSimplicialComplex
     facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
