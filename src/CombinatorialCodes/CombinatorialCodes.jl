@@ -292,7 +292,7 @@ end
 
 CombinatorialCode(::Type{CodeWordList}, args...) = CodeWordList(args...)
 
-vertices(CC::CodeWordList) = CC.vertices
+vertices(CC::CodeWordList) = sort(collect(CC.vertices))
 
 ### OTHER FUNCTIONS: CodeWordList
 
