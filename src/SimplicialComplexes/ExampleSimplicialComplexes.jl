@@ -1,5 +1,6 @@
 # This is a collection of functions that create some example simplicial complexes
 
+export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
 
 """
     TwoTorus()::SimplicialComplex

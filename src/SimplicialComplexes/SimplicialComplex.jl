@@ -18,8 +18,15 @@ AASC`, follow these steps:
 
  1. Define `vertices(K::NewType)` to return a vector of the vertex type of
  `NewType`.
- 2. Define `SimplicialComplex(::Type{NewType}, args...; kwargs...) = NewType(args...; kwargs...)`
- 3. Define the methods for iterating over the _facets_ of `K`, using the
+
+ 2. Define a constructor `NewType(F, V)` where `F` is a collection of faces and
+ `V` is a collection of vertices (such that each element of `F` is a subset of
+ `V`).
+
+ 3. Define `SimplicialComplex(::Type{NewType}, args...; kwargs...) =
+ NewType(args...; kwargs...)`
+
+ 4. Define the methods for iterating over the _facets_ of `K`, using the
  following method signatures:
      * `start(maxK::MaximalSetIterator{NewType})`
      * `next(maxK::MaximalSetIterator{NewType}, state)`
@@ -110,17 +117,6 @@ that set.
 ``del_τ(K) = {σ ∈ K : τ ⊏̸ σ}``
 """
 function del(K::AbstractAbstractSimplicialComplex, tau)
-    # #BUG might need to cast _elements_ of tau to appropriate type...
-    # new_facets = Vector{eltype(K)}()
-    # for F in facets(K)
-    #     if issubset(tau, F)
-    #         for t in tau
-    #             push!(new_facets, setdiff(F, [t]))
-    #         end
-    #     else
-    #         push!(new_facets,F)
-    #     end
-    # end
     new_facets = vcat([issubset(tau, F) ? [setdiff(F,t) for t in tau] : [F] for F in facets(K)]...)
     return SimplicialComplex(typeof(K), new_facets)
 end
@@ -210,7 +206,7 @@ struct FacetMatrix{T} <: AbstractAbstractSimplicialComplex
     # inner constructor to enforce removal of redundant facets and sorting of
     # facets
     function FacetMatrix{T}(V::Vector{T}, B::BitMatrix; check_facets=true, sort_facets=true) where {T}
-        #TODO enforce unique vertices
+        #TODO enforce unique vertices?
         if check_facets
             max_idx = subset_rows(B) .== 0
             B = B[max_idx,:]
@@ -290,6 +286,14 @@ done{T}(maxK::MaximalSetIterator{FacetMatrix{T}}, state) = state > size(maxK.col
 
 Stores an abstract simplicial complex on vertex set ``{1,..,n}`` by storing a
 list of its facets.
+
+# Constructors
+
+    FacetList(ListOfWords::Vector, vertices=CodeWord(union(ListOfWords...)))
+
+Uses the maximal elements of `ListOfWords` as facets. Optional argument
+`vertices` can specify vertex set if some vertices do not appear as faces.
+
 """
 type FacetList <: AbstractAbstractSimplicialComplex
     facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
@@ -302,7 +306,7 @@ type FacetList <: AbstractAbstractSimplicialComplex
      ## It takes a list of Integer arrays, where each array represents a facet
      ## facets are checked for inclusions
      ## An input looks like ListOfWords=Any[[1,2,3],[2,3,4],[3,1,5],[1,2,4],[2,2,3,3]].
-    function FacetList(ListOfWords::Vector)
+    function FacetList(ListOfWords::Vector, vertices=CodeWord(union(ListOfWords...)))
         if isempty(ListOfWords)||(ListOfWords==Any[]) # This is the case of the void (or null) Complex
             new(Array{CodeWord}(0),Array{Int}(0),-2,0,emptyset)
         elseif (ListOfWords==Any[[]])||(ListOfWords==[emptyset]) #  the irrelevant complex with empty vertex set
@@ -311,11 +315,11 @@ type FacetList <: AbstractAbstractSimplicialComplex
             ## refine the list of words to a list of sets (to eliminate redundant vertices)
             facets=map(CodeWord,ListOfWords);
             DeleteRedundantFacets!(facets);
-            ## union one by one the entries of facets using for loop
-            vertices=emptyset
-            for i=1:length(facets)
-                vertices=union(vertices, facets[i])
-            end
+            # ## union one by one the entries of facets using for loop
+            # vertices=emptyset
+            # for i=1:length(facets)
+            #     vertices=union(vertices, facets[i])
+            # end
             ## dimensions is the array of dimensions of each words in facets
             dimensions=Int[length(facets[i])-1 for i=1:length(facets)]
             dim=length(facets[end])-1
@@ -325,6 +329,7 @@ type FacetList <: AbstractAbstractSimplicialComplex
     end
 end
 FacetList(itr) = FacetList(collect(itr))
+FacetList(itr, v_itr) = FacetList(collect(itr), CodeWord(v_itr))
 FacetList(C::AbstractFiniteSetCollection) = FacetList(collect(facets(C)))
 
 ### REQUIRED FUNCTIONS: FacetList
