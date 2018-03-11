@@ -38,12 +38,11 @@ map(include,
 # For ease of reading/updating, export statements are being moved to the files
 # where the types/methods are defined.
 export in, ==
-export BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, link, del, Bicomplex, DeleteRedundantFacets!
+export BettiNumbers, VoidComplex, IrrelevantComplex, Alexander_dual, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export AIMC_minus_C, link_AIMC_minus_C
 export show
 export MaximalDimension, MaximalHomologicalDimension
-export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
 export PlotBettiCurves
 export hvector
 export start, next, done, eltype, length

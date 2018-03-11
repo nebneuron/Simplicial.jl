@@ -1,4 +1,6 @@
 
+export polar_complex, Bicomplex
+
 # """ This function computes the bicomplex of a combinatorial code
 # Usage: BDelta= Bicomplex(C);
 # """
