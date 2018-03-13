@@ -1,14 +1,14 @@
 
 export AbstractAbstractSimplicialComplex, SimplicialComplex,
-       vertices,
+       vertices, matrix_form,
        dim, dimension, link, del, res, void,
        FacetList, FacetMatrix
 
 """
     abstract type AbstractAbstractSimplicialComplex
 
-The abstract parent class for all concrete implementations of _abstract
-simplicial complexes_ (a regrettable clash of terminology). Many functions are
+The abstract parent class for all concrete implementations of *abstract
+simplicial complexes* (a regrettable clash of terminology). Many functions are
 defined for `K::AbstractAbstractSimplicialComplex` (`AASC` from here forward)
 using generic (often highly inefficient) algorithms that involve iterating over
 facets of `K`. For reasonably small complexes, the time lost to these
@@ -16,37 +16,37 @@ inefficiencies is likely dwarfed by the time spent implementing a basic working
 version of a new data structure. Therefore, to define a new subtype `NewType <:
 AASC`, follow these steps:
 
- 1. Define `vertices(K::NewType)` to return a vector of the vertex type of
- `NewType`.
+1. Define `vertices(K::NewType)` to return a vector of the vertex type of
+   `NewType`.
 
- 2. Define a constructor `NewType(F, V)` where `F` is a collection of faces and
- `V` is a collection of vertices (such that each element of `F` is a subset of
- `V`).
+2. Define a constructor `NewType(Fs, V)` where `Fs` is a collection of faces and
+   `V` is a collection of vertices (such that each element of `Fs` is a subset of
+   `V`).
 
- 3. Define `SimplicialComplex(::Type{NewType}, args...; kwargs...) =
- NewType(args...; kwargs...)`
+3. Define `SimplicialComplex(::Type{NewType}, args...; kwargs...) =
+   NewType(args...; kwargs...)`
 
- 4. Define the methods for iterating over the _facets_ of `K`, using the
- following method signatures:
-     * `start(maxK::MaximalSetIterator{NewType})`
-     * `next(maxK::MaximalSetIterator{NewType}, state)`
-     * `done(maxK::MaximalSetIterator{NewType}, state)`
+4. Define the methods for iterating over the *facets* of `K`, using the
+   following method signatures:
+   * `start(maxK::MaximalSetIterator{NewType})`
+   * `next(maxK::MaximalSetIterator{NewType}, state)`
+   * `done(maxK::MaximalSetIterator{NewType}, state)`
 
-For more information, see the [Iteration](https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1)
+For more information, see the [Iteration interface](https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1)
 in the Julia documentation and the [`MaximalSetIterator`](@ref) type.
 
 With these functions defined, a generic implementation of the following
 methods/features is handled automatically (though perhaps inefficiently):
 
- * Iteration over _all_ faces of `K`
- * Equality and subset comparisons to other `AbstractFiniteSetCollection`s
- * [`void`](@ref)
- * [`dim`](@ref)
- * [`link`](@ref)
- * [`del`](@ref)
- * [`res`](@ref)
- * [`in`](@ref)
- * [`add`](@ref)
+* Iteration over *all* faces of `K`
+* Equality and subset comparisons to other `AbstractFiniteSetCollection`s
+* [`void`](@ref)
+* [`dim`](@ref)
+* [`link`](@ref)
+* [`del`](@ref)
+* [`res`](@ref)
+* [`in`](@ref)
+* [`add`](@ref)
 
 """
 abstract type AbstractAbstractSimplicialComplex <: AbstractFiniteSetCollection end
