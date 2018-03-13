@@ -6,6 +6,10 @@ C2 = CombinatorialCode(BinaryMatrixCode, [[], [1], [1,2],[2,3]])
 
 @test C1 == C2
 
+K0 = SimplicialComplex([])
+
+@test isvoid(K0)
+
 K1 = SimplicialComplex([[1,2],[2,3]])
 K2 = SimplicialComplex(C1)
 K3 = SimplicialComplex(FacetMatrix, C1)
