@@ -11,6 +11,7 @@ map(include,
     ["ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
      joinpath("utilities","auxiliaryoperations.jl"),
      "CombinatorialCodes/CombinatorialCodes.jl",
+     joinpath("CombinatorialCodes","CodeOperations.jl"),
      "CombinatorialCodes/BernoulliRandomCode.jl",
      "CombinatorialCodes/NeuralRing.jl",
      "SimplicialComplexes/SimplicialComplex.jl",

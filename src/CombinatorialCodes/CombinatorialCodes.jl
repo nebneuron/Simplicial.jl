@@ -115,29 +115,33 @@ interprets rows as codewords.
 struct BinaryMatrixCode{T<:Integer} <: AbstractCombinatorialCode
     C::BitMatrix
     max_idx::Vector{Int} # which codewords are maximal
+
+    # inner constructor to enforce removal of redundant codewords and sorting
+    function BinaryMatrixCode{T}(C::BitMatrix) where {T<:Integer}
+        C = unique(C,1)
+        C = sortrows(C, lt=isless_GrRevLex)
+        max_idx = find(subset_rows(C) .== 0)
+        new{T}(C, max_idx)
+    end
 end
-function BinaryMatrixCode(::Type{T}, itr) where {T <: Integer}
-    # For now, a naive constructor:
-    n = maximum(map(maximum, filter(c -> length(c) > 0, itr)))
-    uLL = unique(itr)
-    C = list_to_bitmatrix(uLL, 1:n)
-    C = sortrows(C, lt=isless_GrRevLex) # sortrows so identical codes are stored the same way.
-    # now perform a naive O(m^2 + matrix multiplication) check for which words
-    # are maximal. subset_rows is defined in util.jl
-    max_idx = find(subset_rows(C) .== 0)
-    return BinaryMatrixCode{T}(C, max_idx)
+function BinaryMatrixCode(itr)
+    # first, check that itr is not empty, and contains at least one nonempty set.
+    if length(itr) == 0
+        return BinaryMatrixCode{Int}(falses(0,0))
+    elseif all(collect(map(length,itr)) .== 0)
+        return BinaryMatrixCode{Int}(falses(1,1))
+    else
+        # For now, a naive constructor:
+        n = maximum(map(maximum, filter(c -> length(c) > 0, itr)))
+        itr = unique(itr)
+        C = list_to_bitmatrix(itr, 1:n)
+        return BinaryMatrixCode{typeof(n)}(C)
+    end
 end
-function BinaryMatrixCode(::Type{T}, B::Union{BitMatrix,Matrix{Bool}}) where {T<:Integer}
-    uB = unique(B, 1)
-    uB = sortrows(uB, lt=isless_GrRevLex)
-    max_idx = find(subset_rows(uB) .== 0)
-    return BinaryMatrixCode{T}(uB, max_idx)
-end
-BinaryMatrixCode(args...) = BinaryMatrixCode(Int, args...)
 
 ### REQUIRED FUNCTIONS: BinaryMatrixCode
 
-CombinatorialCode(::Type{BinaryMatrixCode}, args...) = BinaryMatrixCode(args...)
+CombinatorialCode(::Type{T}, args...) where {T <: BinaryMatrixCode} = BinaryMatrixCode(args...)
 
 vertices(CC::BinaryMatrixCode{T}) where {T} = Vector{T}(1:size(CC.C,2))
 

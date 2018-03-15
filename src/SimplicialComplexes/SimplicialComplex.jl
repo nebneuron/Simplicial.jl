@@ -1,8 +1,8 @@
 
 export AbstractAbstractSimplicialComplex, SimplicialComplex,
-       vertices, matrix_form,
-       dim, dimension, link, del, res, void,
-       FacetList, FacetMatrix
+    vertices, matrix_form,
+    dim, dimension, link, del, res, void,
+    FacetList, FacetMatrix
 
 """
     abstract type AbstractAbstractSimplicialComplex
@@ -207,7 +207,9 @@ struct FacetMatrix{T} <: AbstractAbstractSimplicialComplex
     # facets
     function FacetMatrix{T}(V::Vector{T}, B::BitMatrix; check_facets=true, sort_facets=true) where {T}
         #TODO enforce unique vertices?
+        length(V) >= size(B,2) || error("Error: FacetMatrix: vertex set too small")
         if check_facets
+            B = unique(B,1)
             max_idx = subset_rows(B) .== 0
             B = B[max_idx,:]
         end

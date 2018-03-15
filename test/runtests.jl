@@ -6,6 +6,12 @@ C2 = CombinatorialCode(BinaryMatrixCode, [[], [1], [1,2],[2,3]])
 
 @test C1 == C2
 
+C3 = CombinatorialCode([[],[1],[1,2],[2,3],[2]])
+C4 = CombinatorialCode([[],[1],[1,2],[2,3],[1,2,3]])
+
+@test intersection_completion(C1) == C3
+@test union_completion(C2) == C4
+
 K0 = SimplicialComplex([])
 
 @test isvoid(K0)
