@@ -1,0 +1,48 @@
+In file included from ../include/phat/representations/bit_tree_pivot_column.h:22:0,
+                 from ../include/phat/boundary_matrix.h:22,
+                 from ../include/phat/compute_persistence_pairs.h:22,
+                 from interface_with_julia.cpp:21:
+../include/phat/representations/../representations/abstract_pivot_column.h:66:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+             #pragma omp parallel for
+ 
+../include/phat/representations/../representations/abstract_pivot_column.h:81:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+             #pragma omp parallel for
+ 
+In file included from ../include/phat/compute_persistence_pairs.h:22:0,
+                 from interface_with_julia.cpp:21:
+../include/phat/boundary_matrix.h:182:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+             #pragma omp parallel for private( temp_col )
+ 
+In file included from ../include/phat/compute_persistence_pairs.h:23:0,
+                 from interface_with_julia.cpp:21:
+../include/phat/helpers/dualize.h:46:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+         #pragma omp parallel for 
+ 
+../include/phat/helpers/dualize.h:57:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+         #pragma omp parallel for
+ 
+../include/phat/helpers/dualize.h:61:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+         #pragma omp parallel for
+ 
+In file included from interface_with_julia.cpp:28:0:
+../include/phat/algorithms/chunk_reduction.h:55:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+                 #pragma omp parallel for schedule( guided, 1 )
+ 
+../include/phat/algorithms/chunk_reduction.h:62:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+                 #pragma omp parallel for schedule( guided, 1 )
+ 
+../include/phat/algorithms/chunk_reduction.h:76:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+             #pragma omp parallel for
+ 
+../include/phat/algorithms/chunk_reduction.h:85:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+                 #pragma omp parallel for schedule( guided, 1 ), private( temp_col )
+ 
+../include/phat/algorithms/chunk_reduction.h:152:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+             #pragma omp parallel for schedule( guided, 1 ), private( stack, cur_col_values )
+ 
+interface_with_julia.cpp: In function ‘void print_vector(const std::vector<int>&)’:
+interface_with_julia.cpp:191:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for ( int i = 0 ; i != vect.size() ; ++i )
+                    ~~^~~~~~~~~~~~~~
+interface_with_julia.so: file not recognized: File format not recognized
+collect2: error: ld returned 1 exit status
