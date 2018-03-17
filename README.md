@@ -5,7 +5,7 @@ This package provides data structures and algorithms for combinatorial topology.
 DISCLAIMER: This software is still in development. The documentation is currently very sparse. Use at your own risk! Please let us know if you'd like to contribute. The work was supported by the ARO award W911NF-15-1-0084.
 
 
-This package interfaces with existing software for homology computations, such as [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html).  In the future, Simplicial will interface with other TDA software.
+This package interfaces with existing software for homology computations, such as [PHAT](https://github.com/blazs/phat) and [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html).  In the future, Simplicial will interface with other TDA software as well. 
 
 
 # Installation:
