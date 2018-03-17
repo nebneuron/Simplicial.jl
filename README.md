@@ -2,7 +2,7 @@
 
 This package provides data structures and algorithms for combinatorial topology. Currently, it can handle   abstract simplicial complexes, directed complexes, and combinatorial codes. The package is written in [Julia language](http://julialang.org).  The long-term goal of this project is to be a *"swiss-knife"*  for manipulating (*very* *large*) combinatorial structures, with an eye towards topological data analysis.
 
-This is a free software  under the terms of the GNU General Public License ([GPLv3](http://www.gnu.org/licenses/gpl.html)).
+This software is free under the terms of the GNU General Public License ([GPLv3](http://www.gnu.org/licenses/gpl.html)).
 
 DISCLAIMER: This software is still in development. The documentation is currently very sparse. Use at your own risk! Please let us know if you'd like to contribute. The work was supported by the ARO award W911NF-15-1-0084.
 
