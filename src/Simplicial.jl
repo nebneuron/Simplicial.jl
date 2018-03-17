@@ -46,4 +46,5 @@ export cham
 # definitions related to directed complexes
 export DirectedCodeword, issubsequence, subset_of_a_sequence, IntersectionsOfSequences, DirectedComplex, Matrix2Permutations, EmptyDirectedCodeword
 export GradedPoset, BoundaryOperator, EulerCharacteristic
+export The_Location_Of_PHAT_Executables, phat_compute_betti_numbers, PHAT_BettiNumbers
 end
