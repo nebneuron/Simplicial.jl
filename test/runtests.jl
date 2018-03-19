@@ -6,6 +6,10 @@ C2 = CombinatorialCode(BinaryMatrixCode, [[], [1], [1,2],[2,3]])
 
 @test C1 == C2
 
+CF1 = [PseudoMonomial([1,3],[]), PseudoMonomial([3],[2]), PseudoMonomial([2],[1,3])]
+
+@test Set(CF1) == Set(canonical_form(C1))
+
 C3 = CombinatorialCode([[],[1],[1,2],[2,3],[2]])
 C4 = CombinatorialCode([[],[1],[1,2],[2,3],[1,2,3]])
 

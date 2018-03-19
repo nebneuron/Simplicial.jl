@@ -25,19 +25,19 @@ end
 
 
 
-"""
-    show(pm::PseudoMonomial)
-    This prints a pseudomonomial
-"""
-function show(io::IO, pm::PseudoMonomial)
-  if isempty(pm.x) && isempty(pm.y)
-     print("1");
-   else
-     for i in sort(collect(pm.x)) print("x_$(i)"); end
-     for j in sort(collect(pm.y)) print("y_$(j)"); end
-   end
-   print(" ");
-end
+# """
+#     show(pm::PseudoMonomial)
+#     This prints a pseudomonomial
+# """
+# function show(io::IO, pm::PseudoMonomial)
+#   if isempty(pm.x) && isempty(pm.y)
+#      print("1");
+#    else
+#      for i in sort(collect(pm.x)) print("x_$(i)"); end
+#      for j in sort(collect(pm.y)) print("y_$(j)"); end
+#    end
+#    print(" ");
+# end
 
 
 """

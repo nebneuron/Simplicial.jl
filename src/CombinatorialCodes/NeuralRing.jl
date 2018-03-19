@@ -1,6 +1,7 @@
 
 export SmallIntegerType, PseudoMonomial, CanonicalForm, Code2CF,
-       PseudoMonomialType
+	PseudoMonomialType,
+	canonical_form
 
 
 "below are constants used in the canonical form computation. In the future, these will be obsolete"
@@ -8,11 +9,30 @@ const SmallIntegerType=Int8;
 const positive_one= SmallIntegerType(1);
 const negative_one= SmallIntegerType(-1);
 
-" PseudoMonomial is a type for encoding pseudomonomials  "
-immutable  PseudoMonomial
-           x::CodeWord   #
-           y::CodeWord   #
+"""
+    PseudoMonomial
+
+A polynomial of the form ``∏_{i∈σ} x_i ∏_{j∈τ} (1 - x_j)``
+"""
+struct PseudoMonomial
+	x::Vector{Int}
+	y::Vector{Int}
+
+	function PseudoMonomial(x_itr, y_itr; sort_x=true, sort_y=true)
+        x = collect(unique(x_itr))
+        y = collect(unique(y_itr))
+        new(sort_x ? sort(x) : x, sort_y ? sort(y) : y)
+    end
+    function PseudoMonomial(b::BitVector) # binary vector of length 2n
+        iseven(length(b)) || error("PseudoMonomial: length of vector b is odd")
+
+        new(find(b[1:length(b)>>1], find(b[1+length(b)>>1:end])))
+    end
 end
+function show(io::IO, pm::PseudoMonomial)
+	print(io, join(["x_$i" for i in pm.x], " ") * " " * join(["(1 - x_$j)" for j in pm.y]))
+end
+
 
 """
 function PseudoMonomialType(p::PseudoMonomial)::Int
@@ -211,3 +231,52 @@ function  FinalIntersectIdeals(L::Array{SmallIntegerType,2},r::Array{SmallIntege
     Ideal = I[1:k-1,:];
     return Ideal
 end
+
+"""
+    canonical_form(C::AbstractCombinatorialCode)
+
+The set of minimal psuedomonomials that generate the ideal ``I_C``. See [The
+Neural Ring](https://arxiv.org/abs/1212.4201). Per the conventions of that
+paper, this set excludes the "boolean relations" ``x_i(1-x_i)``.
+
+This is an implementation of Algorithm 1 from [this
+paper](https://arxiv.org/abs/1511.00255)
+"""
+function canonical_form(C::BitMatrix)
+    m,n = size(C) # m codewords on n neurons
+    if m == 0
+        return PseudoMonomial[]
+    elseif m == 1
+        return [PseudoMonomial(vcat(.!C[1,:], C[1,:]))]
+    else
+        notCC = [.!C C]
+        # Recursive algorithm starts with CF of a single codeword. Then adds one
+        # codeword at a time, taking intersections of ideals. "Flattened" into a
+        # single loop over codewords 2 through m.
+        CF_prev = [Diagonal(notCC[1,1:n]) Diagonal(notCC[1,(n+1):end])]
+        # CF_prev = notCC[1:1,:]
+        for k = 2:m
+            c_k_killers = CF_prev * notCC[k,:] .> 0
+            M = CF_prev[c_k_killers, :]     # members of CF which already kill kth word
+            N = CF_prev[.!c_k_killers, :]   # members of CF which need help
+            L = falses(0, 2n)               # new members of CF
+            for j = 1:size(N,1)
+                g = N[j,:]' .+ [Diagonal(notCC[k,1:n]) Diagonal(notCC[k,(n+1):end])]
+                for i = 1:n
+                    # skip the term (x_i - c_i^k) * f_j if it contains a boolean
+                    # relation
+                    (g[i,i] == 1 && g[i,i] == g[i,i+n]) && continue
+                    # skip the term if is is divisible by something in M
+                    any(all((g[i,:]' .- M) .>= 0, 2)) && continue
+
+                    # if we make it here, it's an honest-to-goodness new member of the CF
+                    L = [L; g[i,:]]
+                end
+            end
+            # now tack on new members
+            CF_prev = [CF_prev; L]
+        end
+        return [PseudoMonomial(CF_prev[l,:]) for l = 1:size(CF_prev,1)]
+    end
+end
+canonical_form(C::AbstractCombinatorialCode) = canonical_form(matrix_form(C))
