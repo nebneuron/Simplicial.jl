@@ -6,7 +6,7 @@ export AbstractCombinatorialCode,
 """
     abstract type AbstractCombinatorialCode
 
-The abstract parent class for concrete implements of _combinatorial codes_.
+The abstract parent class for concrete implements of *combinatorial codes*.
 """
 abstract type AbstractCombinatorialCode <: AbstractFiniteSetCollection end
 

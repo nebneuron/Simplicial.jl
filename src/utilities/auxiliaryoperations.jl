@@ -63,7 +63,7 @@ otherwise, `V[i] = j` means that set `i` is a subset of set `j`. If row `i` is
 contained in multiple other rows, no guarantee about which will be returned.
 
 """
-function subset_rows(B::BitMatrix)
+function subset_rows(B::Union{BitMatrix,Matrix{Bool}})
     m,n = size(B)
     intersections = B * B'
     parent = zeros(Int,m)

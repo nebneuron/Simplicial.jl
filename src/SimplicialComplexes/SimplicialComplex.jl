@@ -31,16 +31,15 @@ AASC`, follow these steps:
    * `start(maxK::MaximalSetIterator{NewType})`
    * `next(maxK::MaximalSetIterator{NewType}, state)`
    * `done(maxK::MaximalSetIterator{NewType}, state)`
-
-For more information, see the [Iteration interface](https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1)
-in the Julia documentation and the [`MaximalSetIterator`](@ref) type.
+   For more information, see the [Iteration interface](https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1)
+   in the Julia documentation and the [`MaximalSetIterator`](@ref) type.
 
 With these functions defined, a generic implementation of the following
 methods/features is handled automatically (though perhaps inefficiently):
 
-* Iteration over *all* faces of `K`
+* Iteration over *all* faces of `K`, using the [`IterTools`](https://github.com/JuliaCollections/IterTools.jl) package.
 * Equality and subset comparisons to other `AbstractFiniteSetCollection`s
-* [`void`](@ref)
+* [`isvoid`](@ref)
 * [`dim`](@ref)
 * [`link`](@ref)
 * [`del`](@ref)
@@ -205,9 +204,9 @@ struct FacetMatrix{T} <: AbstractAbstractSimplicialComplex
 
     # inner constructor to enforce removal of redundant facets and sorting of
     # facets
-    function FacetMatrix{T}(V::Vector{T}, B::BitMatrix; check_facets=true, sort_facets=true) where {T}
+    function FacetMatrix{T}(V::Vector{T}, B::Union{BitMatrix,Matrix{Bool}}; check_facets=true, sort_facets=true) where {T}
         #TODO enforce unique vertices?
-        length(V) >= size(B,2) || error("Error: FacetMatrix: vertex set too small")
+        length(V) == size(B,2) || error("Error: FacetMatrix: mismatched face and vertex set size")
         if check_facets
             B = unique(B,1)
             max_idx = subset_rows(B) .== 0
@@ -216,7 +215,7 @@ struct FacetMatrix{T} <: AbstractAbstractSimplicialComplex
         if sort_facets
             B = sortrows(B, lt=isless_GrRevLex)
         end
-        new{T}(V, B)
+        new{T}(V, BitMatrix(B))
     end
 end
 function FacetMatrix(Fs, V=collect(union(Fs...)); sort_V=false)
@@ -240,7 +239,7 @@ function FacetMatrix(CC::BinaryMatrixCode)
     V = collect(vertices(CC))
     T = eltype(V)
     B = CC.C[CC.max_idx,:]
-    FacetMatrix{T}(V,B)
+    FacetMatrix{T}(V,B, check_facets=false, sort_facets=false)
 end
 
 ### REQUIRED FUNCTIONS: FacetMatrix
