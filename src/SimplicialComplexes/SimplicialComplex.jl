@@ -1,5 +1,5 @@
 
-export AbstractAbstractSimplicialComplex, DefaultComplexType,
+export AbstractAbstractSimplicialComplex,
     SimplicialComplex, VoidComplex, IrrelevantComplex,
     vertices, matrix_form,
     dim, dimension, link, del, res, void,
@@ -50,7 +50,6 @@ methods/features is handled automatically (though perhaps inefficiently):
 
 """
 abstract type AbstractAbstractSimplicialComplex <: AbstractFiniteSetCollection end
-const DefaultComplexType = FacetList
 
 """
     SimplicialComplex([FacetList], args...; kwargs...)
@@ -68,7 +67,7 @@ the object is stored in memory). The second is to make generic methods easier to
 write, minimizing the amount of work necessary to implement a new object type.
 See [`AbstractAbstractSimplicialComplex`](@ref) for more details.
 """
-SimplicialComplex(args...; kwargs...) = SimplicialComplex(DefaultComplexType, args...; kwargs...)
+SimplicialComplex(args...; kwargs...) = SimplicialComplex(FacetList, args...; kwargs...)
 
 """
     VoidComplex([FacetList], V=Int[])
@@ -81,7 +80,7 @@ The second form returns a simplicial complex of the same type and vertex set as
 `K`
 """
 VoidComplex(::Type{T}, V=Int[]) where {T <: AbstractAbstractSimplicialComplex} = SimplicialComplex(T, [], V)
-VoidComplex(V=Int[]) = VoidComplex(DefaultComplexType, V)
+VoidComplex(V=Int[]) = VoidComplex(FacetList, V)
 VoidComplex(K::AbstractAbstractSimplicialComplex) = SimplicialComplex(typeof(K), [], vertices(K))
 
 """
@@ -95,7 +94,7 @@ The second form returns a simplicial comple of the same type and vertex set as
 `K`.
 """
 IrrelevantComplex(::Type{T}, V=Int[]) where {T <: AbstractAbstractSimplicialComplex} = SimplicialComplex(T, [[]], V)
-IrrelevantComplex(V=Int[]) = IrrelevantComplex(DefaultComplexType, V)
+IrrelevantComplex(V=Int[]) = IrrelevantComplex(FacetList, V)
 IrrelevantComplex(K::AbstractAbstractSimplicialComplex) = SimplicialComplex(typeof(K), [[]], vertices(K))
 
 ################################################################################
