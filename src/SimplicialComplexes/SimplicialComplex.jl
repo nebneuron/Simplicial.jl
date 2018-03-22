@@ -2,7 +2,7 @@
 export AbstractAbstractSimplicialComplex,
     SimplicialComplex, VoidComplex, IrrelevantComplex,
     vertices, matrix_form,
-    dim, dimension, link, del, res, void,
+    dim, dimension, link, del, res, fvector, hvector,
     FacetList, FacetMatrix
 
 """
@@ -173,6 +173,47 @@ function add(sigma, K::AbstractAbstractSimplicialComplex)
         return SimplicialComplex(typeof(K), chain([sigma], facets(K)))
     end
 end
+
+"""
+    fvector(K)
+
+Compute the f-vector of the given simplicial complex.
+
+The f-vector of a simplicial complex is the vector ``(f_0, f_1, ..., f_{d+1})``
+where ``f_i`` is the number of faces of cardinality ``i`` (i.e. dimension ``i -
+1``).
+"""
+function fvector(K::AbstractAbstractSimplicialComplex)
+    fv = zeros(Int,dim(K) + 2)
+    for f in K
+        fv[length(f) + 1] += 1
+    end
+    return fv
+end
+
+"""
+    hvector(K)
+    hvector(fv)
+
+Compute the h-vector of complex `K` by calling `fvector(K)`, or compute the
+h-vector corresponding to vector `fv`.
+
+See [`fvector`](@ref) for details on the f-vector of a simplicial complex. The
+f-polynomial is the polynomial ``F(x)`` with coefficient ``f_i`` in degree
+``d+1-i``; the h-vector is the coefficients of ``F(x-1)`` in decreasing order of
+degree.
+"""
+function hvector(fv::Vector)
+    d = length(fv) - 1
+    A = zeros(Int,length(fv),length(fv))
+    for lk = 0:(length(fv)-1)
+        for li = 0:lk
+            A[lk+1, li+1] = (-1)^(lk-li) * binomial(d-li,lk-li)
+        end
+    end
+    return A * fv
+end
+hvector(K::AbstractAbstractSimplicialComplex) = hvector(fvector(K))
 
 function in(sigma, K::AbstractAbstractSimplicialComplex)
     for f in facets(K)
