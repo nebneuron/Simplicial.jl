@@ -1,18 +1,40 @@
 "DirectedCodeword is the type that encodes (ordered) sequences of vertices"
 DirectedCodeword=Vector{TheIntegerType}
-const emptydirectedset=DirectedCodeword([])
-" issubsequence(a,b) The function issubsequence determines if the sequence a is a subsequence of sequence b"
+const EmptyDirectedCodeword=DirectedCodeword(0);
+" issubsequence(a,b) a.k.a. <=(a,b)  determines if the sequence a is a subsequence of sequence b"
 
-function issubsequence(a::DirectedCodeword,b::DirectedCodeword)::Bool
-    if isempty(a)
-       return true
-    else
+
+function <=(a::DirectedCodeword,b::DirectedCodeword)::Bool
+# This function is written very ugly, to optimize it for speed..
+        Na=length(a); if Na==0; return true end
+        Nb=length(b);
+        if Nb<Na; return false ; end
+        if Nb==Na return a==b; end
+
         # here the variable a_membership indicates if the appropriate member of b is a member of a.
         # The reason for this akward loop is to preserve the ordering
-        a_membership=falses(length(b)); for i=1:length(b);  a_membership[i]=in(b[i],a);end
-        return (a==b[a_membership])
-    end
-end
+        result=false;
+        b_pos=0; # this is the position of the previous  element of the sequence a in the sequence b
+        current_a_element_found_in_b=false; # define it outside of the loop
+        for a_pos=1:Na
+            current_a_element=a[a_pos];
+            current_a_element_found_in_b=false;
+            b_pos+=1;
+            while b_pos<=Nb;
+                if current_a_element==b[b_pos];
+                    current_a_element_found_in_b=true ;
+                     break
+                else b_pos+=1;
+                end
+            end # while b_pos<=Nb;
+            if !current_a_element_found_in_b ; return false; end
+
+        end # for a_pos=1:Na
+return current_a_element_found_in_b
+end # function <=
+
+" The following name added for compartibility with the older code" 
+issubsequence(a::DirectedCodeword,b::DirectedCodeword)=(<=(a,b))::Bool
 
 
 
@@ -37,7 +59,7 @@ type DirectedComplex
                  redundant_word_indexes=[]
                  for i=1:Nfacets
                           for j=i+1:Nfacets
-                               if  issubsequence(facets[i],facets[j])
+                               if  <=(facets[i],facets[j])
                                    push!(redundant_word_indexes, i)
                                    break
                                end

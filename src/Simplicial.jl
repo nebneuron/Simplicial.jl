@@ -17,7 +17,6 @@ map(include,
      joinpath("SimplicialComplexes", "SimplicialComplex.jl"),
      joinpath("SimplicialComplexes", "ExampleSimplicialComplexes.jl"), # Some examples of simplicial complexes
      joinpath("utilities", "cham.jl"),
-     joinpath("utilities", "fvector.jl"),
      joinpath("SimplicialComplexes", "Alexander_dual_function.jl"),
      joinpath("utilities", "DeleteRedundantFacets!.jl"),
      joinpath("utilities", "function_Bicomplex.jl"),
@@ -27,7 +26,12 @@ map(include,
      joinpath("utilities", "function_show.jl"), # most show functions have been moved next to the type declarations. This file will be removed at next version.
      joinpath("plotting", "PlottingFunctions.jl"),
      joinpath("DirectedComplexes", "DirectedComplex.jl"),
-     joinpath("DirectedComplexes", "Posets.jl")
+     joinpath("DirectedComplexes", "Posets.jl"),
+     joinpath("utilities", "EulerCharacteristic.jl"),
+     joinpath("HomologyComputations", "PHAT_interface.jl"),
+     joinpath("utilities", "subset_of_a_sequence.jl"),
+     joinpath("utilities", "IntersectionsOfSequences.jl"),
+     joinpath("utilities", "function_in.jl")
      ])
 
 # For ease of reading/updating, export statements are being moved to the files
@@ -42,6 +46,7 @@ export MaximalDimension, MaximalHomologicalDimension
 export PlotBettiCurves
 export cham
 # definitions related to directed complexes
-export DirectedCodeword, issubsequence, DirectedComplex, Matrix2Permutations
-export GradedPoset, BoundaryOperator
+export DirectedCodeword, issubsequence, subset_of_a_sequence, IntersectionsOfSequences, DirectedComplex, Matrix2Permutations, EmptyDirectedCodeword
+export GradedPoset, BoundaryOperator, EulerCharacteristic
+export The_Location_Of_PHAT_Executables, phat_compute_betti_numbers, PHAT_BettiNumbers
 end
