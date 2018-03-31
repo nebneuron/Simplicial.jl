@@ -1,9 +1,7 @@
 # Here we define the type of CodeWord and the related methods for this type
 # This definition determines the behavior and performance of all the other functions and types
-export CodeWord, emptyset, TheIntegerType,
-       PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType,
-       AbstractFiniteSetCollection, MaximalSetIterator, facets, max,
-       isvoid, isirrelevant
+
+_NI(m) = error("Not implemented: $m") # taken straight from LightGraphs package.
 
 # This is an important choice (from performance perspective)
 "  TheIntegerType is the integer type that is used for enumerating the vertices of combinatorial codes and simplicial complexes"
@@ -47,7 +45,7 @@ const PersistenceIntervalsType=Array{SingleDimensionPersistenceIntervalsType,1}
 Abstract supertype for concrete implementations of Combinatorial Codes and
 Simplicial Complexes.
 """
-abstract type AbstractFiniteSetCollection end
+abstract type AbstractFiniteSetCollection{T} where {T} end
 
 ################################################################################
 ### Generic method implementations

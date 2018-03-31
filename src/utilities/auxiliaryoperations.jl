@@ -1,5 +1,30 @@
 # misc utility functions
 
+# sorting binary vectors and sets
+"""
+    lessequal_GrRevLex(a, b)
+
+True if ``a <=_GrRevLex b``. See [graded reverse lexicographic
+order](https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order).
+
+Can be used to `sortrows` a matrix with boolean entries (i.e. `a` and `b` are both
+`AbstractVector{Bool}` types) or to sort a list of sets (i.e. `a` and `b` are both
+`AbstractSet{T<:Integer}`s).
+
+"""
+lessequal_GrRevLex(a::AbstractVector{Bool}, b::AbstractVector{Bool}) = a == b ? true : (sum(a) != sum(b) ? sum(a) < sum(b) : (a-b)[findlast(a-b)] < 0)
+lessequal_GrRevLex(a::AbstractSet{S}, b::AbstractSet{T}) where {S<:Integer, T<:Integer} = a == b ? true : (length(a) != length(b) ? length(a) < length(b) : maximum(setdiff(a,b)) < maximum(setdiff(b,a)))
+
+"""
+    insert_sorted!(a::Vector{T}, item::T, lt)
+
+Inserts `item` into sorted vector `a` in the appropriate position, according to the order
+`lt`. Danger! Requires `item` to be of type `T`.
+
+"""
+insert_sorted!(a::Vector{T}, item::T, lt) where T = insert!(a, searchsortedlast(a, item, lt=lt), item)
+
+# Tools for manipulating binary vectors as sets
 """
     binary_to_set(b, V)
     binary_to_set(b, C::AbstractFiniteSetCollection)
@@ -24,16 +49,6 @@ function set_to_binary(s, V)
     return b
 end
 set_to_binary(s, C::AbstractFiniteSetCollection) = set_to_binary(s, vertices(C))
-
-"""
-    isless_GrRevLex(a, b)
-
-The [graded reverse lexicographic
-order](https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order)
-applied to the vectors `a`,`b`.
-
-"""
-isless_GrRevLex(a, b) = a == b? false : (sum(a) < sum(b) ? true : (a-b)[findlast(a-b)] > 0)
 
 """
     list_to_bitmatrix(L, V=collect(union(L...)))

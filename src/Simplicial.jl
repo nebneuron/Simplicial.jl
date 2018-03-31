@@ -34,9 +34,23 @@ map(include,
      "utilities/function_in.jl"
      ])
 
-# For ease of reading/updating, export statements are being moved to the files
-# where the types/methods are defined.
-export in, ==, start, next, done, eltype, length
+export
+# Imported from Base
+in, ==, <=, show, push!, transpose,
+start, next, done, eltype, length,
+max, show
+
+# ImportantConstants.jl
+CodeWord, emptyset, TheIntegerType,
+PersistenceIntervalsType, SingleDimensionPersistenceIntervalsType,
+AbstractFiniteSetCollection, MaximalSetIterator, facets, max,
+isvoid, isirrelevant
+
+# CombinatorialCodes.jl
+AbstractCombinatorialCode, CombinatorialCode,
+vertices, HasEmptySet, isvoid, isirrelevant,
+link, add, add!, del, del!, matrix_form, transpose
+
 
 export BettiNumbers, Alexander_dual, DeleteRedundantFacets!
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
