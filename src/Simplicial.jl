@@ -5,33 +5,33 @@ using Combinatorics, IterTools
 
 import Base: in, ==, <=, show, push!, transpose,
              start, next, done, eltype, length,
-             max
+             max, show
 
 map(include,
     ["ImportantConstants.jl", # definition for the type of CodeWord and the related methods for this type
-     joinpath("utilities", "auxiliaryoperations.jl"),
-     joinpath("CombinatorialCodes", "CombinatorialCodes.jl"),
-     joinpath("CombinatorialCodes", "CodeOperations.jl"),
-     joinpath("CombinatorialCodes", "BernoulliRandomCode.jl"),
-     joinpath("CombinatorialCodes", "NeuralRing.jl"),
-     joinpath("SimplicialComplexes", "SimplicialComplex.jl"),
-     joinpath("SimplicialComplexes", "ExampleSimplicialComplexes.jl"), # Some examples of simplicial complexes
-     joinpath("utilities", "cham.jl"),
-     joinpath("SimplicialComplexes", "Alexander_dual_function.jl"),
-     joinpath("utilities", "DeleteRedundantFacets!.jl"),
-     joinpath("utilities", "function_Bicomplex.jl"),
-     joinpath("utilities", "function_AIMC_minus_C_and_link_AIMC_minus_C.jl"),
-     joinpath("SimplicialComplexes", "FiltrationOfSimplicialComplexes.jl"),
-     joinpath("HomologyComputations", "PersistenceIntervals.jl"),
-     joinpath("utilities", "function_show.jl"), # most show functions have been moved next to the type declarations. This file will be removed at next version.
-     joinpath("plotting", "PlottingFunctions.jl"),
-     joinpath("DirectedComplexes", "DirectedComplex.jl"),
-     joinpath("DirectedComplexes", "Posets.jl"),
-     joinpath("utilities", "EulerCharacteristic.jl"),
-     joinpath("HomologyComputations", "PHAT_interface.jl"),
-     joinpath("utilities", "subset_of_a_sequence.jl"),
-     joinpath("utilities", "IntersectionsOfSequences.jl"),
-     joinpath("utilities", "function_in.jl")
+     "utilities/auxiliaryoperations.jl",
+     "CombinatorialCodes/CombinatorialCodes.jl",
+     "CombinatorialCodes/CodeOperations.jl",
+     "CombinatorialCodes/BernoulliRandomCode.jl",
+     "CombinatorialCodes/NeuralRing.jl",
+     "SimplicialComplexes/SimplicialComplex.jl",
+     "SimplicialComplexes/ExampleSimplicialComplexes.jl", # Some examples of simplicial complexes
+     "utilities/cham.jl",
+     "SimplicialComplexes/Alexander_dual_function.jl",
+     "utilities/DeleteRedundantFacets!.jl",
+     "utilities/function_Bicomplex.jl",
+     "utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl",
+     "SimplicialComplexes/FiltrationOfSimplicialComplexes.jl",
+     "HomologyComputations/PersistenceIntervals.jl",
+     "utilities/function_show.jl", # most show functions have been moved next to the type declarations. This file will be removed at next version.
+     "plotting/PlottingFunctions.jl",
+     "DirectedComplexes/DirectedComplex.jl",
+     "DirectedComplexes/Posets.jl",
+     "utilities/EulerCharacteristic.jl",
+     "HomologyComputations/PHAT_interface.jl",
+     "utilities/subset_of_a_sequence.jl",
+     "utilities/IntersectionsOfSequences.jl",
+     "utilities/function_in.jl"
      ])
 
 # For ease of reading/updating, export statements are being moved to the files
