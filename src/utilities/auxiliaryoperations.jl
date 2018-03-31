@@ -7,8 +7,8 @@
 Converts binary vector `b` into a subset of `V` or `vertices(C)`, reresented as
 a vector.
 """
-binary_to_set(b::Union{BitVector,Vector{Bool}}, V) = V[BitVector(b)]
-binary_to_set(b::Union{BitVector,Vector{Bool}}, C::AbstractFiniteSetCollection) = binary_to_set(b, vertices(C))
+binary_to_set(b::AbstractVector{Bool}, V) = V[BitVector(b)]
+binary_to_set(b::AbstractVector{Bool}, C::AbstractFiniteSetCollection) = binary_to_set(b, vertices(C))
 
 """
     set_to_binary(s, V)
@@ -20,10 +20,7 @@ Converts set `s` into a logical index to the (ordered) vertex set `V` or
 """
 function set_to_binary(s, V)
     b = falses(length(V))
-    # b[indexin(s,V)] = true
-    for i in filter(x -> x > 0, indexin(s,V))
-        b[i] = true
-    end
+    b[indexin(collect(s),collect(V))] = true
     return b
 end
 set_to_binary(s, C::AbstractFiniteSetCollection) = set_to_binary(s, vertices(C))
