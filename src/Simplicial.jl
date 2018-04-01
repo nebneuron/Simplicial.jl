@@ -31,7 +31,8 @@ map(include,
      "HomologyComputations/PHAT_interface.jl",
      "utilities/subset_of_a_sequence.jl",
      "utilities/IntersectionsOfSequences.jl",
-     "utilities/function_in.jl"
+     "utilities/function_in.jl",
+     "deprecations.jl"
      ])
 
 export
@@ -50,6 +51,12 @@ isvoid, isirrelevant
 AbstractCombinatorialCode, CombinatorialCode,
 vertices, HasEmptySet, isvoid, isirrelevant,
 link, add, add!, del, del!, matrix_form, transpose
+
+# SimplicialComplex.jl
+AbstractSimplicialComplex,
+SimplicialComplex, VoidComplex, IrrelevantComplex,
+vertices, matrix_form,
+dim, dimension, link, del, res, add, fvector, hvector,
 
 
 export BettiNumbers, Alexander_dual, DeleteRedundantFacets!

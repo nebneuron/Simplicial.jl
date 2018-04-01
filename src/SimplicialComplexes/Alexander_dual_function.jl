@@ -1,5 +1,5 @@
 ## This function computes the Alexander dual of a simplicial complex
-function Alexander_dual(SC::FacetList)
+function Alexander_dual(SC::SimplicialComplex)
     ## Collect all simplices of SC
     ## Note that we start from j=0, also collecting the empty set
     All_simplex=[]
@@ -23,7 +23,7 @@ function Alexander_dual(SC::FacetList)
     dual_part_array=collect(dual_part)
     Ad=[setdiff(neuron_array,dual_part_array[i]) for i=1:length(dual_part_array)]
     ## transform in to simplicial complex
-    Ad=FacetList(Ad)
+    Ad=SimplicialComplex(Ad)
     ## keep the vertices the same as the vertices of SC
     ## (This is for making the dual of dual the original SC)
     Ad.vertices=SC.vertices

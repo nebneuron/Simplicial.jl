@@ -6,7 +6,7 @@
     Usage: betti=BettiNumbers(K)
     Here betti[i] is the dimension of the (i-1)-dimensional homology group
 """
-function BettiNumbers(K::AbstractAbstractSimplicialComplex)::Array{Int,1}
+function BettiNumbers(K::AbstractSimplicialComplex)::Array{Int,1}
 I=PersistenceIntervals(FiltrationOfSimplicialComplexes(K));
 L=length(I);
 betti=Array{Int,1}(L);
