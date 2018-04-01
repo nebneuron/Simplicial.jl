@@ -1,5 +1,30 @@
 # misc utility functions
 
+# memory performance functions
+"""
+    smallest_int_type(ints...)
+
+Return the smallest integer type that can store all the given integers.
+"""
+function smallest_int_type(ints...)
+    types = [Int8, Int16, Int32, Int64]
+    for T in types
+        all(i -> typemin(T) <= i < typemax(T), ints) && return T
+    end
+end
+
+"""
+    smallest_uint_type(ints...)
+
+Return the smallest unsigned integer type that can store all the given integers
+"""
+function smallest_uint_type(ints...)
+    types = [UInt8, UInt16, UInt32, UInt64]
+    for T in types
+        all(i -> i < typemax(T), ints) && return T
+    end
+end
+
 # sorting binary vectors and sets
 """
     lessequal_GrRevLex(a, b)
@@ -8,12 +33,12 @@ True if ``a <=_GrRevLex b``. See [graded reverse lexicographic
 order](https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order).
 
 Can be used to `sortrows` a matrix with boolean entries (i.e. `a` and `b` are both
-`AbstractVector{Bool}` types) or to sort a list of sets (i.e. `a` and `b` are both
-`AbstractSet{T<:Integer}`s).
+`AbstractVector{Bool}` types) or to sort a list of sets (i.e. `a` and `b` are `Vector`s or
+`Set`s)
 
 """
 lessequal_GrRevLex(a::AbstractVector{Bool}, b::AbstractVector{Bool}) = a == b ? true : (sum(a) != sum(b) ? sum(a) < sum(b) : (a-b)[findlast(a-b)] < 0)
-lessequal_GrRevLex(a::AbstractSet{S}, b::AbstractSet{T}) where {S<:Integer, T<:Integer} = a == b ? true : (length(a) != length(b) ? length(a) < length(b) : maximum(setdiff(a,b)) < maximum(setdiff(b,a)))
+lessequal_GrRevLex(a, b) = a == b ? true : (length(a) != length(b) ? length(a) < length(b) : maximum(setdiff(a,b)) < maximum(setdiff(b,a)))
 
 """
     insert_sorted!(a::Vector{T}, item::T, lt)

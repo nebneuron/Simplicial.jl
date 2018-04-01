@@ -1,5 +1,5 @@
 """
-    abstract type AbstractCombinatorialCode
+    abstract type AbstractCombinatorialCode{T<:Integer}
 
 The abstract parent class for concrete implements of *combinatorial codes*.
 """
@@ -10,63 +10,80 @@ abstract type AbstractCombinatorialCode{T<:Integer} <: AbstractFiniteSetCollecti
 ################################################################################
 
 function show(io::IO, C::AbstractCombinatorialCode)
-    get(io, :compact, false) || println(io, typeof(C))
+    if !get(io, :compact, false)
+        println(io, typeof(C))
+    end
     print(io, "Code on [$(length(vertices(C)))] with $(length(C)) codewords")
-    get(io, :compact, false) || (println(); println(io, "C = {$(join(C, ", "))}"))
+    if !get(io, :compact, false)
+        println()
+        println(io, "C = {$(join(C, ", "))}")
+    end
 end
 
 ################################################################################
 ### CombinatorialCode
 ################################################################################
 """
-    CombinatorialCode
+    CombinatorialCode{T<:Integer}
 
 A collection of subsets of ``[n] = {1,...,n}``. Codewords are stored as
-[`CodeWord`](@ref) objects in an array.
+[`Set{T}`](@ref) objects in an array.
+
+By default, `T` is determined at object construction to be the smallest `Int` type that can
+store all the vertices; see notes below.
 
 # Constructors
 
-    CombinatorialCode(itr, [vertices=union(itr...)])
+    CombinatorialCode(itr, [vertices=union(itr...)]; [signed=true])
 
-Collects the unique elements of `itr`, then sorts them according to `order`. Optional
-argument `vertices` allows creation of trivial neurons, i.e. neurons which never fire. Words
-are stored in graded reverse lexicographic order (see [`lessequal_GrRevLex`](@ref)).
+Collects the unique elements of iterable collection `itr` as codewords. Determines the
+smallest integer type which can store all the vertices; if `signed=false` this will be a
+`UInt` type, otherwise it will be an `Int` type. Optional argument `vertices` allows
+creation of trivial neurons, i.e. neurons which never fire. Words are stored in graded
+reverse lexicographic order (see [`lessequal_GrRevLex`](@ref)).
 
     CombinatorialCode(B::AbstractMatrix{Bool})
 
 Interprets rows of matrix `B` as codewords.
 
 """
-mutable struct CombinatorialCode <: AbstractCombinatorialCode{eltype(CodeWord)}
-    words::Vector{CodeWord}   # the codewords, these are ordered by the weights (in the increasing order)
+mutable struct CombinatorialCode{T} <: AbstractCombinatorialCode{T}
+    words::Vector{Set{T}}   # codewords stored in GrRevLex order
     weights::Vector{Int} # the sizes of the codewords in the same order as the words
     MaximumWeight::Int  #
     Minimumweight::Int  #
-    Nwords::Int       	# total number of codewords in the code
-    vertices::CodeWord 	# the set of all vertices that show up in the code
+    Nwords::Int         # total number of codewords in the code
+    vertices::Set{T}    # the set of all vertices that show up in the code
     maximal_idx::Vector{Int} # indices of maximal (by set inclusion) codewords
 
-    function CombinatorialCode(itr, V=union(itr...)))
-        if length(itr) == 0
+    # offload fiddling with types to external constructor.
+    function CombinatorialCode{T}(words::Vector{Set{T}}, V::Set{T}) where T
+        if length(words) == 0
             # no words were passed
-            new(Vector{CodeWord}(0), Int[], 0, 0, 0, emptyset, Int[])
-        elseif all(collect(map(length,itr)) .== 0)
+            new{T}(words, Int[], 0, 0, 0, V, Int[])
+        elseif all(map(length,words) .== 0)
             # only the empty set was passed, possibly many times
-            new([emptyset], [0], 0, 0, 1, emptyset, [1])
+            new{T}([Set{T}()], [0], 0, 0, 1, V, [1])
         else
-            L = collect(unique(itr))
-            L = sort(L, lt=order)
+            L = unique(words)
+            L = sort(L, lt=lessequal_GrRevLex)
             weights = map(length, L)
             # since words are in GrRevLex order, a given set can only be contained in a set later in the list.
-            subset_idx = [any(s -> issubset(L[i], s) for s in L[i+1:end]) for i = 1:length(L)]
-            new(L, weight, maximum(L), minimum(L), length(L), CodeWord(V), find(subset_idx))
+            maximal_idx = [all(s -> !issubset(L[i], s), L[i+1:end]) for i = 1:length(L)]
+            new{T}(L, weights, maximum(weights), minimum(weights), length(L), V, find(maximal_idx))
         end
     end
 end
-function CombinatorialCode(B::AbstractMatrix{Bool})
-    V = 1:size(B,2)
-    CombinatorialCode([V[B[i,:]] for i=1:size(B,1)], V)
+# preprocess the data to determine the type of vertices to use
+function CombinatorialCode(itr, V=union(itr...); signed=true)
+    T = signed ? smallest_int_type(extrema(V)...) : smallest_uint_type(extrema(V)...)
+    CombinatorialCode{T}(map(Set{T}, collect(itr)), Set{T}(V))
 end
+function CombinatorialCode(B::AbstractMatrix{Bool}; signed=true)
+    V = 1:size(B,2)
+    CombinatorialCode([V[B[i,:]] for i=1:size(B,1)], V; signed=signed)
+end
+CombinatorialCode(C::AbstractFiniteSetCollection; signed=true) = CombinatorialCode(C, vertices(C); signed=signed)
 
 ### REQUIRED FUNCTIONS: CombinatorialCode
 
@@ -90,11 +107,11 @@ defined by
 ``link_{σ,τ}(C) = {ρ ⊆ [n] : ρ ∩ σ = ρ ∩ τ = ∅, ρ ∪ σ ∈ C}``
 """
 function link(C::CombinatorialCode, sigma, tau=[])
-  new_words = filter(c -> issubset(sigma, c) && (isempty(tau) || isempty(intersect(tau, c))), C)
-  if isempty(new_words)
-    println("ERROR!! $sigma is not a sub-codeword, and/or ($sigma,$tau) is a combinatorial relation")
-  end
-  return CombinatorialCode([setdiff(c, sigma) for c in new_words])
+    new_words = filter(c -> issubset(sigma, c) && (isempty(tau) || isempty(intersect(tau, c))), C)
+    if isempty(new_words)
+        println("ERROR!! $sigma is not a sub-codeword, and/or ($sigma,$tau) is a combinatorial relation")
+    end
+    return CombinatorialCode([setdiff(c, sigma) for c in new_words], vertices(C))
 end
 
 """
@@ -102,11 +119,12 @@ end
 
 Return `C` if `in(sigma, C)`, otherwise construct a new code ``C ∪ {sigma}``.
 """
-function add(CC::CombinatorialCode, sigma)
+function add(CC::CombinatorialCode{T}, sigma) where T
+    issubset(sigma, vertices(CC)) || throw(DomainError("Cannot add codeword sigma = {$sigma}: not a subset of V(C) = {$(vertices(C))}"))
     if sigma in CC
         return CC
     else
-        return CombinatorialCode(chain([sigma],CC), vertices(C))
+        return CombinatorialCode{T}(vcat(CC.words, Set{T}(sigma)), vertices(C))
     end
 end
 

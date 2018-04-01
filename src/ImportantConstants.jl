@@ -18,7 +18,7 @@ const CodeWord = Set{TheIntegerType}  # We currently encode sets via sparse sets
 const emptyset=CodeWord([]) # This definition should agree with the CodeWord type
 
 " Show a single CodeWord"
-function show(io::IO, c::CodeWord)
+function show(io::IO, c::Set{T}) where {T<:Integer}
     if isempty(c)
         print(io, "emptyset")
     else
@@ -45,7 +45,7 @@ const PersistenceIntervalsType=Array{SingleDimensionPersistenceIntervalsType,1}
 Abstract supertype for concrete implementations of Combinatorial Codes and
 Simplicial Complexes.
 """
-abstract type AbstractFiniteSetCollection{T} where {T} end
+abstract type AbstractFiniteSetCollection{T} end
 
 ################################################################################
 ### Generic method implementations
@@ -65,7 +65,7 @@ function matrix_form(C::AbstractFiniteSetCollection)
     V = vertices(C)
     M = falses(length(C), length(V))
     for (i,c) in enumerate(C)
-        M[i,indexin(c, V)] = true
+        M[i,indexin(collect(c), V)] = true
     end
     return M
 end
@@ -85,8 +85,13 @@ isvoid(C::AbstractFiniteSetCollection) = length(C) == 0
 isirrelevant(C::AbstractFiniteSetCollection) = length(C) == 1 && [] in C
 
 ################################################################################
-### Iteration over maximal sets
+### Iteration functions
 ################################################################################
+
+# iterating over a collection C, as in a loop "for c in C ...", should yield Set{T}s, where
+# T is the vertex type of C.
+eltype(::Type{AbstractFiniteSetCollection{T}}) where T = Set{T}
+
 """
     MaximalSetIterator{T<:AbstractFiniteSetCollection}
 
