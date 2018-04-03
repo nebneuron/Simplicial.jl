@@ -16,7 +16,7 @@ function show(io::IO, K::AbstractSimplicialComplex)
     print(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
     if !get(io, :compact, false)
         println(io)
-        println(io, "    V = {$(join(vertices(K), ", "))}")
+        println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
         println(io, "max K = {$(join(collect(facets(K)),", "))}")
     end
 end
@@ -112,8 +112,10 @@ list of its facets.
 
     SimplicialComplex(itr, vertices=union(itr...))
 
-Uses the maximal elements of `itr` as facets. Optional argument
-`vertices` can specify vertex set if some vertices do not appear as faces.
+Uses the maximal elements of `itr` as facets. Optional argument `vertices` can specify
+vertex set if some vertices do not appear as faces. The vertices are of type
+`eltype(vertices)`; if this is a subtype of `Integer` the smallest type which can store
+those values is used.
 
     SimplicialComplex(B)
 
@@ -129,14 +131,14 @@ mutable struct SimplicialComplex{T} <: AbstractSimplicialComplex{T}
 
     # offload fiddling with types to external constructor(s)
     function SimplicialComplex{T}(facets::Vector{Set{T}}, V::Set{T}) where T
-        if length(itr) == 0
+        if length(facets) == 0
             # no words; return void complex
-            new{T}(words, Int[], 0, 0, V)
-        elseif all(collect(map(length,itr)) .== 0)
+            new{T}(facets, Int[], 0, 0, V)
+        elseif all(collect(map(length,facets)) .== 0)
             # only the empty set was passed, possibly many times
             new([Set{T}()], [-1], -1, 1, V)
         else
-            L = unique(itr)
+            L = unique(facets)
             L = sort(L, lt=lessequal_GrRevLex)
             # once sorted, keep only the maximal elements
             maximal_idx = [all(s -> !issubset(L[i], s), L[i+1:end]) for i = 1:length(L)]
@@ -148,8 +150,15 @@ mutable struct SimplicialComplex{T} <: AbstractSimplicialComplex{T}
         end
     end
 end
-function SimplicialComplex(B::AbstractMatrix{Bool})
-    T = smallest_int_type(size(B,2))
+function SimplicialComplex(itr, V=union(itr...); squash_int_type=true)
+    T = eltype(V)
+    if T <: Integer && squash_int_type
+        T = smallest_int_type(extrema(V)...)
+    end
+    SimplicialComplex{T}(Set{T}.(collect(itr)), Set{T}(V))
+end
+function SimplicialComplex(B::AbstractMatrix{Bool}; squash_int_type=true)
+    T = squash_int_type ? smallest_int_type(size(B,2)) : Int
     V = T.(1:size(B,2))
     SimplicialComplex{T}([Set{T}(V[B[i,:]]) for i=1:size(B,1)], Set{T}(V))
 end
@@ -201,7 +210,7 @@ in `K`'s vertex set and use `res` to restrict to that set.
 function del(K::SimplicialComplex{T}, tau) where T
     issubset(tau, vertices(K)) || throw(DomainError("Cannot delete face: tau = {$tau} is not a subset of V(K) = {$(vertices(K))}"))
     _tau = Set{T}(tau)
-    new_facets = vcat([issubset(_tau, F) ? [setdiff(F,t) for t in _tau] : [F] for F in facets(K)]...)
+    new_facets = vcat([issubset(_tau, F) ? [Set{T}(setdiff(F,t)) for t in _tau] : [F] for F in facets(K)]...)
     return SimplicialComplex{T}(new_facets, vertices(K))
 end
 
@@ -251,7 +260,7 @@ end
 
 
 ###### Iteration over facets: SimplicialComplex
-length(maxK::MaximalSetIterator{SimplicialComplex}) = length(maxK.collection.facets)
-start(maxK::MaximalSetIterator{SimplicialComplex}) = 1
-next(maxK::MaximalSetIterator{SimplicialComplex}, state) = (maxK.collection.facets[state], state+1)
-done(maxK::MaximalSetIterator{SimplicialComplex}, state) = state > length(maxK.collection.facets)
+length(maxK::MaximalSetIterator{T}) where {T <: SimplicialComplex} = length(maxK.collection.facets)
+start(maxK::MaximalSetIterator{T}) where {T <: SimplicialComplex} = 1
+next(maxK::MaximalSetIterator{T}, state) where {T <: SimplicialComplex} = (maxK.collection.facets[state], state+1)
+done(maxK::MaximalSetIterator{T}, state) where {T <: SimplicialComplex} = state > length(maxK.collection.facets)

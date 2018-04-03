@@ -34,16 +34,16 @@ store all the vertices; see notes below.
 
 # Constructors
 
-    CombinatorialCode(itr, [vertices=union(itr...)]; [signed=true])
+    CombinatorialCode(itr, [vertices=union(itr...)]; [squash_int_type=true], [signed=true])
 
-Collects the unique elements of iterable collection `itr` as codewords. Determines the
-smallest integer type which can store all the vertices; if `signed=false` this will be a
-`UInt` type, otherwise it will be an `Int` type. Optional argument `vertices` allows
-creation of trivial neurons, i.e. neurons which never fire. Words are stored in graded
-reverse lexicographic order by their binary vector representation  (see
+Collects the unique elements of iterable collection `itr` as codewords. If `squash_int_type`
+is true, determines the smallest integer type which can store all the vertices; if
+`signed=false` this will be a `UInt` type, otherwise it will be an `Int` type. Optional
+argument `vertices` allows creation of trivial neurons, i.e. neurons which never fire. Words
+are stored in graded reverse lexicographic order by their binary vector representation  (see
 [`lessequal_GrRevLex`](@ref)).
 
-    CombinatorialCode(B::AbstractMatrix{Bool})
+    CombinatorialCode(B::AbstractMatrix{Bool}; kwargs...)
 
 Interprets rows of matrix `B` as codewords.
 
@@ -76,15 +76,19 @@ mutable struct CombinatorialCode{T} <: AbstractCombinatorialCode{T}
     end
 end
 # preprocess the data to determine the type of vertices to use
-function CombinatorialCode(itr, V=union(itr...); signed=true)
-    T = signed ? smallest_int_type(extrema(V)...) : smallest_uint_type(extrema(V)...)
+function CombinatorialCode(itr, V=union(itr...); squash_int_type=true, signed=true)
+    T = if squash_int_type
+        signed ? smallest_int_type(extrema(V)...) : smallest_uint_type(extrema(V)...)
+    else
+        Int
+    end
     CombinatorialCode{T}(map(Set{T}, collect(itr)), Set{T}(V))
 end
-function CombinatorialCode(B::AbstractMatrix{Bool}; signed=true)
+function CombinatorialCode(B::AbstractMatrix{Bool}; squash_int_type=true, signed=true)
     V = 1:size(B,2)
-    CombinatorialCode([V[B[i,:]] for i=1:size(B,1)], V; signed=signed)
+    CombinatorialCode([V[B[i,:]] for i=1:size(B,1)], V; squash_int_type=squash_int_type, signed=signed)
 end
-CombinatorialCode(C::AbstractFiniteSetCollection; signed=true) = CombinatorialCode(C, vertices(C); signed=signed)
+CombinatorialCode(C::AbstractFiniteSetCollection; squash_int_type=true, signed=true) = CombinatorialCode(C, vertices(C); squash_int_type=squash_int_type, signed=signed)
 
 ### REQUIRED FUNCTIONS: CombinatorialCode
 
@@ -195,7 +199,7 @@ around with `C`'s fields, these should be sorted using `lessequal_GrRevLex`.
 function matrix_form(C::CombinatorialCode)
     B = falses(length(C), length(vertices(C)))
     for (i,c) in enumerate(C.words)
-        B[i,c] = true
+        B[i,collect(c)] = true
     end
     return B
 end

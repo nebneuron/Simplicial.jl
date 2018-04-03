@@ -31,7 +31,7 @@ map(include,
      "plotting/PlottingFunctions.jl",
      "DirectedComplexes/DirectedComplex.jl",
      "DirectedComplexes/Posets.jl",
-     "utilities/EulerCharacteristic.jl",
+     "DirectedComplexes/EulerCharacteristic.jl",
      "HomologyComputations/PHAT_interface.jl",
      "utilities/subset_of_a_sequence.jl",
      "utilities/IntersectionsOfSequences.jl",
@@ -64,7 +64,7 @@ link, add, add!, del, del!, matrix_form, sparse_matrix_form, transpose,
 
 # CodeOperations.jl
 BernoulliRandomCode, intersection_completion, max_intersection_completion, union_completion,
-cham
+cham,
 
 # NeuralRing.jl
 PseudoMonomial, PseudoMonomialType, CanonicalForm, canonical_form,
@@ -79,8 +79,11 @@ VoidComplex, IrrelevantComplex, Alexander_dual, alexander_dual,
 # ExampleSimplicialComplexes.jl
 TwoTorus, KleinBottle, PoincareHomologyThreeSphere, DunceHat,
 
+# mixed_type_operations
+Bicomplex, polar_complex
+
 ###### Not yet organized
-export BettiNumbers,
+export BettiNumbers
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export MaximalDimension, MaximalHomologicalDimension
 export PlotBettiCurves

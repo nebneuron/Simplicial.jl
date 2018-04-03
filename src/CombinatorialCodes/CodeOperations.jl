@@ -6,7 +6,7 @@ Return a random code on `N` neurons, where each neuron is an i.i.d. Bernoulli tr
 success probability `p`. Returns at most `Nwords`
 
 """
-function BernoulliRandomCode(N, Nwords, p) where {T<:AbstractCombinatorialCode}
+function BernoulliRandomCode(N, Nwords, p)
     R = (1 - rand(Nwords, N)) .<= p
     return CombinatorialCode(R)
 end

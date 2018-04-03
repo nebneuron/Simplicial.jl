@@ -7,11 +7,13 @@
 Constructs the polar complex ``Γ(C)`` for the given code.
 
 !!! Implementation notes
-    Vertex set is `[vertices(C); -vertices(C)]`
+    Vertex set is `V = union(vertices(C), map(-,vertices(C)))`. This can have strange
+    results if the vertex type of `C` is unsigned and the size of the vertex set is large.
+
 """
 function polar_complex(C::AbstractCombinatorialCode{T}) where T
-    V = [collect(vertices(C)); -collect(vertices(C))]
-    F = [union(c, -setdiff(vertices(C), c)) for c in C]
+    V = union(vertices(C), map(-,vertices(C)))
+    F = [union(c, map(-,setdiff(vertices(C), c))) for c in C]
     return SimplicialComplex{T}(F, V)
 end
 const Bicomplex = polar_complex # deprecated function
