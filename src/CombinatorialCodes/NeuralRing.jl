@@ -1,7 +1,4 @@
 
-export PseudoMonomial, PseudoMonomialType, CanonicalForm,
-	canonical_form
-
 """
     PseudoMonomial
 
@@ -16,7 +13,7 @@ struct PseudoMonomial
         y = collect(unique(y_itr))
         new(sort_x ? sort(x) : x, sort_y ? sort(y) : y)
     end
-    function PseudoMonomial(b::AbstractVector) # binary vector of length 2n
+    function PseudoMonomial(b::AbstractVector{Bool}) # binary vector of length 2n
         iseven(length(b)) || error("PseudoMonomial: length of vector b is odd")
 
         new(find(b[1:length(b)>>1]), find(b[1+length(b)>>1:end]))

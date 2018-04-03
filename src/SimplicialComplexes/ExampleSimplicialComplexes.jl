@@ -1,22 +1,18 @@
 # This is a collection of functions that create some example simplicial complexes
 
-export TwoTorus, KleinBottle, PoincareHomologyThreeSphere,DunceHat
-
 """
     TwoTorus()::SimplicialComplex
-    This function returns the minimal triangulation of a two-torus (7 vertices, 14 facets)
-    Usage: K=TwoTorus()
+
+Return the minimal triangulation of a two-torus (7 vertices, 14 facets)
 """
-function TwoTorus()
-return SimplicialComplex([[7, 1, 2], [2, 3, 6], [7, 1, 5], [1, 3, 6], [1, 3, 4], [1, 2, 4], [2, 3, 5], [7, 3, 5], [7, 3, 4], [7, 2, 6], [7, 4, 6], [2, 4, 5], [4, 5, 6], [1, 5, 6]]);
-end
+TwoTorus() = SimplicialComplex([[7, 1, 2], [2, 3, 6], [7, 1, 5], [1, 3, 6], [1, 3, 4], [1, 2, 4], [2, 3, 5], [7, 3, 5], [7, 3, 4], [7, 2, 6], [7, 4, 6], [2, 4, 5], [4, 5, 6], [1, 5, 6]])
 
 
 
 """
     KleinBottle()::SimplicialComplex
-    This function returns the minimal triangulation of the Klein bottle (8 vertices, 16 facets)
-    Usage: K=KleinBottle()
+
+Return the minimal triangulation of the Klein bottle (8 vertices, 16 facets)
 """
 function KleinBottle()
 return SimplicialComplex([[3, 4, 6], [2, 5, 7], [2, 3, 7], [3, 4, 7], [1, 4, 7], [8, 2, 5], [2, 4, 6], [1, 2, 6], [8, 1, 6], [1, 3, 5], [1, 2, 3], [8, 2, 4], [1, 5, 7], [8, 1, 4], [8, 5, 6], [3, 5, 6]])

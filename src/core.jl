@@ -17,7 +17,6 @@ const CodeWord = Set{TheIntegerType}  # We currently encode sets via sparse sets
 " emptyset is the representation of the emptyset of the type CodeWord, i.e. emptyset=CodeWord([]) "
 const emptyset=CodeWord([]) # This definition should agree with the CodeWord type
 
-" Show a single CodeWord"
 function show(io::IO, c::Set{T}) where {T<:Integer}
     if isempty(c)
         print(io, "emptyset")
@@ -59,10 +58,10 @@ abstract type AbstractFiniteSetCollection{T} end
     matrix_form(collection)
 
 A `BitMatrix` with one row for every element of `collection`. Each row is a
-logical index to the array `vertices(C)`.
+logical index to the array `collect(vertices(C))`.
 """
 function matrix_form(C::AbstractFiniteSetCollection)
-    V = vertices(C)
+    V = collect(vertices(C))
     M = falses(length(C), length(V))
     for (i,c) in enumerate(C)
         M[i,indexin(collect(c), V)] = true
@@ -104,7 +103,7 @@ collection could be used.
 struct MaximalSetIterator{T<:AbstractFiniteSetCollection}
     collection::T
 end
-eltype{T<:AbstractFiniteSetCollection}(::Type{MaximalSetIterator{T}}) = eltype(T)
+eltype(::Type{MaximalSetIterator{T}}) where {T<:AbstractFiniteSetCollection} = eltype(T)
 
 """
     facets(C::AbstractFiniteSetCollection)

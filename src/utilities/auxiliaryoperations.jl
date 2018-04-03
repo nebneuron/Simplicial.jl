@@ -52,20 +52,15 @@ insert_sorted!(a::Vector{T}, item::T, lt) where T = insert!(a, searchsortedlast(
 # Tools for manipulating binary vectors as sets
 """
     binary_to_set(b, V)
-    binary_to_set(b, C::AbstractFiniteSetCollection)
 
-Converts binary vector `b` into a subset of `V` or `vertices(C)`, reresented as
-a vector.
+Converts binary vector `b` into a subset of `V`, reresented as a vector.
 """
 binary_to_set(b::AbstractVector{Bool}, V) = V[BitVector(b)]
-binary_to_set(b::AbstractVector{Bool}, C::AbstractFiniteSetCollection) = binary_to_set(b, vertices(C))
 
 """
     set_to_binary(s, V)
-    set_to_binary(s, C::AbstractFiniteSetCollection)
 
-Converts set `s` into a logical index to the (ordered) vertex set `V` or
-`vertices(C)`
+Converts set `s` into a logical index to the (ordered) vertex set `V`
 
 """
 function set_to_binary(s, V)
@@ -73,7 +68,6 @@ function set_to_binary(s, V)
     b[indexin(collect(s),collect(V))] = true
     return b
 end
-set_to_binary(s, C::AbstractFiniteSetCollection) = set_to_binary(s, vertices(C))
 
 """
     list_to_bitmatrix(L, V=collect(union(L...)))

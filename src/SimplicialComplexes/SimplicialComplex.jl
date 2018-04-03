@@ -10,55 +10,18 @@ abstract type AbstractSimplicialComplex{T} <: AbstractFiniteSetCollection{T} end
 ### generic implementation of basic operations
 ################################################################################
 function show(io::IO, K::AbstractSimplicialComplex)
-    get(io, :compact, false) || println(io, typeof(K))
+    if !get(io, :compact, false)
+        println(io, typeof(K))
+    end
     print(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
-    get(io, :compact, false) || (println();
-        println(io, "    V = {$(join(vertices(K), ", "))}");
+    if !get(io, :compact, false)
+        println(io)
+        println(io, "    V = {$(join(vertices(K), ", "))}")
         println(io, "max K = {$(join(collect(facets(K)),", "))}")
-        )
+    end
 end
 
 ==(K1::AbstractSimplicialComplex, K2::AbstractSimplicialComplex) = Set(map(Set,facets(K1))) == Set(map(Set,facets(K2)))
-
-"""
-    del(K, tau)
-
-The deletion of `tau` from `K`. This is the set faces in `K` which are _not_
-cofaces of `tau`. For "deletion" to mean "faces which do not intersect `tau`",
-compute the complement of `tau` in `K`'s vertex set and use `res` to restrict to
-that set.
-
-``del_τ(K) = {σ ∈ K : τ ⊏̸ σ}``
-"""
-function del(K::AbstractSimplicialComplex, tau)
-    new_facets = vcat([issubset(tau, F) ? [setdiff(F,t) for t in tau] : [F] for F in facets(K)]...)
-    return SimplicialComplex(typeof(K), new_facets)
-end
-
-"""
-    res(K, Vprime)
-
-The restriction of `K` to `Vprime`.
-
-``res_{V'}(K) = {σ ∈ K : σ ⊆ V'} = {σ ∩ V' : σ ∈ K}``
-"""
-function res(K::AbstractSimplicialComplex, Vprime)
-    return SimplicialComplex(typeof(K), map(F -> intersect(F,Vprime), facets(K)))
-end
-
-"""
-    add(K::AbstractSimplicialComplex, sigma)
-
-Add face `sigma` to simplicial complex `K`. If `sigma` is already a face of `K`,
-returns `K`.
-"""
-function add(sigma, K::AbstractSimplicialComplex)
-    if sigma in K
-        return K
-    else
-        return SimplicialComplex(typeof(K), chain([sigma], facets(K)))
-    end
-end
 
 """
     fvector(K)
@@ -102,13 +65,14 @@ end
 hvector(K::AbstractSimplicialComplex) = hvector(fvector(K))
 
 function in(sigma, K::AbstractSimplicialComplex)
-    for f in facets(K)
-        if issubset(sigma, f)
+    for F in facets(K)
+        if issubset(sigma, F)
             return true
         end
     end
     return false
 end
+
 
 ### ITERATION: generic iteration over _all_ faces of a complex
 function length(K::AbstractSimplicialComplex)
@@ -139,9 +103,9 @@ done(K::AbstractSimplicialComplex, state) = done(state[1], state[2])
 ################################################################################
 
 """
-    SimplicialComplex
+    SimplicialComplex{T}
 
-Stores an abstract simplicial complex on vertex set ``{1,..,n}`` by storing a
+Stores an abstract simplicial complex with vertices of type `T` by storing a
 list of its facets.
 
 # Constructors
@@ -156,22 +120,23 @@ Uses the maximal elements of `itr` as facets. Optional argument
 Interprets rows of binary matrix `B` as codewords.
 
 """
-type SimplicialComplex <: AbstractSimplicialComplex{Int16}
-    facets::Array{CodeWord,1}  # the maximal faces ordered by the weights (in the increasing order)
-    dimensions::Array{Int,1} # the dimensions of the facets
-    dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
-    Nwords::Int  # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
-    vertices::CodeWord 	# the set of all vertices that show up in the simplicial complex
+mutable struct SimplicialComplex{T} <: AbstractSimplicialComplex{T}
+    facets::Vector{Set{T}}  # the maximal faces ordered by the weights (in the increasing order)
+    dimensions::Vector{Int} # the dimensions of the facets
+    dim::Int    # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
+    Nwords::Int # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
+    vertices::Set{T}    # the set of all vertices that show up in the simplicial complex
 
-    function SimplicialComplex(itr, V=union(itr...))
+    # offload fiddling with types to external constructor(s)
+    function SimplicialComplex{T}(facets::Vector{Set{T}}, V::Set{T}) where T
         if length(itr) == 0
             # no words; return void complex
-            new(Vector{CodeWord}(0), Int[], 0, 0, CodeWord(V))
+            new{T}(words, Int[], 0, 0, V)
         elseif all(collect(map(length,itr)) .== 0)
             # only the empty set was passed, possibly many times
-            new([emptyset], [-1], -1, 1, CodeWord(V))
+            new([Set{T}()], [-1], -1, 1, V)
         else
-            L = collect(unique(itr))
+            L = unique(itr)
             L = sort(L, lt=lessequal_GrRevLex)
             # once sorted, keep only the maximal elements
             maximal_idx = [all(s -> !issubset(L[i], s), L[i+1:end]) for i = 1:length(L)]
@@ -179,18 +144,18 @@ type SimplicialComplex <: AbstractSimplicialComplex{Int16}
             dims = map(length, L) .- 1
             dim = maximum(dims)
             Nwords = length(L)
-            new(L, dims, dim, Nwords, CodeWord(V))
+            new(L, dims, dim, Nwords, V)
         end
     end
 end
-SimplicialComplex(B::AbstractMatrix{Bool}) = _NI("SimplicialComplex(B::AbstractMatrix{Bool})")
-SimplicialComplex(C::AbstractFiniteSetCollection) = SimplicialComplex(facets(C), vertices(C))
+function SimplicialComplex(B::AbstractMatrix{Bool})
+    T = smallest_int_type(size(B,2))
+    V = T.(1:size(B,2))
+    SimplicialComplex{T}([Set{T}(V[B[i,:]]) for i=1:size(B,1)], Set{T}(V))
+end
+SimplicialComplex{T}(C::AbstractFiniteSetCollection{T}) where T = SimplicialComplex{T}(collect(facets(C)), vertices(C))
 
 vertices(K::SimplicialComplex) = K.vertices
-
-isvoid(K::SimplicialComplex)=(isempty(K.facets))
-
-isirrelevant(K::SimplicialComplex)=(K.facets==[emptyset])
 
 """
     dim(K)
@@ -215,45 +180,78 @@ The link of `sigma` in `K`.
 
 ``link_σ(K) = {τ ∈ K : σ ∩ τ = ∅, σ ∪ τ ∈ K}``
 """
-link(K::SimplicialComplex, sigma) = SimplicialComplex([setdiff(F, sigma) for F in filter(x -> issubset(sigma, x), facets(K))], setdiff(vertices(K), sigma))
+function link(K::SimplicialComplex{T}, sigma) where T
+    issubset(sigma, vertices(K)) || throw(DomainError("Cannot compute link: sigma = {$sigma} is not a subset of V(K) = {$(vertices(K))}"))
+    _sigma = Set{T}(sigma)
+    Fs = [setdiff(F, _sigma) for F in filter(x -> issubset(_sigma, x), facets(K))]
+    SimplicialComplex(Fs, setdiff(vertices(K), _sigma))
+end
+
+"""
+    del(K, tau)
+
+The deletion of `tau` from `K`. This is the set faces in `K` which are _not_
+cofaces of `tau`. Returned complex has same vertex type and vertex set as `K`.
+
+``del_τ(K) = {σ ∈ K : τ ⊏̸ σ}``
+
+For "deletion" in the sense "faces which do not intersect `tau`", compute the complement of `tau`
+in `K`'s vertex set and use `res` to restrict to that set.
+"""
+function del(K::SimplicialComplex{T}, tau) where T
+    issubset(tau, vertices(K)) || throw(DomainError("Cannot delete face: tau = {$tau} is not a subset of V(K) = {$(vertices(K))}"))
+    _tau = Set{T}(tau)
+    new_facets = vcat([issubset(_tau, F) ? [setdiff(F,t) for t in _tau] : [F] for F in facets(K)]...)
+    return SimplicialComplex{T}(new_facets, vertices(K))
+end
+
+"""
+    del!(K, tau)
+
+In-place version of [`del`](@ref)
+"""
+del!(K::SimplicialComplex{T}, tau) where T = _NI("del!(::SimplicialComplex{T}, tau)")
+
+"""
+    res(K, Vprime)
+
+The restriction of `K` to `Vprime`.
+
+``res_{V'}(K) = {σ ∈ K : σ ⊆ V'} = {σ ∩ V' : σ ∈ K}``
+"""
+function res(K::SimplicialComplex{T}, Vprime) where T
+    issubset(Vprime, vertices(K)) || throw(DomainError("Cannot restrict: V' = $Vprime is not a subset of V(K) = $(vertices(K))"))
+    _Vprime = Set{T}(Vprime)
+    return SimplicialComplex{T}(map(F -> intersect(F,_Vprime), facets(K)), _Vprime)
+end
+
+"""
+    add(K::SimplicialComplex, sigma)
+
+Add face `sigma` to simplicial complex `K`. If `sigma` is already a face of `K`,
+returns `K`, otherwise returns a new object.
+"""
+function add(K::SimplicialComplex{T}, sigma) where T
+    issubset(sigma, vertices(K)) || throw(DomainError("Cannot add face: sigma = $sigma is not a subset of V(K) = $(vertices(K))"))
+    _sigma = Set{T}(sigma)
+    if _sigma in K
+        return K
+    else
+        return SimplicialComplex{T}(chain([sigma], facets(K)), vertices(K))
+    end
+end
+
+
 
 ### ITERATION: SimplicialComplex
 ###### Iteration over all faces: SimplicialComplex
-eltype(::Type{SimplicialComplex}) = CodeWord
+
+# For now, this uses the generic iteration algorithm above, using the Combinatorics package.
+# Presumably, this could be improved by taking advantage of the ordering of the facets.
+
 
 ###### Iteration over facets: SimplicialComplex
 length(maxK::MaximalSetIterator{SimplicialComplex}) = length(maxK.collection.facets)
 start(maxK::MaximalSetIterator{SimplicialComplex}) = 1
 next(maxK::MaximalSetIterator{SimplicialComplex}, state) = (maxK.collection.facets[state], state+1)
 done(maxK::MaximalSetIterator{SimplicialComplex}, state) = state > length(maxK.collection.facets)
-
-################################################################################
-### special complexes
-################################################################################
-"""
-    VoidComplex([SimplicialComplex], V=Int[])
-    VoidComplex(K::AbstractSimplicialComplex)
-
-The void simplicial complex, which has no faces (not even the empty set), with
-specified vertex set (default is empty).
-
-The second form returns a simplicial complex of the same type and vertex set as
-`K`
-"""
-VoidComplex(::Type{T}, V=Int[]) where {T <: AbstractSimplicialComplex} = SimplicialComplex(T, [], V)
-VoidComplex(V=Int[]) = VoidComplex(SimplicialComplex, V)
-VoidComplex(K::AbstractSimplicialComplex) = SimplicialComplex(typeof(K), [], vertices(K))
-
-"""
-    IrrelevantComplex([SimplicialComplex], V=Int[])
-    IrrelevantComplex(K::AbstractSimplicialComplex)
-
-The irrelevant complex, which has exactly one face, the empty set. Vertex set
-can be optionally specified.
-
-The second form returns a simplicial comple of the same type and vertex set as
-`K`.
-"""
-IrrelevantComplex(::Type{T}, V=Int[]) where {T <: AbstractSimplicialComplex} = SimplicialComplex(T, [[]], V)
-IrrelevantComplex(V=Int[]) = IrrelevantComplex(SimplicialComplex, V)
-IrrelevantComplex(K::AbstractSimplicialComplex) = SimplicialComplex(typeof(K), [[]], vertices(K))

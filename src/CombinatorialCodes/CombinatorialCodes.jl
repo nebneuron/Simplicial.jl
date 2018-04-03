@@ -15,7 +15,7 @@ function show(io::IO, C::AbstractCombinatorialCode)
     end
     print(io, "Code on [$(length(vertices(C)))] with $(length(C)) codewords")
     if !get(io, :compact, false)
-        println()
+        println(io)
         println(io, "C = {$(join(C, ", "))}")
     end
 end
@@ -40,7 +40,8 @@ Collects the unique elements of iterable collection `itr` as codewords. Determin
 smallest integer type which can store all the vertices; if `signed=false` this will be a
 `UInt` type, otherwise it will be an `Int` type. Optional argument `vertices` allows
 creation of trivial neurons, i.e. neurons which never fire. Words are stored in graded
-reverse lexicographic order (see [`lessequal_GrRevLex`](@ref)).
+reverse lexicographic order by their binary vector representation  (see
+[`lessequal_GrRevLex`](@ref)).
 
     CombinatorialCode(B::AbstractMatrix{Bool})
 
@@ -87,16 +88,19 @@ CombinatorialCode(C::AbstractFiniteSetCollection; signed=true) = CombinatorialCo
 
 ### REQUIRED FUNCTIONS: CombinatorialCode
 
-vertices(CC::CombinatorialCode) = sort(collect(CC.vertices))
+"""
+    vertices(C::CombinatorialCode)
 
-### OTHER FUNCTIONS: CombinatorialCode
+Returns the vertex set of `C` as a `Set`
+"""
+vertices(C::CombinatorialCode) = C.vertices
 
-# This is a function that detects if the code has the empty set:
-HasEmptySet(code::CombinatorialCode)=in(emptyset,code)
+"""
+    in(sigma::itr, C::CombinatorialCode)
 
-isvoid(code::CombinatorialCode)=(length(code.words)==0)
-
-isirrelevant(code::CombinatorialCode)=(code.words==[emptyset])
+True if `sigma` is a codeword in `C`
+"""
+in(sigma, C::CombinatorialCode) = sigma in C.words
 
 """
     link(code, sigma, tau=[])
@@ -197,6 +201,21 @@ function matrix_form(C::CombinatorialCode)
 end
 
 """
+    sparse_matrix_form(C::CombinatorialCode)
+
+A `SparseMatrixCSC` representation of `C` with `Bool` entries; rows as codewords.
+
+Order of returned codewords matches that in `C.words`; assuming no one has been messing
+around with `C`'s fields, these should be sorted using `lessequal_GrRevLex`.
+
+"""
+function sparse_matrix_form(C::CombinatorialCode)
+    Is = vcat([fill(k,length(c)) for (k,c) in enumerate(C.words)]...)
+    Js = vcat(map(collec,C.words)...)
+    return sparse(Is, Js, true)
+end
+
+"""
     transpose(C::CombinatorialCode)
 
 The code obtained by transposing the matrix form of a code.
@@ -205,10 +224,17 @@ Usage: `C1 = transpose(C)` or `C1 = C'`
 """
 transpose(C::CombinatorialCode) = CombinatorialCode(transpose(matrix_form(C)))
 
+# This is a function that detects if the code has the empty set:
+HasEmptySet(code::CombinatorialCode)=in(emptyset,code)
+
+isvoid(code::CombinatorialCode)=(length(code.words)==0)
+
+isirrelevant(code::CombinatorialCode)=(code.words==[emptyset])
+
 ### ITERATION: CombinatorialCode
 ###### Iteration over all codewords
-eltype(::CombinatorialCode) = CodeWord
-eltype(::Type{CombinatorialCode}) = CodeWord
+eltype(::CombinatorialCode{T}) where T = Set{T}
+eltype(::Type{CombinatorialCode{T}}) where T = Set{T}
 length(CC::CombinatorialCode) = length(CC.words)
 start(CC::CombinatorialCode) = 1
 next(CC::CombinatorialCode, state) = (CC.words[state], state+1)
@@ -227,6 +253,7 @@ done(maxC::MaximalSetIterator{CombinatorialCode}, state) = state > length(maxC.c
 
 
 
+#DEPRECATED
 # Below are types and methods associated to the BitArray representation of codes
 # This representation is (inconviniently) used by some methods, such as CanonicalForm
 
