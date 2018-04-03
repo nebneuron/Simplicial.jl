@@ -1,0 +1,32 @@
+site_name:        Simplicial.jl
+repo_url:         https://github.com/nebneuron/Simplicial.jl
+site_description: Simplicial.jl package for topological data analysis
+site_author:      Vladimir Itskov, Alex Kunin, Min-Chun Wu, et al.
+
+theme: readthedocs
+
+extra_css:
+  - assets/Documenter.css
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML
+  - assets/mathjaxhelper.js
+
+markdown_extensions:
+  - extra
+  - tables
+  - fenced_code
+  - mdx_math
+
+docs_dir: 'build'
+
+pages:
+  - Home: index.md
+  - 'Combinatorial Codes': man/combinatorialcodes.md
+  - 'Simplicial Complexes': man/simplicialcomplexes.md
+  - 'Finite Set Collections': man/finitesetcollections.md
+  - 'Directed Complexes': man/directedcomplexes.md
+  - 'CombinatorialCode': lib/combinatorialcodes.md
+  - 'SimplicialComplex': lib/simplicialcomplexes.md
+  - 'FiltrationOfSimplicialComplexes': lib/filteredsimplicialcomplexes.md
+  - 'DirectedComplex': lib/directedcomplex.md
