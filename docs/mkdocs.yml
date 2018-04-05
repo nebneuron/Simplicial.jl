@@ -28,4 +28,4 @@ pages:
   - 'CombinatorialCode': lib/combinatorialcodes.md
   - 'SimplicialComplex': lib/simplicialcomplexes.md
   - 'FiltrationOfSimplicialComplexes': lib/filteredsimplicialcomplexes.md
-  - 'DirectedComplex': lib/directedcomplex.md
+  - 'DirectedComplex': lib/directedcomplexes.md
