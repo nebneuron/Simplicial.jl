@@ -1,5 +1,8 @@
 # Package Simplicial
 
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://nebneuron.github.io/Simplicial.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://nebneuron.github.io/Simplicial.jl/latest)
+
 This package provides data structures and algorithms for combinatorial topology. Currently, it can handle   abstract simplicial complexes, directed complexes, and combinatorial codes. The package is written in [Julia language](http://julialang.org).  The long-term goal of this project is to be a *"swiss-knife"*  for manipulating (*very* *large*) combinatorial structures, with an eye towards topological data analysis.
 
 This software is free under the terms of the GNU General Public License ([GPLv3](http://www.gnu.org/licenses/gpl.html)).
