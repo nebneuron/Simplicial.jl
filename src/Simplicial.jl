@@ -1,6 +1,6 @@
 __precompile__(true)
 module Simplicial
-using Combinatorics, LightGraphs, Plotly 
+using Combinatorics, LightGraphs 
 import Base.in, Base.==, Base.<=, Base.show, Base.push!, Base.transpose
 import Base: start, next, done, eltype, length
 map(include,
