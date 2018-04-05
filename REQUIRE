@@ -4,9 +4,8 @@
 # If no REQUIRE file is present, it means there are no requirements.
 
 
-julia 0.5
+julia 0.6
 Combinatorics
-Plotly
+PyPlot
 IterTools
 Iterators
-LightGraphs
