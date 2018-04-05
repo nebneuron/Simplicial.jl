@@ -1,7 +1,8 @@
 # Package Simplicial
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://nebneuron.github.io/Simplicial.jl/stable)
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://nebneuron.github.io/Simplicial.jl/latest)
+| **Stable** | **Latest** |
+|:----------:|:----------:|
+| [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://nebneuron.github.io/Simplicial.jl/stable) [![Build Status](https://travis-ci.org/nebneuron/Simplicial.jl.svg?branch=master)](https://travis-ci.org/nebneuron/Simplicial.jl) | [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://nebneuron.github.io/Simplicial.jl/latest) [![Build Status](https://travis-ci.org/nebneuron/Simplicial.jl.svg?branch=v0.1)](https://travis-ci.org/nebneuron/Simplicial.jl)
 
 This package provides data structures and algorithms for combinatorial topology. Currently, it can handle   abstract simplicial complexes, directed complexes, and combinatorial codes. The package is written in [Julia language](http://julialang.org).  The long-term goal of this project is to be a *"swiss-knife"*  for manipulating (*very* *large*) combinatorial structures, with an eye towards topological data analysis.
 
@@ -14,8 +15,6 @@ This package interfaces with existing TDA software for homology computations. Cu
 
 
 # Installation:
-
-`julia> Pkg.update(); Pkg.add("Plotly")`
 
 `julia> Pkg.clone("https://github.com/nebneuron/Simplicial.jl.git")`
 
