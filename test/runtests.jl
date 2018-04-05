@@ -22,9 +22,12 @@ K0 = SimplicialComplex([])
 
 K1 = SimplicialComplex([[1,2],[2,3]])
 K2 = SimplicialComplex(C1)
+C5 = CombinatorialCode([[],[1],[2],[3],[1,2],[2,3]])
+C6 = CombinatorialCode(K1)
 
 @test dim(K1) == 1
 @test K1 == K2
+@test K1 == C5
 
 K5 = SimplicialComplex([[1,2,3,4],[2,3,4,5]])
 

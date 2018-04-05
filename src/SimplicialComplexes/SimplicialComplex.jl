@@ -75,28 +75,29 @@ end
 
 
 ### ITERATION: generic iteration over _all_ faces of a complex
-function length(K::AbstractSimplicialComplex)
+function length(K::AbstractSimplicialComplex{T}) where T
     ans = 0
     for Fs in combinations(collect(facets(K)))
         ans += (-1)^(length(Fs)-1) * 2^length(intersect(Fs...))
     end
     return ans
 end
-function start(K::AbstractSimplicialComplex)
-    all_combos = map(combinations,facets(K))
+function start(K::AbstractSimplicialComplex{T}) where T
+    #TODO subsets does not work on sets, so we have to use collect here, and then cast back
+    #to Set{T} in next(). Surely there is a better way to handle this.
+    all_subsets = map(f -> subsets(collect(f)),facets(K))
     # combinations() does not include the empty set, so we'll add it in below
-    V = eltype(vertices(K))
 
     # Warning! This is grossly inefficient. Don't use with overly large
     # complexes, or write your own, more efficient method!
-    itr = distinct(chain([Vector{V}(0)], all_combos...))
+    itr = distinct(chain(all_subsets...))
     return (itr, start(itr))
 end
-function next(K::AbstractSimplicialComplex, state)
+function next(K::AbstractSimplicialComplex{T}, state) where T
     (f, st) = next(state[1], state[2])
-    return (f, (state[1], st))
+    return (Set{T}(f), (state[1], st))
 end
-done(K::AbstractSimplicialComplex, state) = done(state[1], state[2])
+done(K::AbstractSimplicialComplex{T}, state) where T = done(state[1], state[2])
 
 ################################################################################
 ### type SimplicialComplex
@@ -171,8 +172,8 @@ vertices(K::SimplicialComplex) = K.vertices
 
 The dimension of `K`, defined as the maximum size of a face of `K` minus 1.
 
-If `K` is the void complex (i.e. `K` has no faces), returns `-2` (for type stability (this
-function always returns an `Int`); mathematically a sensible value would be `-Inf`).
+If `K` is the void complex (i.e. `K` has no faces), returns `-2` for type stability (this
+function always returns an `Int`); mathematically a sensible value would be `-Inf`.
 """
 dim(K::SimplicialComplex) = K.dim
 """

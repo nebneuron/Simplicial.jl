@@ -27,7 +27,7 @@ end
     CombinatorialCode{T<:Integer}
 
 A collection of subsets of ``[n] = {1,...,n}``. Codewords are stored as
-[`Set{T}`](@ref) objects in an array.
+`Set{T}` objects in an array.
 
 By default, `T` is determined at object construction to be the smallest `Int` type that can
 store all the vertices; see notes below.
