@@ -5,6 +5,6 @@ This is an incomplete list of methods available for manipulating `SimplicialComp
 ```@autodocs
 Modules = [Simplicial]
 Order = [:constant, :type, :function]
-Private = False
+Private = false
 Pages = ["SimplicialComplex.jl", "ExampleSimplicialComplexes.jl"]
 ```

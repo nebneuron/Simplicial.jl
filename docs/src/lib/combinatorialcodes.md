@@ -5,6 +5,6 @@ This is an incomplete list of methods available for manipulating `CombinatorialC
 ```@autodocs
 Modules = [Simplicial]
 Order = [:constant, :type, :function]
-Private = False
+Private = false
 Pages = ["CombinatorialCodes.jl", "BernoulliRandomCode.jl", "NeuralRing.jl"]
 ```
