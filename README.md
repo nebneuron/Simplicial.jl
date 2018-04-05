@@ -4,7 +4,7 @@
 |:----------:|:----------:|
 | [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://nebneuron.github.io/Simplicial.jl/stable) [![Build Status](https://travis-ci.org/nebneuron/Simplicial.jl.svg?branch=master)](https://travis-ci.org/nebneuron/Simplicial.jl) | [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://nebneuron.github.io/Simplicial.jl/latest) [![Build Status](https://travis-ci.org/nebneuron/Simplicial.jl.svg?branch=v0.1)](https://travis-ci.org/nebneuron/Simplicial.jl)
 
-This package provides data structures and algorithms for combinatorial topology. Currently, it can handle   abstract simplicial complexes, directed complexes, and combinatorial codes. The package is written in [Julia language](http://julialang.org).  The long-term goal of this project is to be a *"swiss-knife"*  for manipulating (*very* *large*) combinatorial structures, with an eye towards topological data analysis.
+This package provides data structures and algorithms for combinatorial topology. Currently, it can handle   abstract simplicial complexes, directed complexes, and combinatorial codes. The package is written in [Julia language](http://julialang.org).  The long-term goal of this project is to be a *"swiss-knife"*  for manipulating (*very* *large*) combinatorial structures, suitable for topological data analysis of large data. 
 
 This software is free under the terms of the GNU General Public License ([GPLv3](http://www.gnu.org/licenses/gpl.html)).
 The work was supported by the ARO award W911NF-15-1-0084 and NIH R01GM117592.
