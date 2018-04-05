@@ -179,13 +179,18 @@ del(C::CombinatorialCode, tau) = CombinatorialCode([setdiff(c, tau) for c in C],
 
 In-place version of `del`. Returns the resulting code.
 """
-del!(C::CombinatorialCode, tau) = _NI("del!")
+del!(C::CombinatorialCode, tau) = _NI("del!(::$(typeof(C)), tau)")
 # function del!(C::CombinatorialCode, tau)
 #     issubset(tau, vertices(C)) && throw(DomainError("Can't delete codeword: tau ($(tau)) is not a subset of V ($(vertices(C)))"))
 #     !any(s -> issubset(tau, s), C) && return C
 #     #TODO lots of details to keep track of here.
 #
 # end
+
+function add_trivial_neuron!(C::CombinatorialCode{T}, on=false) where T
+    # check if we can preserve type
+    maximum(vertices(C)) + T(1) > maximum(vertices(C)) || error("Cannot add trivial neuron in-place: maximum index exceeds Int type. ")
+end
 
 """
     matrix_form(C::CombinatorialCode)
@@ -258,40 +263,45 @@ done(maxC::MaximalSetIterator{CombinatorialCode}, state) = state > length(maxC.c
 
 
 #DEPRECATED
-# Below are types and methods associated to the BitArray representation of codes
-# This representation is (inconviniently) used by some methods, such as CanonicalForm
-
-" BitArrayOfACombinatorialCode is a different representation of a CombinatorialCode"
-type BitArrayOfACombinatorialCode
-     BinaryMatrix::BitArray{2}  # This is a binary representation of the code
-                                # The rows correspond to the vertices
-                                # The columns correspond to the codewords
-     VertexTranslation::Array{Int,1}
-end
-
 """
-    BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinatorialCode
-    This function converts the CombinatorialCode representation to the BitArrayOfACombinatorialCode representation
+    BitArrayOfACombinatorialCode(C)
 
+!!! Deprecated
+    This function is an alias to [`matrix_form`](@ref), use that instead.
 """
-function BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinatorialCode
-         Nvertices=length(C.vertices); Nwords=length(C.words);
-         OrderedListOfVertexNumbers=sort(collect(C.vertices))
+BitArrayOfACombinatorialCode(C::CombinatorialCode) = matrix_form(C)
 
-         # We also need to construct a dictionary that translates
-         # an  integer vertex label into the appropriate position in  OrderedListOfVertexNumbers
-         LookUp=Dict{TheIntegerType,Int}(); for i=1: Nvertices; LookUp[OrderedListOfVertexNumbers[i]]=i;end
-
-         # First, we initiate the binary mtx with all zeros
-         B=BitArrayOfACombinatorialCode(falses(Nwords,Nvertices), OrderedListOfVertexNumbers);
-         # now we go through the list of codewords and assign each column
-         for j=1: Nwords
-             the_word = collect(C.words[j]);
-             L = length(the_word) ; the_substitution = Array{Int}(L);
-             for p=1:L
-                 the_substitution[p]=LookUp[the_word[p]]
-             end
-         B.BinaryMatrix[j,the_substitution]=true
-         end
-        return B
-end
+# " BitArrayOfACombinatorialCode is a different representation of a CombinatorialCode"
+# type BitArrayOfACombinatorialCode
+#      BinaryMatrix::BitArray{2}  # This is a binary representation of the code
+#                                 # The rows correspond to the vertices
+#                                 # The columns correspond to the codewords
+#      VertexTranslation::Array{Int,1}
+# end
+#
+# """
+#     BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinatorialCode
+#     This function converts the CombinatorialCode representation to the BitArrayOfACombinatorialCode representation
+#
+# """
+# function BitArrayOfACombinatorialCode(C::CombinatorialCode)::BitArrayOfACombinatorialCode
+#          Nvertices=length(C.vertices); Nwords=length(C.words);
+#          OrderedListOfVertexNumbers=sort(collect(C.vertices))
+#
+#          # We also need to construct a dictionary that translates
+#          # an  integer vertex label into the appropriate position in  OrderedListOfVertexNumbers
+#          LookUp=Dict{TheIntegerType,Int}(); for i=1: Nvertices; LookUp[OrderedListOfVertexNumbers[i]]=i;end
+#
+#          # First, we initiate the binary mtx with all zeros
+#          B=BitArrayOfACombinatorialCode(falses(Nwords,Nvertices), OrderedListOfVertexNumbers);
+#          # now we go through the list of codewords and assign each column
+#          for j=1: Nwords
+#              the_word = collect(C.words[j]);
+#              L = length(the_word) ; the_substitution = Array{Int}(L);
+#              for p=1:L
+#                  the_substitution[p]=LookUp[the_word[p]]
+#              end
+#          B.BinaryMatrix[j,the_substitution]=true
+#          end
+#         return B
+# end
