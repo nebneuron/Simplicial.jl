@@ -50,6 +50,8 @@ end # of the dumb costructor function of FiltrationOfSimplicialComplexes
 
 end
 
+FiltrationOfSimplicialComplexes(K::AbstractSimplicialComplex) = FiltrationOfSimplicialComplexes(facets(K), ones(length(facets(K))), vertices(K))
+
 function FiltrationOfSimplicialComplexes(K::SimplicialComplex)::FiltrationOfSimplicialComplexes
 """ This utility function converts a single simplicial complex into the `trivial filtration' of just one complex
     Usage: TrivialFiltration=FiltrationOfSimplicialComplexes(K);

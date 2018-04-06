@@ -12,8 +12,9 @@ end
 ## where sigma are simplices in AIMC_minus_C(C)
 function link_AIMC_minus_C(C::Array{Any,1})
     links=[]
+    K = SimplicialComplex(C)
     for i=1:length(AIMC_minus_C(C).words)
-        push!(links,link(SimplicialComplex(C),(AIMC_minus_C(C).words)[i]))
+        push!(links,link(K,(AIMC_minus_C(C).words)[i]))
     end
     links
 end
@@ -22,10 +23,11 @@ end
 
 
 ## This function computes the difference of two combinatorial codes
-function CombinaDiff(CC1::CombinatorialCode, CC2::CombinatorialCode)
-    WordDiff=[collect(i) for i in setdiff(Set(CC1.words),Set(CC2.words))]
-    CombinatorialCode(WordDiff)
-end
+# function CombinaDiff(CC1::CombinatorialCode, CC2::CombinatorialCode)
+#     WordDiff=[collect(i) for i in setdiff(Set(CC1.words),Set(CC2.words))]
+#     CombinatorialCode(WordDiff)
+# end
+CombinaDiff(C1::AbstractCombinatorialCode, C2::AbstractCombinatorialCode) = CombinatorialCode(typeof(C1), setdiff(C1, C2))
 
 
 

@@ -1,10 +1,22 @@
 # [Simplicial Complexes](@id lib-simplicial-complexes)
 
-This is an incomplete list of methods available for manipulating `SimplicialComplex`es
+## Public Methods
 
 ```@autodocs
 Modules = [Simplicial]
 Order = [:constant, :type, :function]
 Private = false
-Pages = ["SimplicialComplex.jl", "ExampleSimplicialComplexes.jl"]
+
+Pages = ["SimplicialComplex.jl", "SimplicialComplexOperations.jl", "Alexander_dual_function.jl", "ExampleSimplicialComplexes.jl"]
+```
+
+## Private methods
+
+To use these functions, you'll have to call `Simplicial.function_name()`
+
+```@autodocs
+Modules = [Simplicial]
+Order = [:constant, :type, :function]
+Private = true
+Pages = ["SimplicialComplex.jl", "SimplicialComplexOperations.jl", "Alexander_dual_function.jl", "ExampleSimplicialComplexes.jl"]
 ```

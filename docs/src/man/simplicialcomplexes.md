@@ -17,6 +17,27 @@ This complex has 3 facets:
 Array{Int16,1}[Int16[2, 4], Int16[3, 4], Int16[1, 2, 3]]
 ```
 
+### Example Simplicial Complexes
+
+Several example simplicial complexes can be constructed by calling the appropriate function, for example
+
+```julia-repl
+julia> K = TwoTorus()
+Simplicial.SimplicialComplex{Int8}
+2-dimensional simplicial complex on 7 vertices with 14 facets
+    V = {1, 2, 3, 4, 5, 6, 7}
+max K = {1 2 4, 1 3 4, 2 3 5, 2 4 5, 1 3 6, 2 3 6, 1 5 6, 4 5 6, 1 2 7, 3 4 7, 1 5 7, 3 5 7, 2 6 7, 4 6 7}
+```
+
+A complete list follows:
+
+```@autodocs
+Modules = [Simplicial]
+Order = [:constant, :type, :function]
+Private = false
+Pages = ["ExampleSimplicialComplexes.jl"]
+```
+
 ## [Filtered Simplicial Complexes](@id man-filtered-simplicial-complexes)
 
 A *filtered simplicial complex* ``(\Delta,f)`` is a simplicial complex ``\Delta`` together with a *filtration function* ``f : \Delta \to R`` which is monotone, i.e. if ``\sigma \subseteq \tau \in \Delta``, then ``f(\sigma) \le f(\tau)``. Equivalently, a filtered simplicial complex is a sequence
