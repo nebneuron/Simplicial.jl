@@ -13,26 +13,22 @@ end
 
 # union and intersection products
 """
-    union_product(C1, C2; [force_bitmatrix=false], [permutation=[]])
+    union_product(C1, C2)
 
 Compute the union product of codes `C1` and `C2`, under the GrRevLex ordering on both codes.
 
-If `force_bitmatrix=true` the intermediate steps will be carried out using `matrix_form`
-rather than `sparse_matrix_form`. If `permutation` is an vector of length `length(C1)`, it
-will be modified in-place to store the permutation applied to the sort the resulting matrix.
-
-For ``A = {a_1,...,a_m}`` a code on ``[d]`` and ``B = {b_1,...,b_d}`` a code on ``[n]``, the
+For ``A = \{a_1,...,a_m\}`` a code on ``[d]`` and ``B = \{b_1,...,b_d\}`` a code on ``[n]``, the
 union product is a code on ``[n]`` defined by
-``A ∨ B = { ⋃_{j ∈ a_i} b_j : a_i ∈ A}``
+``A ∨ B = \{ ⋃_{j ∈ a_i} b_j : a_i ∈ A\}``
 
 More simply, this is the code obtained from the nonzero entries of the product of the matrix
-forms of ``A`` and ``B``
+forms of ``A`` and ``B``.
 
 """
-function union_product(C1::AbstractCombinatorialCode, C2::AbstractCombinatorialCode; force_bitmatrix=false, permutation=Int[])
+function union_product(C1::AbstractCombinatorialCode, C2::AbstractCombinatorialCode)
     length(vertices(C1)) == length(C2) || throw(DomainError("Cannot multiply codes: C1 on [$(length(vertices(C1)))] while C2 has $(length(C2)) words"))
-    B1 = force_bitmatrix ? matrix_form(C1) : sparse_matrix_form(C1)
-    B2 = force_bitmatrix ? matrix_form(C2) : sparse_matrix_form(C2)
+    B1 = matrix_form(C1)
+    B2 = matrix_form(C2)
     return CombinatorialCode(B1 * B2 .> 0)
 end
 

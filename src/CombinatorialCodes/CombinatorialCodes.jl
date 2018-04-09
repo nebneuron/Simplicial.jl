@@ -220,7 +220,7 @@ around with `C`'s fields, these should be sorted using `lessequal_GrRevLex`.
 """
 function sparse_matrix_form(C::CombinatorialCode)
     Is = vcat([fill(k,length(c)) for (k,c) in enumerate(C.words)]...)
-    Js = vcat(map(collec,C.words)...)
+    Js = vcat(map(collect,C.words)...)
     return sparse(Is, Js, true)
 end
 
