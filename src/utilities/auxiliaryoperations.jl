@@ -88,13 +88,13 @@ end
 """
     subset_rows(B)
 
-Which rows in `B` have support contained in the support of another row. Returns
-a vector `V` with `V[i] = 0` if row `i` is not contained in any other row;
-otherwise, `V[i] = j` means that set `i` is a subset of set `j`. If row `i` is
-contained in multiple other rows, no guarantee about which will be returned.
+Which rows in binary matrix `B` have support contained in the support of another row.
+Returns a vector `V` with `V[i] = 0` if row `i` is not contained in any other row;
+otherwise, `V[i] = j` means that set `i` is a subset of set `j`. If row `i` is contained in
+multiple other rows, no guarantee about which will be returned.
 
 """
-function subset_rows(B::Union{BitMatrix,Matrix{Bool}})
+function subset_rows(B::AbstractMatrix{Bool})
     m,n = size(B)
     intersections = B * B'
     parent = zeros(Int,m)

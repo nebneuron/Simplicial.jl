@@ -67,7 +67,9 @@ vertices, HasEmptySet, isvoid, isirrelevant,
 link, add, add!, del, del!, matrix_form, sparse_matrix_form, transpose,
 
 # CodeOperations.jl
-BernoulliRandomCode, intersection_completion, max_intersection_completion, union_completion,
+BernoulliRandomCode,
+union_product,
+intersection_completion, max_intersection_completion, union_completion,
 cham,
 
 # NeuralRing.jl

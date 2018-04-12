@@ -43,9 +43,10 @@ argument `vertices` allows creation of trivial neurons, i.e. neurons which never
 are stored in graded reverse lexicographic order by their binary vector representation  (see
 [`lessequal_GrRevLex`](@ref)).
 
-    CombinatorialCode(B::AbstractMatrix{Bool}; kwargs...)
+    CombinatorialCode(B::AbstractMatrix{Bool}; order="rows", kwargs...)
 
-Interprets rows of matrix `B` as codewords.
+Interprets rows of matrix `B` as codewords. Keyword argument `order` is either `rows` or
+`cols` to specify whether rows of `B` or columns of `B` should be interpreted as codewords.
 
 """
 mutable struct CombinatorialCode{T} <: AbstractCombinatorialCode{T}
@@ -80,11 +81,14 @@ function CombinatorialCode(itr, V=union(itr...); squash_int_type=true, signed=tr
     T = if squash_int_type
         signed ? smallest_int_type(extrema(V)...) : smallest_uint_type(extrema(V)...)
     else
-        Int
+        eltype(V)
     end
     CombinatorialCode{T}(map(Set{T}, collect(itr)), Set{T}(V))
 end
-function CombinatorialCode(B::AbstractMatrix{Bool}; squash_int_type=true, signed=true)
+function CombinatorialCode(B::AbstractMatrix{Bool}; squash_int_type=true, signed=true, order="rows")
+    if order == "cols"
+        V = transpose(V)
+    end
     V = 1:size(B,2)
     CombinatorialCode([V[B[i,:]] for i=1:size(B,1)], V; squash_int_type=squash_int_type, signed=signed)
 end
@@ -220,7 +224,7 @@ around with `C`'s fields, these should be sorted using `lessequal_GrRevLex`.
 """
 function sparse_matrix_form(C::CombinatorialCode)
     Is = vcat([fill(k,length(c)) for (k,c) in enumerate(C.words)]...)
-    Js = vcat(map(collec,C.words)...)
+    Js = vcat(map(collect,C.words)...)
     return sparse(Is, Js, true)
 end
 
