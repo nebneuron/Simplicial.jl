@@ -31,14 +31,21 @@ map(include,
      "SimplicialComplexes/SimplicialComplexOperations.jl",
 
      # "utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl",
+    
      "HomologyComputations/PersistenceIntervals.jl",
      "plotting/PlottingFunctions.jl",
+    
+     # Directed Complexes
      "DirectedComplexes/DirectedComplex.jl",
+     "DirectedComplexes/FiltrationOfDirectedComplexes.jl",
      "DirectedComplexes/Posets.jl",
      "DirectedComplexes/EulerCharacteristic.jl",
      "HomologyComputations/PHAT_interface.jl",
      "utilities/subset_of_a_sequence.jl",
      "utilities/IntersectionsOfSequences.jl",
+     
+     # Filtrations Of Z2 Complexes
+    "HomologyComputations/FiltrationOfZ2Complexes.jl",
 
      # utility files
      "utilities/mixed_type_operations.jl",
@@ -97,4 +104,5 @@ export PlotBettiCurves
 export DirectedCodeword, issubsequence, subset_of_a_sequence, IntersectionsOfSequences, DirectedComplex, Matrix2Permutations, EmptyDirectedCodeword
 export GradedPoset, BoundaryOperator, EulerCharacteristic
 export The_Location_Of_PHAT_Executables, phat_compute_betti_numbers, PHAT_BettiNumbers
+export PHATarray, FiltrationOfDirectedComplexes, FiltrationOfZ2Complexes, FiltrationOfRandomSequences
 end
