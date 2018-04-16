@@ -25,7 +25,8 @@ pages:
   - 'Combinatorial Codes': man/combinatorialcodes.md
   - 'Simplicial Complexes': man/simplicialcomplexes.md
   - 'Directed Complexes': man/directedcomplexes.md
-  - '`CombinatorialCode`': lib/combinatorialcodes.md
-  - '`SimplicialComplex`': lib/simplicialcomplexes.md
-  - '`FiltrationOfSimplicialComplexes`': lib/filteredsimplicialcomplexes.md
-  - '`DirectedComplex`': lib/directedcomplexes.md
+  - 'CombinatorialCode Type': lib/combinatorialcodes.md
+  - 'SimplicialComplex Type': lib/simplicialcomplexes.md
+  - 'FiltrationOfSimplicialComplexes Type': lib/filteredsimplicialcomplexes.md
+  - 'DirectedComplex Type': lib/directedcomplexes.md
+  - 'Additional Functions': lib/otherfunctions.md
