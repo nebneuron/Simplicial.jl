@@ -260,7 +260,7 @@ function next(maxC::MaximalSetIterator{CombinatorialCode}, state)
     C = maxC.collection
     return (C.words[C.maximal_idx[state]], state+1)
 end
-done(maxC::MaximalSetIterator{CombinatorialCode}, state) = state > length(maxC.collect.maximal_idx)
+done(maxC::MaximalSetIterator{CombinatorialCode}, state) = state > length(maxC.collection.maximal_idx)
 
 
 
