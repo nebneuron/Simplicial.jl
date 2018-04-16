@@ -86,11 +86,13 @@ function CombinatorialCode(itr, V=union(itr...); squash_int_type=true, signed=tr
     CombinatorialCode{T}(map(Set{T}, collect(itr)), Set{T}(V))
 end
 function CombinatorialCode(B::AbstractMatrix{Bool}; squash_int_type=true, signed=true, order="rows")
-    if order == "cols"
-        V = transpose(V)
+    _B = if order == "cols"
+        transpose(B)
+    else
+        B
     end
-    V = 1:size(B,2)
-    CombinatorialCode([V[B[i,:]] for i=1:size(B,1)], V; squash_int_type=squash_int_type, signed=signed)
+    V = 1:size(_B,2)
+    CombinatorialCode([V[_B[i,:]] for i=1:size(_B,1)], V; squash_int_type=squash_int_type, signed=signed)
 end
 CombinatorialCode(C::AbstractFiniteSetCollection; squash_int_type=true, signed=true) = CombinatorialCode(C, vertices(C); squash_int_type=squash_int_type, signed=signed)
 
