@@ -36,16 +36,20 @@ end
 
 
 """
-    PseudoMonomialType(p::PseudoMonomial)
+    pseudomonomialtype(p::PseudoMonomial)
 
 Return the type of `p` as classified in [the neural ring
 paper](https://arxiv.org/abs/1212.4201) as an `Int`.
 
 Type I:   ``σ ≠ ∅, τ = ∅``
+
 Type II:  ``σ ≠ ∅, τ ≠ ∅``
+
 Type III: ``σ = ∅, τ ≠ ∅``
+
+Returns `0` if `p` does not match one of the above.
 """
-function PseudoMonomialType(p::PseudoMonomial)
+function pseudomonomialtype(p::PseudoMonomial)
     l1=isempty(p.x); l2= isempty(p.y)
     if l1 && l2;  return 0; end
     if l1 && !l2; return 3; end
@@ -53,6 +57,7 @@ function PseudoMonomialType(p::PseudoMonomial)
     else return 2
     end
 end
+PseudoMonomialType(p) = pseudomonomialtype(p)
 
 # custom display for arrays of pseudomonomials
 function show(io::IO, CF::Array{PseudoMonomial,1})

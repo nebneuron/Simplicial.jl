@@ -73,7 +73,7 @@ intersection_completion, max_intersection_completion, union_completion,
 cham,
 
 # NeuralRing.jl
-PseudoMonomial, PseudoMonomialType, CanonicalForm, canonical_form,
+PseudoMonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form,
 
 # SimplicialComplex.jl
 AbstractSimplicialComplex, SimplicialComplex,
