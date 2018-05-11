@@ -35,6 +35,29 @@ const MaximalHomologicalDimension=8;
 const SingleDimensionPersistenceIntervalsType=Matrix{Float64}
 const PersistenceIntervalsType=Array{SingleDimensionPersistenceIntervalsType,1}
 
+"""
+function show(P::PersistenceIntervalsType);
+This prints out the appropriate persistence intervals 
+"""
+
+function show(P::PersistenceIntervalsType);
+ println("Persistence intervals up to dimension=$(length(P)-1)");
+ for d=0:length(P)-1
+   print_with_color(:green, "d= $d"); println();
+   if isempty(P[d+1])
+       print_with_color(:green, "no intervals");println();
+   else
+       for l=1:size(P[d+1],1)
+            print_with_color(:blue, "birth=",P[d+1][l,1])
+            print_with_color(:red, "   death=",P[d+1][l,2]); println()
+       end
+   end
+   print_with_color(:green,"-------------") ; println();
+end
+end
+
+
+
 ################################################################################
 ### Abstract type and general utility function definitions
 ################################################################################
