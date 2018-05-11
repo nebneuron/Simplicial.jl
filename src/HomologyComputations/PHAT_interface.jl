@@ -59,3 +59,29 @@ function PHAT_BettiNumbers(D::DirectedComplex)::Array{Int64,1}
          return phat_compute_betti_numbers(convert(UInt64,Ncells),convert(UInt64,D.dim),reshape(cells, 1,length(cells)))
 end
 
+"""
+This function plugs the phat executable for julia PHAT interface, written by Pawel Dlotko
+
+"""
+
+function compute_PersistenceIntervals_Of_PHAT_array(number_of_cells::UInt64,dimension::UInt64,A::Array{Int64,2})::Vector{Int}
+############   First, take care of the location of the various executables:
+    const The_Location_Of_PHAT_Executables=Pkg.dir("Simplicial")*"/src/HomologyComputations/phat/src";
+    if is_apple()
+      const libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "macosx-interface_with_julia_May2018.so"));
+    elseif is_linux()
+          const libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "interface_with_julia_May2018.so"));
+    elseif is_windows()
+             error("Dear Windows OS user. There is no phat interface that has been made to work with julia on windows.
+             Be the first to make it happen :-)")
+    end
+const funhandle = Libdl.dlsym(libhandle, :compute_persistence_intervals);
+###########  now we call the phat executable
+         result = Vector{Int64}(dimension)
+         ccall(funhandle, Void, (UInt64, UInt64, Ref{Int64}, Ref{Int64}),
+               number_of_cells, dimension, A, result)
+         return result
+end
+
+
+
