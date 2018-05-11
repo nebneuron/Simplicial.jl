@@ -85,3 +85,88 @@ end
 
 
 
+
+
+
+
+
+
+"""
+This function returns the persistence diagrams of FiltrationOfZ2Complexes
+example usage: 
+
+P=PersistenceIntervals(Fz); 
+show(P); 
+"""
+
+function PersistenceIntervals(complex::Simplicial.FiltrationOfZ2Complexes)::Simplicial.PersistenceIntervalsType
+result =
+compute_PersistenceIntervals_Of_PHAT_array(convert(UInt64,length(complex.dimensions)),convert(UInt64,length(complex.dimensions)+1),PHATarray(complex));
+# now we translate the sequence numbers to the fitration numbers
+# initialize the empty persistence interval
+PersistenceIntervals=PersistenceIntervalsType(complex.dim+1);
+for d=0:complex.dim;
+    PersistenceIntervals[d+1]=SingleDimensionPersistenceIntervalsType(0,0);
+end
+###
+dimensions_of_intervals=Vector{Int}()
+deathtimes=Vector{Float64}(0);
+birthtimes=Vector{Float64}(0);
+i=1; IsInfiniteInterval=false;
+while i<=length(result)
+if (!IsInfiniteInterval)&&(result[i]==-1);
+    IsInfiniteInterval= true;
+    i+=1# skip the -1 to the next
+end
+
+Has_Zero_Length=false;
+
+the_birth_cell=result[i];
+birth_time=Float64(complex.birth[the_birth_cell]);
+
+    if !IsInfiniteInterval
+        death_time=Float64(complex.birth[result[i+1]]);
+        if death_time==birth_time; Has_Zero_Length=true;end
+        i+=1 # skip to the next element in the vector result
+    else
+        death_time=Inf
+    end
+
+if !Has_Zero_Length
+push!(dimensions_of_intervals,complex.dimensions[the_birth_cell]);
+push!(birthtimes,birth_time);
+push!(deathtimes,death_time);
+end
+
+i+=1;
+end
+# now we compose the PersistenceIntervals array
+for d=0:complex.dim;
+cycle_indices_in_d=find(dimensions_of_intervals.==d);
+PersistenceIntervals[d+1]=Matrix{Float64}(length(cycle_indices_in_d),2);
+for j=1: length(cycle_indices_in_d);
+    PersistenceIntervals[d+1][j,:]=[ birthtimes[cycle_indices_in_d[j]] deathtimes[cycle_indices_in_d[j]]]
+end
+end
+return PersistenceIntervals
+end
+
+
+
+"""
+ function PersistenceIntervals(FD::Simplicial.FiltrationOfDirectedComplexes)::Simplicial.PersistenceIntervalsType
+ Example usage:
+ max_simplices = [ Int16[1,2],Int16[2,3],Int16[3,4],Int16[1,4] ]
+ births = [0,1,2,3]
+ facet_complex = FiltrationOfDirectedComplexes(max_simplices, births)
+ P=PersistenceIntervals(facet_complex );
+ show(P)
+"""
+
+
+function PersistenceIntervals(FD::Simplicial.FiltrationOfDirectedComplexes)::Simplicial.PersistenceIntervalsType
+return   PersistenceIntervals(FiltrationOfZ2Complexes(FD));
+end
+
+
+
