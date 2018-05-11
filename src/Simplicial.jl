@@ -40,13 +40,15 @@ map(include,
      "DirectedComplexes/FiltrationOfDirectedComplexes.jl",
      "DirectedComplexes/Posets.jl",
      "DirectedComplexes/EulerCharacteristic.jl",
-     "HomologyComputations/PHAT_interface.jl",
+    
      "utilities/subset_of_a_sequence.jl",
      "utilities/IntersectionsOfSequences.jl",
      
      # Filtrations Of Z2 Complexes
     "HomologyComputations/FiltrationOfZ2Complexes.jl",
-
+ 
+     "HomologyComputations/PHAT_interface.jl",
+    
      # utility files
      "utilities/mixed_type_operations.jl",
 
