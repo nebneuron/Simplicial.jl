@@ -27,13 +27,25 @@ type FiltrationOfZ2Complexes
 
   depth::Int                        # this is the depth of filtration, i.e. the total  number of filtration levels
 
-    function FiltrationOfZ2Complexes(FD::FiltrationOfDirectedComplexes);
+
+  function FiltrationOfZ2Complexes(dimensions, dim, boundaries, birth, depth);
+    return new(dimensions, dim, boundaries, birth, depth)
+  end
+
+    function FiltrationOfZ2Complexes(FD::FiltrationOfDirectedComplexes, maxdim=-1);
 
       if isempty(FD.faces)
         return   new(Array{Int,1}(0), -2, 0, Array{Array{Int,1},1}(), Array{Int,1}(),0);
       end
+      if maxdim == -1
+        dim = maximum(FD.dimensions)
+      elseif 0 <= maxdim <= maximum(FD.dimensions)
+        dim = maxdim
+      else
+        error("Maximal dimension out of bounds")
+      end
+
       depth = FD.depth
-      dim = maximum(FD.dimensions)
       faces = []
       birth = []
       dimensions = []
@@ -55,7 +67,8 @@ type FiltrationOfZ2Complexes
       # that's some real bad coding happening here
       for j in 1:length(sorted_faces)
         facet = sorted_faces[j]
-        for len in 1:length(facet)-1
+        max_len = min(length(facet)-1, dim+1)
+        for len in 1:max_len
           for boundary in Combinatorics.combinations(facet, len)
             if !(boundary in faces)
               push!(faces, boundary)
@@ -64,9 +77,11 @@ type FiltrationOfZ2Complexes
             end
           end
         end
-      push!(faces, facet)
-      push!(birth, sorted_births[j])
-      push!(dimensions, length(facet)-1)
+        if length(facet)-1 <= dim
+          push!(faces, facet)
+          push!(birth, sorted_births[j])
+          push!(dimensions, length(facet)-1)
+        end
       end
 
       # "faces" is now an array of faces, ordered by filtration, and within filtration -- by dimension
@@ -90,11 +105,48 @@ type FiltrationOfZ2Complexes
 end  # type FiltrationOfZ2Complexes
 
 
+"""
+function SkeletonOfFiltration(Fz::FiltrationOfZ2Complexes, level)::FiltrationOfZ2Complexes;
+Returns the skelton of of the specified level (i.e. only facets whose dimension is at most equal to the level  )
+"""
+function SkeletonOfFiltration(Fz::FiltrationOfZ2Complexes, level)::FiltrationOfZ2Complexes;
+  if level == Fz.dim
+    return Fz
+  elseif (level < 0) && (level > Fz.dim)
+    error("Level is out of bounds")
+  end
 
+  dimensions = Fz.dimensions
+  birth = Fz.birth
+  boundaries = Fz.boundaries
 
+  cur_face = 1
+  cur_len = length(dimensions)
 
+  while cur_face <= cur_len
+    if dimensions[cur_face] <= level
+      cur_face += 1
+    else #need to carefully remove the i'th facet..
+      deleteat!(dimensions, cur_face)
+      deleteat!(birth, cur_face)
+      deleteat!(boundaries, cur_face)
+      for j in 1:length(boundaries)
+        # delete mentions of the face we're removing
+        cur_face_ind = findfirst(boundaries[j], cur_face)
+        if cur_face_ind > 0
+          deleteat!(boundaries[j], cur_face_ind)
+        end
+        #adjust the indicies for later faces (since we shifted the indexing when we deleted the face)
+        if !isempty(boundaries[j])
+          boundaries[j] = [x -> x - 1 for x in boundaries[j] if x > cur_face]
+        end
 
-
+        cur_len -= 1
+      end
+    end
+  end
+ return FiltrationOfZ2Complexes(dimensions, level, boundaries, birth, maximum(birth))
+end
 
 
 """
@@ -104,6 +156,7 @@ into array that can be input into PHAT.
 Usage:
 A=PHATarray(Fz)
 """
+
 function PHATarray(Fz::FiltrationOfZ2Complexes)::Array{Int64,2};
 Nelements=length(Fz.dimensions)
 cells=Array{Int,1}([]); # initialize as empty
