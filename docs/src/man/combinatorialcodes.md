@@ -42,3 +42,8 @@ julia> [length(c) for c in C]
 ```
 
 A complete list of methods can be found [here](@ref lib-combinatorial-codes).
+
+
+## Morphisms of Neural Codes
+
+Several functions related to [morphisms of neural codes](https://arxiv.org/abs/1806.02014) have been implemented. See the documentation [here](@ref lib-morphisms-codes).
