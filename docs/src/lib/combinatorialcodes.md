@@ -7,7 +7,7 @@ Modules = [Simplicial]
 Order = [:constant, :type, :function]
 Public = true
 Private = false
-Pages = ["CombinatorialCodes.jl", "CodeOperations.jl", "NeuralRing.jl", "morphisms.jl"]
+Pages = ["CombinatorialCodes.jl", "CodeOperations.jl", "NeuralRing.jl"]
 ```
 
 ## Private methods
@@ -19,7 +19,7 @@ Modules = [Simplicial]
 Order = [:constant, :type, :function]
 Public = false
 Private = true
-Pages = ["CombinatorialCodes.jl", "CodeOperations.jl", "NeuralRing.jl", "morphisms.jl"]
+Pages = ["CombinatorialCodes.jl", "CodeOperations.jl", "NeuralRing.jl"]
 ```
 
 ## [Morphisms](@id lib-morphisms-codes)
