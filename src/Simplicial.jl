@@ -19,6 +19,7 @@ map(include,
      "CombinatorialCodes/CombinatorialCodes.jl",
      "CombinatorialCodes/CodeOperations.jl",
      # "CombinatorialCodes/BernoulliRandomCode.jl", moved to CodeOperations.jl
+     "CombinatorialCodes/morphisms.jl",
      "CombinatorialCodes/NeuralRing.jl",
 
      # Simplicial complexes
@@ -31,10 +32,10 @@ map(include,
      "SimplicialComplexes/SimplicialComplexOperations.jl",
 
      # "utilities/function_AIMC_minus_C_and_link_AIMC_minus_C.jl",
-    
+
      "HomologyComputations/PersistenceIntervals.jl",
      "plotting/PlottingFunctions.jl",
-    
+
      # Directed Complexes
      "DirectedComplexes/DirectedComplex.jl",
      "DirectedComplexes/FiltrationOfDirectedComplexes.jl",
@@ -43,7 +44,7 @@ map(include,
     
      "utilities/subset_of_a_sequence.jl",
      "utilities/IntersectionsOfSequences.jl",
-     
+
      # Filtrations Of Z2 Complexes
     "HomologyComputations/FiltrationOfZ2Complexes.jl",
  
@@ -80,6 +81,9 @@ BernoulliRandomCode,
 union_product,
 intersection_completion, max_intersection_completion, union_completion,
 cham,
+
+# morphisms.jl
+trunk, core, product, coproduct, trunksmorphism,
 
 # NeuralRing.jl
 PseudoMonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form,
