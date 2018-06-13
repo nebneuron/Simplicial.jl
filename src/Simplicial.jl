@@ -111,4 +111,5 @@ export DirectedCodeword, issubsequence, subset_of_a_sequence, IntersectionsOfSeq
 export GradedPoset, BoundaryOperator, EulerCharacteristic
 export The_Location_Of_PHAT_Executables, phat_compute_betti_numbers, PHAT_BettiNumbers
 export PHATarray, FiltrationOfDirectedComplexes, FiltrationOfZ2Complexes, FiltrationOfRandomSequences
+export SkeletonOfFiltration
 end
