@@ -50,6 +50,9 @@ map(include,
  
      "HomologyComputations/PHAT_interface.jl",
     
+    # Laplacians:
+     "Laplacians/CombinatorialLaplacians.jl",
+    
      # utility files
      "utilities/mixed_type_operations.jl",
 
@@ -112,4 +115,5 @@ export GradedPoset, BoundaryOperator, EulerCharacteristic
 export The_Location_Of_PHAT_Executables, phat_compute_betti_numbers, PHAT_BettiNumbers
 export PHATarray, FiltrationOfDirectedComplexes, FiltrationOfZ2Complexes, FiltrationOfRandomSequences
 export SkeletonOfFiltration
+export Laplacians
 end
