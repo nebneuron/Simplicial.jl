@@ -19,7 +19,7 @@ if  P.dim<=0; error("This function can only handle complexes of dimension d>=1")
 ∂=[BoundaryOperator(P,k) for k=1:P.dim]; # The operator   ∂[k] maps C_k -> C_{k-1}
 Laps=typeof(∂)(P.dim+1);
 Laps[1]=∂[1]*∂[1]'; # the laplacian at C^0. This coinsides with the "classical" graph Laplacian
-for d=2:P.dim-1;
+for d=1:P.dim-1;
     # Here Laps[d+1] is the laplacian on C^d
     Laps[d+1]=∂[d+1]*∂[d+1]' + ((∂[d])')*∂[d]
 end
