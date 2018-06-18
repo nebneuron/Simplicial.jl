@@ -75,6 +75,20 @@ type DirectedComplex
                  new(facets, dimensions, dim, length(facets),vertices)
              end
          end
+        
+"""
+This constructor transforms a simplicial complex into the appropriate directed complex,
+where each SimplicialComplex is ordered according to the ordering of the integers
+Usage:
+D=DirectedComplex(Δ) ;
+Note that here we do not check Δ for sanity
+"""
+function DirectedComplex(Δ::SimplicialComplex)::DirectedComplex
+        if isvoid(Δ) ; return DirectedComplex(Array{DirectedCodeword}([]))
+        else
+        new(map(σ-> TheIntegerType.(sort(collect(σ))),Δ.facets), Δ.dimensions, Δ.dim, Δ.Nwords, Δ.vertices)
+        end
+end
 end
 
 
