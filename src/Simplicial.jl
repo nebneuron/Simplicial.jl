@@ -7,7 +7,7 @@ import IterTools: chain, distinct, product, subsets
 import Combinatorics: combinations
 
 # methods to extend
-import Base: in, ==, <=, show, push!, transpose,
+import Base: in, ==, <=, >=, <, >, show, push!, transpose,
              start, next, done, eltype, length,
              max, show
 
@@ -64,7 +64,7 @@ map(include,
 
 export
 # Imported from Base
-in, ==, <=, show, push!, transpose,
+in, ==, <=, >=, >, <, show, push!, transpose,
 start, next, done, eltype, length,
 max, show,
 
