@@ -84,6 +84,8 @@ type DirectedComplex
                  new(facets, dimensions, dim, length(facets),vertices)
              end
          end
+" This constructor handles the case when ListOfSequences is a list of integers "
+DirectedComplex(ListOfSequences::Array{Array{Int64,1},1}) =DirectedComplex(map(DirectedCodeword,ListOfSequences))::DirectedComplex        
         
 """
 This constructor transforms a simplicial complex into the appropriate directed complex,
