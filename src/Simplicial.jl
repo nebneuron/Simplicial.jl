@@ -57,7 +57,6 @@ map(include,
      "utilities/mixed_type_operations.jl",
 
      # deprecated files; contents should be moved to relevant locations
-     "utilities/function_show.jl",
      "utilities/function_in.jl",
      "deprecations.jl"
      ])
