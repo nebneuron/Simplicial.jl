@@ -108,7 +108,7 @@ end
 
 
 
-function show(D::DirectedComplex)
+function show(io::IO, D::DirectedComplex)
     if !get(io, :compact, false)
         println(io, typeof(K))
     end
