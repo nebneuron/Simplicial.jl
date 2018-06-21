@@ -102,8 +102,8 @@ function DirectedComplex(Δ::SimplicialComplex)::DirectedComplex
 end
 end
 
-
-
+"The dimension of a complex"
+ dim(D::DirectedComplex)=D.dim::Int;
 
 """
   function  Matrix2Permutations(A::Matrix)::Matrix
