@@ -110,7 +110,7 @@ end
 
 function show(io::IO, D::DirectedComplex)
     if !get(io, :compact, false)
-        println(io, typeof(K))
+        println(io, typeof(D))
     end
     print(io, "$(dim(D))-dimensional directed complex on $(length(D.vertices)) vertices with $(length(D.facets)) facets")
     if !get(io, :compact, false)
@@ -119,6 +119,8 @@ function show(io::IO, D::DirectedComplex)
         println(io, "max D = {$(join(collect(D.facets),", "))}")
     end
 end
+
+
 
 
 
