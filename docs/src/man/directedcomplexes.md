@@ -1,7 +1,7 @@
 # [Directed Complexes](@id man-directed-complexes)
 
 Let ``V`` be a finite set. A sequence of size ``k`` in ``V`` (also known as ``DirectedCodeword``) is a tuple ``(v_1,v_2, \dots, v_k) `` of ``k`` elements in ``V``, without repetitions. In other words, a directed codeword (a sequence) is a set together with a total order. 
-A sequence ``s`` is a subsequence of a sequence ``t`` ( ``s<t``) if s is obtained by removing some vertices from ``t``, while keeping the same ordering of the remaining vertices. 
+A sequence ``s`` is a subsequence of a sequence ``t`` ( ``s<t``) if ``s`` can  obtained by removing some vertices from ``t``, while keeping the same ordering of the remaining vertices. 
 
 
 Similarly, to a simplicial complex, a  ``DirectedComplex`` is  defined as follows. 
