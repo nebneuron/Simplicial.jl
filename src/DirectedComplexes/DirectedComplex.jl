@@ -112,46 +112,13 @@ function show(io::IO, D::DirectedComplex)
     if !get(io, :compact, false)
         println(io, typeof(K))
     end
-    print(io, "$(dim(D))-dimensional directed complex on $(length(D.vertices)) vertices with $(length(d.facets)) facets")
+    print(io, "$(dim(D))-dimensional directed complex on $(length(D.vertices)) vertices with $(length(D.facets)) facets")
     if !get(io, :compact, false)
         println(io)
-        println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
+        println(io, "    V = {$(join(sort(collect(D.vertices)), ", "))}")
         println(io, "max D = {$(join(collect(D.facets),", "))}")
     end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
