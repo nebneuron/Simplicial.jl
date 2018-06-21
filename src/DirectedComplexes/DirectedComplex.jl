@@ -49,7 +49,7 @@ This boolean operation returns true if a is a proper subsequence of b.
 
 
 
-type DirectedComplex
+mutable struct DirectedComplex
     facets::Array{DirectedCodeword,1}  # the maximal faces ordered by the weights (in the increasing order)
     dimensions::Array{Int,1} # the dimensions of the facets (ith dimension corresponds to the ith facet in facets)
     dim::Int  # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
@@ -104,6 +104,56 @@ end
 
 "The dimension of a complex"
  dim(D::DirectedComplex)=D.dim::Int;
+
+
+
+
+function show(D::DirectedComplex)
+    if !get(io, :compact, false)
+        println(io, typeof(K))
+    end
+    print(io, "$(dim(D))-dimensional directed complex on $(length(D.vertices)) vertices with $(length(d.facets)) facets")
+    if !get(io, :compact, false)
+        println(io)
+        println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
+        println(io, "max D = {$(join(collect(D.facets),", "))}")
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 """
   function  Matrix2Permutations(A::Matrix)::Matrix
