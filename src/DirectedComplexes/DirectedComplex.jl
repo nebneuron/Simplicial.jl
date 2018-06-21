@@ -36,6 +36,15 @@ end # function <=
 " The following name added for compartibility with the older code" 
 issubsequence(a::DirectedCodeword,b::DirectedCodeword)=(<=(a,b))::Bool
 
+"""
+Usage: a<b
+This boolean operation returns true if a is a proper subsequence of b.
+
+"""
+<(a::DirectedCodeword,b::DirectedCodeword)=(length(a)<length(b) && <=(a,b) )::Bool;
+>(a::DirectedCodeword,b::DirectedCodeword)= (length(a)>length(b) && <=(b,a) )::Bool;
+>=(a::DirectedCodeword,b::DirectedCodeword)=(b<=a)::Bool;
+
 
 
 
