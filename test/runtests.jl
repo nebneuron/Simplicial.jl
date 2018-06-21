@@ -47,3 +47,11 @@ G = SimplicialComplex([[-1,-2,-3],[1,-2,-3],[1,2,-3],[-1,2,3]])
 
 @test G1 == G
 @test G1 != G2
+
+
+
+
+# test computing Simplicial Homology
+ Δ=PoincareHomologyThreeSphere(); 
+β=BettiNumbers(Δ); 
+@test β==[1,0,0,1]
