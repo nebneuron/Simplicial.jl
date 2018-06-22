@@ -151,9 +151,16 @@ mutable struct SimplicialComplex{T} <: AbstractSimplicialComplex{T}
         end
     end
 end
-function SimplicialComplex(itr, V=union(itr...); squash_int_type=true)
-    T = eltype(V)
-    if T <: Integer && squash_int_type
+function SimplicialComplex(itr, V=unique(union(itr...)); squash_int_type=true)
+    #TODO the extra `unique` in the method signature ensures that empty arrays (which
+    #default to type `Array{Any,1}`) get ignored in determining the element type for `V`.
+    #This is a quick hack for now; this should be handled more elegantly (and efficiently)
+    #in the future.
+
+    T = isempty(V) ? Int : eltype(V)
+    #TODO additionally, the check below avoids evaluating `extrema([])` which would throw
+    #any error. Again, not the most efficient but it works for now.
+    if !isempty(V) && T <: Integer && squash_int_type
         T = smallest_int_type(extrema(V)...)
     end
     SimplicialComplex{T}(Set{T}.(collect(itr)), Set{T}(V))
@@ -193,7 +200,7 @@ The link of `sigma` in `K`.
 function link(K::SimplicialComplex{T}, sigma) where T
     issubset(sigma, vertices(K)) || throw(DomainError("Cannot compute link: sigma = {$sigma} is not a subset of V(K) = {$(vertices(K))}"))
     _sigma = Set{T}(sigma)
-    Fs = [setdiff(F, _sigma) for F in filter(x -> issubset(_sigma, x), facets(K))]
+    Fs = [setdiff(F, _sigma) for F in Iterators.filter(x -> issubset(_sigma, x), facets(K))]
     SimplicialComplex(Fs, setdiff(vertices(K), _sigma))
 end
 

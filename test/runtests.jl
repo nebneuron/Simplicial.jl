@@ -19,6 +19,10 @@ C4 = CombinatorialCode([[],[1],[1,2],[2,3],[1,2,3]])
 K0 = SimplicialComplex([])
 
 @test isvoid(K0)
+@test eltype(eltype(K0)) == Int
+
+K3 = SimplicialComplex([[1,2],[],[1,3],[2,3]])
+@test eltype(eltype(K3)) <: Integer
 
 K1 = SimplicialComplex([[1,2],[2,3]])
 K2 = SimplicialComplex(C1)
@@ -52,6 +56,6 @@ G = SimplicialComplex([[-1,-2,-3],[1,-2,-3],[1,2,-3],[-1,2,3]])
 
 
 # test computing Simplicial Homology
- Δ=PoincareHomologyThreeSphere(); 
-β=BettiNumbers(Δ); 
+ Δ=PoincareHomologyThreeSphere();
+β=BettiNumbers(Δ);
 @test β==[1,0,0,1]
