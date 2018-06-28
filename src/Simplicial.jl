@@ -47,8 +47,10 @@ map(include,
 
      # Filtrations Of Z2 Complexes
     "HomologyComputations/FiltrationOfZ2Complexes.jl",
- 
      "HomologyComputations/PHAT_interface.jl",
+    
+    # Functions testing the homology computations:
+    "HomologyComputations/Test_PersistenceComputations.jl",
     
     # Laplacians:
      "Laplacians/CombinatorialLaplacians.jl",
