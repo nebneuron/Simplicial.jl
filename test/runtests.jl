@@ -62,4 +62,4 @@ G = SimplicialComplex([[-1,-2,-3],[1,-2,-3],[1,2,-3],[-1,2,3]])
 
 # Test the computation of persistence intervals of a Dowker complex: 
 
-@test Simplicial.Test_PersistenceComputations()
+@test Simplicial.TestPersistenceComputationsOfDowkerComplex()
