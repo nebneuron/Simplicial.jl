@@ -20,6 +20,9 @@ K0 = SimplicialComplex([])
 
 @test isvoid(K0)
 @test eltype(eltype(K0)) == Int
+@test dim(K0) < -1
+
+@test isirrelevant(SimplicialComplex([[]]))
 
 K3 = SimplicialComplex([[1,2],[],[1,3],[2,3]])
 @test eltype(eltype(K3)) <: Integer

@@ -134,7 +134,7 @@ mutable struct SimplicialComplex{T} <: AbstractSimplicialComplex{T}
     function SimplicialComplex{T}(facets::Vector{Set{T}}, V::Set{T}) where T
         if length(facets) == 0
             # no words; return void complex
-            new{T}(facets, Int[], 0, 0, V)
+            new{T}(facets, Int[], -2, 0, V)
         elseif all(collect(map(length,facets)) .== 0)
             # only the empty set was passed, possibly many times
             new([Set{T}()], [-1], -1, 1, V)
