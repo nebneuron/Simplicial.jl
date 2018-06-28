@@ -59,3 +59,7 @@ G = SimplicialComplex([[-1,-2,-3],[1,-2,-3],[1,2,-3],[-1,2,3]])
  Δ=PoincareHomologyThreeSphere();
 β=BettiNumbers(Δ);
 @test β==[1,0,0,1]
+
+# Test the computation of persistence intervals of a Dowker complex: 
+
+@test Simplicial.Test_PersistenceComputations()
