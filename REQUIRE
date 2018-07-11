@@ -6,6 +6,7 @@
 
 julia 0.6
 Combinatorics
+LightGraphs
 PyPlot
 IterTools
 Iterators
