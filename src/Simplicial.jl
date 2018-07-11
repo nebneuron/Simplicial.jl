@@ -1,6 +1,6 @@
 __precompile__(true)
 module Simplicial
-using Combinatorics
+using Combinatorics, LightGraphs
 
 # used in package
 import IterTools: chain, distinct, product, subsets
