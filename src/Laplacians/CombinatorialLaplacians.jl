@@ -28,8 +28,11 @@ return Laps
 end
 
 
-# Laplacians of directed complexes
-Laplacians(D::DirectedComplex)=Laplacians(GradedPoset(D))::Array{SparseMatrixCSC{Int64,Int64},1};
+# Laplacians of directed complexes, here maxdim is the maximal dimension we are willing to consider..
+Laplacians(D::DirectedComplex, maximaldimension = Inf)=Laplacians(GradedPoset(D, maximaldimension))::Array{SparseMatrixCSC{Int64,Int64},1};
+
+
+
 
 # laplacians of simplicial complexes 
 Laplacians(Δ::SimplicialComplex)= Laplacians(DirectedComplex(Δ))::Array{SparseMatrixCSC{Int64,Int64},1};
