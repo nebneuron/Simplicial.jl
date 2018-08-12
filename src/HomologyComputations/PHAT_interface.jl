@@ -2,11 +2,11 @@
 
 function phat_compute_betti_numbers(number_of_cells::UInt64,dimension::UInt64,A::Array{Int64,2})
     if is_linux()
-        const libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "interface_with_julia.so"));
+         libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "interface_with_julia.so"));
     end
 
     if is_apple()
-    const libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "macosx-interface_with_julia.so"));
+      libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "macosx-interface_with_julia.so"));
     end
 
     if is_windows()
