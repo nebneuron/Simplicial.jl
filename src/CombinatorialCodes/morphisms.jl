@@ -28,12 +28,9 @@ function product(C::CombinatorialCode, D::CombinatorialCode)
     return CombinatorialCode([union(c, [d_i + n for d_i in d]) for c in C, d in D], 1:(n+m))
 end
 
-doc"""
+"""
     coproduct(C, D)
-
-The category-theoretic coproduct of two codes.
-
-$C \coprod D = \\{c ∪ \\{n+m+1\\} : c ∈ C\\} ∪ \\{d ∪ \\{n+m+2\\} : d ∈ D\\}$
+The category-theoretic coproduct of two codes. More detailed latex definition is currently removed for compartibility reasons
 """
 function coproduct(C::CombinatorialCode, D::CombinatorialCode)
     n,m = maximum(vertices(C)),maximum(vertices(D))
