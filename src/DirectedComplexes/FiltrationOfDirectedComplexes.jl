@@ -1,4 +1,4 @@
-type FiltrationOfDirectedComplexes
+mutable struct FiltrationOfDirectedComplexes
     faces::Array{DirectedCodeword,1}     # these are all possible faces that appear in the filtration (may include just the `emptyset` if the first complex is the irrelevant complex)
     dimensions::Array{Int,1}     # the dimensions of the faces -- these are the dimensions of the faces (IN THE SAME ORDER)
     depth::Int                   # this is the depth of filtration, i.e. the total number of simplicial complexes it contains
