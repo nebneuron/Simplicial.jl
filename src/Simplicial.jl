@@ -12,14 +12,15 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
              max, show
 
 
-    # because of the changes in the os type  detection in julia version >=0.7 
-    # we introduce this backward compartibility fix below
+    # because of the changes in   julia version >=0.7 
+    # we introduce these backward compartibility fixes below
        if VERSION>= v"0.7.0"
        using Pkg
+       const Void=Nothing 
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
        is_apple()=Sys.isapple()
-       export is_linux,is_windows,is_apple
+       export is_linux, is_windows, is_apple
        end
 
 
