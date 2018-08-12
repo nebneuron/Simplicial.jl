@@ -15,7 +15,7 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
     # because of the changes in   julia version >=0.7 
     # we introduce these backward compartibility fixes below
  if VERSION>= v"0.7.0"
-       using Pkg
+       using Pkg, DelimitedFiles
        const Void=Nothing 
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
