@@ -83,6 +83,8 @@ map(include,
      "deprecations.jl"
      ])
 
+export PATHOF_Simplicial
+
 export
 # Imported from Base
 in, ==, <=, >=, >, <, show, push!, transpose,
