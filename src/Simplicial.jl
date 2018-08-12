@@ -11,6 +11,21 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
              start, next, done, eltype, length,
              max, show
 
+
+    # because of the changes in the os type  detection in julia version >=0.7 
+    # we introduce this backward compartibility fix below
+       if VERSION>= v"0.7.0"
+       using Pkg
+       is_linux()=Sys.islinux()
+       is_windows()=Sys.iswindows()
+       is_apple()=Sys.isapple()
+       export is_linux,is_windows,is_apple
+       end
+
+
+
+
+
 map(include,
     ["core.jl", # definition for the type of CodeWord and the related methods for this type
      "utilities/auxiliaryoperations.jl",
@@ -118,14 +133,6 @@ export PHATarray, FiltrationOfDirectedComplexes, FiltrationOfZ2Complexes, Filtra
 export SkeletonOfFiltration
 export Laplacians
 
-    # because of the changes in the os type  detection in julia version >=0.7 
-    # we introduce this backward compartibility fix below
-       if VERSION>= v"0.7.0"
-       is_linux()=Sys.islinux()
-       is_windows()=Sys.iswindows()
-       is_apple()=Sys.isapple()
-       export is_linux,is_windows,is_apple
-       end
 
 
 end
