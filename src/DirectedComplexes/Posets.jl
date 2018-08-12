@@ -113,7 +113,7 @@ d = spzeros(Int, P.Nelements[k_ind-1],P.Nelements[k_ind]);
 
 for m = 1:P.Nelements[k_ind];
     for j = 1:length(P.boundaries[k_ind][m])
-      d[P.boundaries[k_ind][m][j],m] = (P.negativesigns[k_ind][m][j])? -1 : 1 ;
+      d[P.boundaries[k_ind][m][j],m] = (P.negativesigns[k_ind][m][j]) ? -1  :  1 ;
     end
 end
 return d
