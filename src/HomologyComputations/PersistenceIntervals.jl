@@ -68,6 +68,7 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
             k_dimensional_persistent_intervals=readdlm("$baseFileName"*"_$k.txt");
             # We next sort the rows of k_dimensional_persistent_intervals by the birthtimes (the first column)
             Intervals[k+1]= MySortRows(k_dimensional_persistent_intervals,1);
+            catch nothing 
         end
     end
 
