@@ -117,4 +117,15 @@ export The_Location_Of_PHAT_Executables, phat_compute_betti_numbers, PHAT_BettiN
 export PHATarray, FiltrationOfDirectedComplexes, FiltrationOfZ2Complexes, FiltrationOfRandomSequences
 export SkeletonOfFiltration
 export Laplacians
+
+    # because of the changes in the os type  detection in julia version >=0.7 
+    # we introduce this backward compartibility fix below
+    if VERSION>v"0.6.2"
+       is_linux()=Sys.islinux()
+       is_windows()=Sys.iswindows()
+       is_apple()=Sys.isapple()
+       export is_linux,is_windows,is_apple
+   end
+
+
 end
