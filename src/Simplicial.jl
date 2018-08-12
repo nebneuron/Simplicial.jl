@@ -14,14 +14,16 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
 
     # because of the changes in   julia version >=0.7 
     # we introduce these backward compartibility fixes below
-       if VERSION>= v"0.7.0"
+ if VERSION>= v"0.7.0"
        using Pkg
        const Void=Nothing 
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
        is_apple()=Sys.isapple()
        export is_linux, is_windows, is_apple
-       end
+  else 
+  findall=find
+  end
 
 
 
