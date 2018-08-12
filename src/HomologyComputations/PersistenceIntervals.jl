@@ -62,7 +62,8 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
      run(`$perseus nmfsimtop $baseFileName.txt $baseFileName`)
      println("..done!")
     ## Read from the result txt files the persistence intervals and store them into the array Intervals
-    Intervals=PersistenceIntervalsType(maxdim+1); for i=1:maxdim+1; Intervals[i]=SingleDimensionPersistenceIntervalsType[]; end
+   Intervals=[zeros(0,0) for i=1:maxdim+1]
+    
     for k=0:maxdim
         try
             k_dimensional_persistent_intervals=readdlm("$baseFileName"*"_$k.txt");
