@@ -120,12 +120,12 @@ export Laplacians
 
     # because of the changes in the os type  detection in julia version >=0.7 
     # we introduce this backward compartibility fix below
-    if VERSION>v"0.6.2"
+       if VERSION>= v"0.7.0"
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
        is_apple()=Sys.isapple()
        export is_linux,is_windows,is_apple
-   end
+       end
 
 
 end
