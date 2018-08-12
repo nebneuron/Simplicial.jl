@@ -180,7 +180,7 @@ end
 
     Here FS is of the type FiltrationOfSimplicialComplexes
     And GraphDensity is an array of real numbers of length =F.depth
-    where each number GraphDensity[i] represents the graph density at the simplicial complex \Delta_i in the filtration
+    where each number GraphDensity[i] represents the graph density at the simplicial complex Δ_i in the filtration
 
 """
 function DowkerComplex(A,maxdensity=1)
