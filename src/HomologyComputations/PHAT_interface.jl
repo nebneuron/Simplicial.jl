@@ -1,6 +1,5 @@
- The_Location_Of_PHAT_Executables=Pkg.dir("Simplicial")*"/src/HomologyComputations/phat/src"
-
 function phat_compute_betti_numbers(number_of_cells::UInt64,dimension::UInt64,A::Array{Int64,2})
+  The_Location_Of_PHAT_Executables=Pkg.dir("Simplicial")*"/src/HomologyComputations/phat/src"
     if is_linux()
          libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "interface_with_julia.so"));
     end
