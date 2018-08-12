@@ -1,4 +1,4 @@
-const The_Location_Of_PHAT_Executables=Pkg.dir("Simplicial")*"/src/HomologyComputations/phat/src"
+ The_Location_Of_PHAT_Executables=Pkg.dir("Simplicial")*"/src/HomologyComputations/phat/src"
 
 function phat_compute_betti_numbers(number_of_cells::UInt64,dimension::UInt64,A::Array{Int64,2})
     if is_linux()
