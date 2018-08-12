@@ -213,7 +213,7 @@ for i=1:length(Sorted) ## this is the main loop on the unique values of the matr
      end
         NewFaces=Array{CodeWord,1}(); # These are the facets that we potentially need to add at the next step of the Dowker complex
           for j=1:Ncolumns;
-            push!(NewFaces,CodeWord(find(OrderOfElement[:,j].<=i))); # This is the codeword from the j-th column
+            push!(NewFaces,CodeWord(findall(OrderOfElement[:,j].<=i))); # This is the codeword from the j-th column
           end
         DeleteRedundantFacets!(NewFaces); # Here we deleteted redundant faces
         # Now we are going through the list NewFaces and check if it was not already contained in the previously added facets
