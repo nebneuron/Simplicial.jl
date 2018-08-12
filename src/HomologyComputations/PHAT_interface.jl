@@ -1,5 +1,5 @@
 function phat_compute_betti_numbers(number_of_cells::UInt64,dimension::UInt64,A::Array{Int64,2})
-  The_Location_Of_PHAT_Executables=Pkg.dir("Simplicial")*"/src/HomologyComputations/phat/src"
+  The_Location_Of_PHAT_Executables=PATHOF_Simplicial*"/HomologyComputations/phat/src"
     if is_linux()
          libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "interface_with_julia.so"));
     end
@@ -65,7 +65,7 @@ This function plugs the phat executable for julia PHAT interface, written by Paw
 
 function compute_PersistenceIntervals_Of_PHAT_array(number_of_cells::UInt64,dimension::UInt64,A::Array{Int64,2})::Vector{Int}
 ############   First, take care of the location of the various executables:
-      The_Location_Of_PHAT_Executables=Pkg.dir("Simplicial")*"/src/HomologyComputations/phat/src";
+    The_Location_Of_PHAT_Executables=PATHOF_Simplicial*"/HomologyComputations/phat/src"
     if is_apple()
        libhandle = Libdl.dlopen(joinpath(The_Location_Of_PHAT_Executables, "macosx-interface_with_julia_May2018.so"));
     elseif is_linux()
