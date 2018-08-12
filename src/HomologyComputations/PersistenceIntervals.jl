@@ -89,7 +89,7 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
     # The reason why -1 stands for 'utill the end' is the artifact of perseus conventions
     for i=1:length(Intervals)
           if !isempty(Intervals[i])
-          Intervals[i]= map(x->((x==-1)?Inf:x),Intervals[i])
+          Intervals[i]= map( x->((x==-1) ? Inf : x ), Intervals[i])
           end
     end
 
