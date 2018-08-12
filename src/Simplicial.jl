@@ -15,6 +15,7 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
     # because of the changes in   julia version >=0.7 
     # we introduce these backward compartibility fixes below
  if VERSION>= v"0.7.0"
+       const PATHOF_Simplicial=dirname(pathof(Simplicial))
        using Pkg, DelimitedFiles
        const Void=Nothing 
        is_linux()=Sys.islinux()
@@ -22,6 +23,7 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
        is_apple()=Sys.isapple()
        export is_linux, is_windows, is_apple
   else 
+  const PATHOF_Simplicial= Pkg.dir("Simplicial")*"/src"
   findall=find
   end
 
