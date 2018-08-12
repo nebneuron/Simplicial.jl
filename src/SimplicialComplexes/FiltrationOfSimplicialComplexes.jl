@@ -190,7 +190,10 @@ function DowkerComplex(A,maxdensity=1)
     Sorted=sort(unique(VectorA)); N_UniqueElements=length(Sorted);
     OrderOfElement=zeros(Int,MaximalPossibleNumberOfEntries);
     for i=1:N_UniqueElements
-        OrderOfElement[VectorA.==Sorted[i]]=i;
+        the_index=findall(VectorA.==Sorted[i]);
+         for the_i in the_index
+          OrderOfElement[the_i]=i;
+         end
     end
     OrderOfElement=reshape(OrderOfElement,Nrows, Ncolumns);
     # The array OrderOfElement contains the order of each element of A
