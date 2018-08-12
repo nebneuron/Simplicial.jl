@@ -10,7 +10,7 @@ The following type encodes a filtration of Z2 chain complexes.
 
 """
 
-type FiltrationOfZ2Complexes
+struct FiltrationOfZ2Complexes
 
   dimensions::Array{Int,1} # this is the list of dimensions of the graded poset.
                            # Here length(dimensions) is equal to the total number of elements in the poset.
