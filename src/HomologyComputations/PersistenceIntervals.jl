@@ -46,7 +46,7 @@ function PersistenceIntervals(FilteredComplex::FiltrationOfSimplicialComplexes, 
     # need to include time as well such as Dates.unix2datetime(time())
     WritePerseusSimplexFile(FilteredComplex, baseFileName);
     ## Use perseusWin.exe to compute the persistence intervals and store them in txt files
-    TheLocationOfPerseusExecutable=Pkg.dir("Simplicial")*"/src/HomologyComputations/perseus/"
+    TheLocationOfPerseusExecutable=PATHOF_Simplicial*"/HomologyComputations/perseus/"
     print("Computing simplicial homology. This may take some time and memory..")
     if is_windows()
         run(`$(TheLocationOfPerseusExecutable*"perseusWin.exe") nmfsimtop $baseFileName.txt $baseFileName`)
