@@ -3,7 +3,7 @@
 """
     trunk(C, sigma)
 
-The trunk of `sigma` in `C`, defined by ``Tk_C(σ) = \{c ∈ C : σ ⊆ c\}``
+The trunk of `sigma` in `C`, defined by ``Tk_C(σ) = \\{c ∈ C : σ ⊆ c\\}``
 """
 trunk(C::AbstractCombinatorialCode, sigma) = [c for c in C if issubset(sigma, c)]
 
@@ -19,8 +19,8 @@ core(C::AbstractCombinatorialCode, sigma) = intersect(trunk(C, sigma)...)
 
 The category-theoretic product of two codes.
 
-``C × D = \{c ∪ d : c ∈ C, d ∈ D\}``
-where the codewords of ``D`` are considered as subsets of ``\{n+1,…,n+m\}``
+``C × D = \\{c ∪ d : c ∈ C, d ∈ D\\}``
+where the codewords of ``D`` are considered as subsets of ``\\{n+1,…,n+m\\}``
 """
 function product(C::CombinatorialCode, D::CombinatorialCode)
     n = maximum(vertices(C))
@@ -33,7 +33,7 @@ doc"""
 
 The category-theoretic coproduct of two codes.
 
-$C \coprod D = \{c ∪ \{n+m+1\} : c ∈ C\} ∪ \{d ∪ \{n+m+2\} : d ∈ D\}$
+$C \coprod D = \\{c ∪ \\{n+m+1\\} : c ∈ C\\} ∪ \\{d ∪ \\{n+m+2\\} : d ∈ D\\}$
 """
 function coproduct(C::CombinatorialCode, D::CombinatorialCode)
     n,m = maximum(vertices(C)),maximum(vertices(D))
