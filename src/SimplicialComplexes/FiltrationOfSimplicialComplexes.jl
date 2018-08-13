@@ -313,7 +313,7 @@ for i=1:length(FS.faces)
       end
   end # if this_face_dim<=dim
     if NumberOfTopDimensionalFaces== MaximalPossibleNumberOfTopDimensionalFaces;
-        print_with_color(:blue, "Warning: the entire $dim-dimensional skeleton was filled  \n") ;break ;
+        println( "Warning: the entire $dim-dimensional skeleton was filled  \n") ;break ;
       elseif NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces
              error("something went wrong: NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces")
     end # Here we stop if we filled all possible top-dimensional faces
