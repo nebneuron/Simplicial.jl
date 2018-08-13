@@ -106,7 +106,7 @@ end# GradedPoset
 
 
 function BoundaryOperator(P::GradedPoset,k)::SparseMatrixCSC{Int64,Int64}
-assert(issubset([k, k-1],P.dimensions))
+# assert(issubset([k, k-1],P.dimensions)) # assert is discouraged in julia 1.0 and later....
 k_ind = findfirst(P.dimensions.==k)
 d = spzeros(Int, P.Nelements[k_ind-1],P.Nelements[k_ind]);
 
