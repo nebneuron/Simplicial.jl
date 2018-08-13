@@ -47,7 +47,7 @@ function PHAT_BettiNumbers(D::DirectedComplex)::Array{Int64,1}
              for k=1:P.Nelements[d+2];
                  if d==0;    append!(cells,[currentcellnumber+1,0,-1]);
                  else        append!(cells,[currentcellnumber+1,d])
-                             append!(cells, sort(AbsoluteCellNumbers[d][P.boundaries[d+2][k]]) +1);
+                             append!(cells, map(x-> x+1, sort(AbsoluteCellNumbers[d][P.boundaries[d+2][k]])));
                              push!(cells,-1);
                  end
                  currentcellnumber+=1
