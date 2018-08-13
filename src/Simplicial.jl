@@ -16,7 +16,7 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
     # we introduce these backward compartibility fixes below
  if VERSION>= v"0.7.0"
        const PATHOF_Simplicial=dirname(pathof(Simplicial))
-       using DelimitedFiles, SparseArrays, LinearAlgebra, Test
+       using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl
        const Void=Nothing 
        full=Array
        is_linux()=Sys.islinux()
