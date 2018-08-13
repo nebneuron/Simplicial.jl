@@ -23,8 +23,8 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
 
   dimensions = collect(-1:maxdim);
   Ndimensions = length(dimensions);
-  boundaries = Array{Array{Array{Int,1},1},1}(Ndimensions);
-  negativesigns = Array{Array{BitArray,1},1}(Ndimensions);
+  boundaries = (VERSION < v"0.7.0")  ?  Array{Array{Array{Int,1},1},1}(Ndimensions) :    Array{Array{Array{Int,1},1},1}(undef, Ndimensions);   
+  negativesigns = (VERSION < v"0.7.0")  ? Array{Array{BitArray,1},1}(Ndimensions) :  Array{Array{BitArray,1},1}(undef , Ndimensions);
   for i = 1:Ndimensions;
     boundaries[i] = [];
     negativesigns[i] = []
