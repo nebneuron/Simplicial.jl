@@ -46,7 +46,7 @@ struct FiltrationOfZ2Complexes
       end
 
       depth = FD.depth
-      faces = Int16[]
+      faces = Array{DirectedCodeword,1}()
       birth = []
       dimensions = []
 
