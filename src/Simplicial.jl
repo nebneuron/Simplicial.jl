@@ -18,6 +18,7 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
        const PATHOF_Simplicial=dirname(pathof(Simplicial))
        using DelimitedFiles, SparseArrays
        const Void=Nothing 
+       full=Array
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
        is_apple()=Sys.isapple()
