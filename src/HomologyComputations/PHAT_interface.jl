@@ -33,7 +33,7 @@ function PHAT_BettiNumbers(D::DirectedComplex)::Array{Int64,1}
          dimensions =zeros(Int,Ncells);
          cells=Array{Int,1}([]); # initialize as empty
          currentcellnumber=0;
-         AbsoluteCellNumbers=Array{Array{Int,1},1}(maxdim+1);
+      AbsoluteCellNumbers=    (VERSION < v"0.7.0")  ?      Array{Array{Int,1},1}(maxdim+1) :   Array{Array{Int,1},1}(undef, maxdim+1);
          for d=0:maxdim;
              # First, we enumerate the absolute cell numbers
              if d==0 ;
