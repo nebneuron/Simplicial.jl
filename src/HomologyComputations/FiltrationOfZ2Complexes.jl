@@ -94,7 +94,8 @@ struct FiltrationOfZ2Complexes
         boundaries[i] = []
         if length(face) > 1
              for b in Combinatorics.combinations(face, length(face)-1)
-                  push!(boundaries[i],findfirst(faces,b))
+                    firstindex=findfirst(faces,b);
+                    push!(boundaries[i],firstindex)
              end
         end
 
