@@ -120,11 +120,6 @@ function show(io::IO, D::DirectedComplex)
     end
 end
 
-
-
-
-
-
 """
   function  Matrix2Permutations(A::Matrix)::Matrix
   This utility function takes a matrix A of real numbers and returns the matrix RowOrdering of integers, so that
@@ -134,12 +129,8 @@ end
 function  Matrix2Permutations(A::Matrix)::Matrix{Int}
     RowOrdering = zeros(Int,size(A));
     for i=1: size(A,1); RowOrdering[i,:]= sortperm(A[i,:])  ; end
-    return unique(RowOrdering,1)
+    return  (VERSION < v"0.7.0")  ? unique(RowOrdering,1)  :  unique(RowOrdering, dims=1)
 end # function  Matrix2Permutations(A)
-
-
-
-
 
 
 
