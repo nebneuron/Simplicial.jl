@@ -70,7 +70,7 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
      for j in 1:length(currentsequences[i])
       # miss the jth elements (Julia automatically handles "j-1 and j+1 out-of-range" issues here)
       #every sequence in currentsequences has length currentlength
-       boundary = cat(1,currentsequences[i][1:j-1], currentsequences[i][j+1:currentlength])
+   boundary =  (VERSION < v"0.7.0") ? cat(1,currentsequences[i][1:j-1], currentsequences[i][j+1:currentlength]) : cat(currentsequences[i][1:j-1], currentsequences[i][j+1:currentlength], dims=1);   
        for k in 1:length(previoussequences) #go through previoussequences and find the current boundary
          if previoussequences[k] == boundary
            boundaries[curdimecounter][i][j] = k #boundaries[curdimecounter][i] has currentlength elements
