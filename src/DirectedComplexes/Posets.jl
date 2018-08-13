@@ -31,9 +31,9 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
   end
   Nelements = ones(Int,Ndimensions);
 # set everything for the 0-dimensional things
-  Nelements[2] = length(D.vertices);
-  negativesigns[2] = Array{BitArray,1}(Nelements[2]);
-  boundaries[2] = Array{Array{Int,1},1}(Nelements[2]);
+  Nelements[2] = length(D.vertices);    
+  negativesigns[2] =  (VERSION < v"0.7.0")  ?   Array{BitArray,1}(Nelements[2]) :   Array{BitArray,1}(undef, Nelements[2]); 
+  boundaries[2] =  (VERSION < v"0.7.0")  ?  Array{Array{Int,1},1}(Nelements[2])  :  Array{Array{Int,1},1}( undef, Nelements[2]);
   for i = 1:Nelements[2];
     negativesigns[2][i] = falses(1);
     boundaries[2][i] = ones(Int,1);
@@ -55,12 +55,11 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
    end
    currentsequences = unique(currentsequences)
    Nelements[curdimecounter] = length(currentsequences) #count all sequences of the current dimension
+   boundaries[curdimecounter] =   (VERSION < v"0.7.0") ? Array{Array{Int,1},1}(Nelements[curdimecounter]) : Array{Array{Int,1},1}(undef, Nelements[curdimecounter]);
+   negativesigns[curdimecounter] =  (VERSION < v"0.7.0") ? Array{BitArray,1}(Nelements[curdimecounter]) : Array{BitArray,1}(undef, Nelements[curdimecounter]);
+      
 
-   boundaries[curdimecounter] = Array{Array{Int,1},1}(Nelements[curdimecounter]);
-
-   negativesigns[curdimecounter] = Array{BitArray,1}(Nelements[curdimecounter]);
-
-   " now we have previoussequences -- n-1 chains, and currentsequences -- n chains
+   " now we have previous sequences -- n-1 chains, and current sequences -- n chains
     it is guaranteed that all the boundaries of currentsequences are already in previoussequences
     so we'll go through all the sequences
     and in each sequence drop one element at a time and find this sequence in previoussequences
