@@ -273,7 +273,6 @@ function Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSim
 if dim<=0; error("The maximal mimension needs to be positive"); end;
 if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
 MaxDimOfFS= maximum(FS.dimensions);
-standard_combinations=Array{Array{Any,1}}(MaxDimOfFS); for d=1: MaxDimOfFS standard_combinations[d] =[]; end
 
 birth=Int[]; # these are birth times of faces
 ListOfFaces=Array{CodeWord,1}([]);
