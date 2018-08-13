@@ -12,7 +12,7 @@ function phat_compute_betti_numbers(number_of_cells::UInt64,dimension::UInt64,A:
         error("Dear Windows OS user. There is no phat interface that has been made to work with julia on windows. Be the first to make it happen :-)")
     end
      funhandle = Libdl.dlsym(libhandle, :compute_betti_numbers);
-    result = Vector{Int64}(dimension+1)
+    result =  zeros(Int64,dimension+1)
     ccall(funhandle, Void, (UInt64, UInt64, Ref{Int64}, Ref{Int64}), number_of_cells, dimension, A, result)
     return result
 end
