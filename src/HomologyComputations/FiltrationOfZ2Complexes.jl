@@ -87,8 +87,8 @@ struct FiltrationOfZ2Complexes
       # "faces" is now an array of faces, ordered by filtration, and within filtration -- by dimension
       # now we go through that array, and for each face, find the boundaries in that array
 
-      boundaries = Array{Array{Int,1}}(length(faces))
-
+    
+      boundaries =     (VERSION < v"0.7.0")  ?    Array{Array{Int,1}}(length(faces))  :   Array{Array{Int,1}}(undef,  length(faces)) 
       for i in 1:length(faces)
         face = faces[i]
         boundaries[i] = []
