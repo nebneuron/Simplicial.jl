@@ -39,7 +39,7 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
     boundaries[2][i] = ones(Int,1);
   end
  dim = D.dimensions[end];
- previoussequences = Array{Array{Int,1},1}(length(D.vertices))
+ previoussequences =    (VERSION < v"0.7.0")  ?    Array{Array{Int,1},1}(length(D.vertices))  :   Array{Array{Int,1},1}(undef,  length(D.vertices))    
  vert = sort(collect(D.vertices))
  for i = 1:length(D.vertices);
    previoussequences[i] = [vert[i]];
