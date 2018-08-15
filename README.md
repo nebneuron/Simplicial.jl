@@ -1,3 +1,6 @@
+## Compatibility Warning
+`Simplicial` is currently incompatible with Julia v0.7 and v1.0. Work is currently under way to upgrade this package to work with the latest version of Julia; in the meantime Julia v0.6 is available [here](https://julialang.org/downloads/oldreleases.html).
+
 # Package Simplicial
 
 | **Stable** | **Latest** |
