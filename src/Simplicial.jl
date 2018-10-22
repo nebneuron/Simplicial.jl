@@ -42,7 +42,7 @@ map(include,
      # "CombinatorialCodes/BernoulliRandomCode.jl", moved to CodeOperations.jl
      "CombinatorialCodes/morphisms.jl",
      "CombinatorialCodes/NeuralRing.jl",
-
+     "CombinatorialCodes/examples_of_codes.jl",
      # Simplicial complexes
      "SimplicialComplexes/SimplicialComplex.jl",
      "SimplicialComplexes/ExampleSimplicialComplexes.jl", # Some examples of simplicial complexes
@@ -102,6 +102,7 @@ isvoid, isirrelevant,
 AbstractCombinatorialCode, CombinatorialCode,
 vertices, HasEmptySet, isvoid, isirrelevant,
 link, add, add!, del, del!, matrix_form, sparse_matrix_form, transpose,
+FullCode,
 
 # CodeOperations.jl
 BernoulliRandomCode,
