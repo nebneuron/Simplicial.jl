@@ -111,7 +111,7 @@ intersection_completion, max_intersection_completion, union_completion,
 cham,
 
 # morphisms.jl
-trunk, core, product, coproduct, trunksmorphism,
+trunk, core, delta, product, coproduct, trunksmorphism, simplexmap,
 
 # NeuralRing.jl
 PseudoMonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form,
