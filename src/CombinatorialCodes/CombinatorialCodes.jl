@@ -13,7 +13,7 @@ function show(io::IO, C::AbstractCombinatorialCode)
     if !get(io, :compact, false)
         println(io, typeof(C))
     end
-    print(io, "Code on [$(length(vertices(C)))] with $(length(C)) codewords")
+    print(io, "Code on [$(maximum(vertices(C)))] with $(length(C)) codewords")
     if !get(io, :compact, false)
         println(io)
         println(io, "C = {$(join(C, ", "))}")
@@ -134,11 +134,11 @@ end
 Return `C` if `in(sigma, C)`, otherwise construct a new code ``C ∪ {sigma}``.
 """
 function add(CC::CombinatorialCode{T}, sigma) where T
-    issubset(sigma, vertices(CC)) || throw(DomainError("Cannot add codeword sigma = {$sigma}: not a subset of V(C) = {$(vertices(C))}"))
+    issubset(sigma, vertices(CC)) || throw(DomainError("Cannot add codeword sigma = {$sigma}: not a subset of V(C) = {$(vertices(CC))}"))
     if sigma in CC
         return CC
     else
-        return CombinatorialCode{T}(vcat(CC.words, Set{T}(sigma)), vertices(C))
+        return CombinatorialCode{T}(vcat(CC.words, Set{T}(sigma)), vertices(CC))
     end
 end
 
@@ -148,8 +148,8 @@ end
 In-place version [`add`](@ref). Returns the resulting code.
 """
 function add!(C::CombinatorialCode, sigma)
-    # a && expr is shorthand for if a; expr; end
-    !issubset(sigma, C.vertices) && throw(DomainError("Can't add codeword: sigma ($sigma) is not a subset of V ($(vertices(C)))"))
+    # a || expr is shorthand for if !a; expr; end
+    issubset(sigma, vertices(C)) || throw(DomainError("Can't add codeword: sigma ($sigma) is not a subset of V ($(vertices(C)))"))
     sigma in C && return C
     c = CodeWord(sigma)
     idx = searchsortedlast(C.words, c, lt=lessequal_GrRevLex)
@@ -256,13 +256,13 @@ next(CC::CombinatorialCode, state) = (CC.words[state], state+1)
 done(CC::CombinatorialCode, state) = state > length(CC.words)
 
 ###### Iteration over maximal codewords
-length(maxC::MaximalSetIterator{CombinatorialCode}) = length(maxC.collection.maximal_idx)
-start(maxC::MaximalSetIterator{CombinatorialCode}) = 1
-function next(maxC::MaximalSetIterator{CombinatorialCode}, state)
+length(maxC::MaximalSetIterator{CombinatorialCode{T}}) where T = length(maxC.collection.maximal_idx)
+start(maxC::MaximalSetIterator{CombinatorialCode{T}}) where T = 1
+function next(maxC::MaximalSetIterator{CombinatorialCode{T}}, state) where T
     C = maxC.collection
     return (C.words[C.maximal_idx[state]], state+1)
 end
-done(maxC::MaximalSetIterator{CombinatorialCode}, state) = state > length(maxC.collection.maximal_idx)
+done(maxC::MaximalSetIterator{CombinatorialCode{T}}, state) where T = state > length(maxC.collection.maximal_idx)
 
 
 

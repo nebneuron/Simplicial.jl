@@ -56,10 +56,18 @@ G = SimplicialComplex([[-1,-2,-3],[1,-2,-3],[1,2,-3],[-1,2,3]])
 @test G1 != G2
 
 
+C_small = CombinatorialCode([[],[1],[2],[3],[1,2,3]])
+m_small, T_small = simplexmap(C_small; check_complete=false, check_max=true)
+@test m_small == 4
+@test C_small == trunksmorphism(delta(m_small), T_small)
+
+C = CombinatorialCode([[], [2],[3],[1,2],[2,3],[3,4],[1,2,3],[2,3,4],[1,2,3,4]])
+m, T = simplexmap(C)
+@test C == trunksmorphism(delta(m), T)
 
 
 # test computing Simplicial Homology
- Δ=PoincareHomologyThreeSphere();
+Δ=PoincareHomologyThreeSphere();
 β=BettiNumbers(Δ);
 @test β==[1,0,0,1]
 
