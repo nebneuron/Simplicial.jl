@@ -1,4 +1,4 @@
-struct GradedPoset
+mutable struct GradedPoset
   dimensions::Array{Int,1} # this is the list of dimensions of the graded poset. This can not be smaller then -1 (corresponding to the empty set)
   dim::Int   # the maximun of dimensions
   Nelements::Array{Int,1}  # total number of facets in teach dimension
