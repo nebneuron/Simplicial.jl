@@ -37,9 +37,8 @@ const PersistenceIntervalsType=Array{SingleDimensionPersistenceIntervalsType,1}
 
 """
 function show(P::PersistenceIntervalsType);
-This prints out the appropriate persistence intervals 
+This prints out the appropriate persistence intervals
 """
-
 function show(P::PersistenceIntervalsType);
  println("Persistence intervals up to dimension=$(length(P)-1)");
  for d=0:length(P)-1
@@ -62,12 +61,13 @@ end
 ### Abstract type and general utility function definitions
 ################################################################################
 """
-    abstract type AbstractFiniteSetCollection
+    abstract type AbstractFiniteSetCollection{T<:Integer}
 
-Abstract supertype for concrete implementations of Combinatorial Codes and
-Simplicial Complexes.
+Abstract supertype for concrete implementations of Combinatorial Codes and Simplicial
+Complexes, or any other collection of finite sets (of integers). See also
+[CombinatorialCode](@ref) and [SimplicialComplex](@ref)
 """
-abstract type AbstractFiniteSetCollection{T} end
+abstract type AbstractFiniteSetCollection{T<:Integer} end
 
 ################################################################################
 ### Generic method implementations

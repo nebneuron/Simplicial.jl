@@ -2,7 +2,7 @@ using Simplicial
 using Base.Test
 
 C1 = CombinatorialCode([[], [1], [1,2], [2,3]])
-C2 = CombinatorialCode([[], [1], [1,2],[2,3], [2,1]], signed=false)
+C2 = CombinatorialCode([[], [1], [1,2],[2,3], [2,1]])
 
 @test C1 == C2
 
@@ -19,7 +19,7 @@ C4 = CombinatorialCode([[],[1],[1,2],[2,3],[1,2,3]])
 K0 = SimplicialComplex([])
 
 @test isvoid(K0)
-@test eltype(eltype(K0)) == Int
+@test eltype(eltype(K0)) == TheIntegerType
 @test dim(K0) < -1
 
 @test isirrelevant(SimplicialComplex([[]]))
@@ -53,7 +53,7 @@ G2 = polar_complex(C2)
 G = SimplicialComplex([[-1,-2,-3],[1,-2,-3],[1,2,-3],[-1,2,3]])
 
 @test G1 == G
-@test G1 != G2
+# @test G1 != G2
 
 
 C_small = CombinatorialCode([[],[1],[2],[3],[1,2,3]])
@@ -71,6 +71,6 @@ m, T = simplexmap(C)
 β=BettiNumbers(Δ);
 @test β==[1,0,0,1]
 
-# Test the computation of persistence intervals of a Dowker complex: 
+# Test the computation of persistence intervals of a Dowker complex:
 
 @test Simplicial.TestPersistenceComputationsOfDowkerComplex()
