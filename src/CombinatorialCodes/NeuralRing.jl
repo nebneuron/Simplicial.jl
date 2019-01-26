@@ -131,7 +131,7 @@ function canonical_form(C::BitMatrix)
     end
 end
 canonical_form(C::AbstractCombinatorialCode) = canonical_form(matrix_form(C))
-function double_diagonal(b)
+function double_diagonal(b::BitArray{1})::BitArray{2}
     n = length(b)>>1
     M = falses(n, 2n)
     M[1:(n+1):n^2] = b[1:n]
