@@ -106,7 +106,7 @@ link, add, add!, del, del!, matrix_form, sparse_matrix_form, transpose,
 FullCode,
 
 # CodeOperations.jl
-BernoulliRandomCode,
+BernoulliRandomCode,CombinatorialCodeOnThreeNeurons,
 union_product,
 intersection_completion, max_intersection_completion, union_completion,
 cham,
