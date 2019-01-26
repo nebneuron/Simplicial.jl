@@ -1,16 +1,3 @@
-
-# Special types of codes
-"""
-    BernoulliRandomCode(N, Nwords, p)
-
-Draw `Nwords` i.i.d. samples from the distribution on `N` bit words given by `N` independent
-Bernoulli trials with success probability `p`.
-"""
-function BernoulliRandomCode(N, Nwords, p)
-    R = (1 - rand(Nwords, N)) .<= p
-    return CombinatorialCode(R)
-end
-
 # union and intersection products
 """
     union_product(C1, C2)
