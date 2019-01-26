@@ -198,22 +198,27 @@ function add_trivial_neuron!(C::CombinatorialCode{T}, on=false) where T
     maximum(vertices(C)) + T(1) > maximum(vertices(C)) || error("Cannot add trivial neuron in-place: maximum index exceeds Int type. ")
 end
 
+
+
 """
     matrix_form(C::CombinatorialCode)
-
 A `BitMatrix` representation of a code, with rows as codewords.
-
 Order of returned codewords matches that in `C.words`; assuming no one has been messing
 around with `C`'s fields, these should be sorted using `lessequal_GrRevLex`.
-
 """
 function matrix_form(C::CombinatorialCode)::BitArray{2}
-    B = falses(length(C), length(vertices(C)))
-    for (i,c) in enumerate(C.words)
-        B[i,collect(c)] = true
+    if VERSION>= v"0.7.0"
+        return BitArray(sparse_matrix_form(C))
+    else
+        B = falses(length(C), length(vertices(C)))
+        for (i,c) in enumerate(C.words)
+            B[i,collect(c)] = true
+        end
+        return B
     end
-    return B
 end
+
+
 
 """
     sparse_matrix_form(C::CombinatorialCode)
