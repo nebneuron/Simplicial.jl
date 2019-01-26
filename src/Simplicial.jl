@@ -22,6 +22,7 @@ import Base: in, ==, <=, >=, <, >, show, push!, transpose,
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
        is_apple()=Sys.isapple()
+       find=findall # make up for this horrible decision of deprecating the find function that was made under the pressure of mathworks goons
        export is_linux, is_windows, is_apple
   else 
   const PATHOF_Simplicial= Pkg.dir("Simplicial")*"/src"
