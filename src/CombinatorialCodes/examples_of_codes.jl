@@ -24,3 +24,23 @@ end
 
 
 
+################   Below are some example codes from the literature
+
+"""
+This function computes the combinatorial codes from the table 1 in the [neural ring paper] (https://arxiv.org/abs/1212.4201).
+    Usage: C=CombinatorialCodeOnThreeNeurons(label)
+"""
+function CombinatorialCodeOnThreeNeurons(label::String)::CombinatorialCode
+const     possible_labels=vcat(["A$x" for x=1:20],["B$x" for x=1:6],["C$x" for x=1:3],["D1"],["E$x" for x=1:4],["F$x" for x=1:3],["G1", "H1","I1"])
+if !in(label,possible_labels);error("unrecognized label=$label");end
+if label=="A1"; C=FullCode(3); end;
+if label=="I1" ; C=CombinatorialCode([emptyset, CodeWord([1]),  CodeWord([2])], squash_int_type=false);end
+if label=="H1" ; C=CombinatorialCode([emptyset], squash_int_type=false); end
+if label=="G1" ; C=CombinatorialCode([emptyset, CodeWord([1])], squash_int_type=false); end
+if label=="F1" ; C=CombinatorialCode([emptyset, CodeWord([1]), CodeWord([2]),CodeWord([1,2])], squash_int_type=false); end
+if label=="F2" ; C=CombinatorialCode([emptyset, CodeWord([1]), CodeWord([1,2])], squash_int_type=false); end
+if label=="F3" ; C=CombinatorialCode([emptyset,  CodeWord([1,2])], squash_int_type=false); end
+C.vertices=CodeWord([1,2,3]);
+
+return C
+end
