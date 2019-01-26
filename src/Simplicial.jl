@@ -105,11 +105,11 @@ vertices, HasEmptySet, isvoid, isirrelevant,
 link, add, add!, del, del!, matrix_form, sparse_matrix_form, transpose,
 FullCode,
 
+# examples_of_codes.jl
+BernoulliRandomCode,CombinatorialCodeOnThreeNeurons, IrrelevantCode,
+
 # CodeOperations.jl
-BernoulliRandomCode,CombinatorialCodeOnThreeNeurons,
-union_product,
-intersection_completion, max_intersection_completion, union_completion,
-cham,
+union_product, intersection_completion, max_intersection_completion, union_completion, cham,
 
 # morphisms.jl
 trunk, core, delta, product, coproduct, trunksmorphism, simplexmap,
