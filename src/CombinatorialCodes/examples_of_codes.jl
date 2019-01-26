@@ -22,9 +22,8 @@ end
      return CombinatorialCode(R)
  end
 
-
 function IrrelevantCode(Nvertices::Int=1)
-    C=CombinatorialCode([],false); C.vertices=CodeWord(collect(1:Nvertices));
+    C=CombinatorialCode([emptyset],false); C.vertices=CodeWord(collect(1:Nvertices));
     return C
 end
 
