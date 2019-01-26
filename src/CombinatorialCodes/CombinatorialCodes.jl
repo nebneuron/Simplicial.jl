@@ -207,7 +207,7 @@ Order of returned codewords matches that in `C.words`; assuming no one has been 
 around with `C`'s fields, these should be sorted using `lessequal_GrRevLex`.
 """
 function matrix_form(C::CombinatorialCode)::BitArray{2}
-    if VERSION>= v"0.7.0"
+    if  VERSION>= v"0.7.0" || C.Nwords<2
         return BitArray(sparse_matrix_form(C))
     else
         B = falses(length(C), length(vertices(C)))
