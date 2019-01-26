@@ -40,7 +40,7 @@ map(include,
      # Combinatorial codes
      "CombinatorialCodes/CombinatorialCodes.jl",
      "CombinatorialCodes/CodeOperations.jl",
-     # "CombinatorialCodes/BernoulliRandomCode.jl", moved to CodeOperations.jl
+     "CombinatorialCodes/PseudoMonomials.jl",
      "CombinatorialCodes/morphisms.jl",
      "CombinatorialCodes/NeuralRing.jl",
      "CombinatorialCodes/examples_of_codes.jl",
