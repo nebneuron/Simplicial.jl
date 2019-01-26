@@ -31,7 +31,6 @@ const MaximalHomologicalDimension=8;
 
 
 "  PersistenceIntervalsType=Array{Array{Real,2},1} is a type used for keeping track of persistent intervals "
-
 const SingleDimensionPersistenceIntervalsType=Matrix{Float64}
 const PersistenceIntervalsType=Array{SingleDimensionPersistenceIntervalsType,1}
 
@@ -39,7 +38,6 @@ const PersistenceIntervalsType=Array{SingleDimensionPersistenceIntervalsType,1}
 function show(P::PersistenceIntervalsType);
 This prints out the appropriate persistence intervals 
 """
-
 function show(P::PersistenceIntervalsType);
  println("Persistence intervals up to dimension=$(length(P)-1)");
  for d=0:length(P)-1
