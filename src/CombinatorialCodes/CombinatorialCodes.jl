@@ -8,17 +8,17 @@ abstract type AbstractCombinatorialCode{T<:Integer} <: AbstractFiniteSetCollecti
 ################################################################################
 ### Generic implementations of basic operations
 ################################################################################
-
-function show(io::IO, C::AbstractCombinatorialCode)
-    if !get(io, :compact, false)
-        println(io, typeof(C))
-    end
-    print(io, "Code on [$(maximum(vertices(C)))] with $(length(C)) codewords")
-    if !get(io, :compact, false)
-        println(io)
-        println(io, "C = {$(join(C, ", "))}")
-    end
-end
+### This funcion is broken in Julia 1 please fix!
+# function show(io::IO, C::AbstractCombinatorialCode)
+#    if !get(io, :compact, false)
+#        println(io, typeof(C))
+#    end
+#    print(io, "Code on [$(maximum(vertices(C)))] with $(length(C)) codewords")
+#    if !get(io, :compact, false)
+#        println(io)
+#        println(io, "C = {$(join(C, ", "))}")
+#    end
+# end
 
 ################################################################################
 ### CombinatorialCode
