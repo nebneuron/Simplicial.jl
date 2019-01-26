@@ -9,12 +9,33 @@ paper, this set excludes the "boolean relations" ``x_i(1-x_i)``. Returns a
 This is an implementation of Algorithm 1 from [this
 paper](https://arxiv.org/abs/1511.00255)
 """
-function canonical_form(C::BitMatrix)
+
+
+function canonical_form(C::AbstractCombinatorialCode)::Array{PseudoMonomial,1}
+    if isvoid(C) return [PseudoMonomial([],[])]; end
+    if length(C)==1 # the case of exactly one word in the code
+        vtices=sort(collect(C.vertices)); the_word=C.words[1];
+        pms=(!(VERSION>= v"0.7.0")) ? Array{Simplicial.PseudoMonomial,1}(length(vtices)) : Array{Simplicial.PseudoMonomial,1}(undef,length(vtices));
+        for i=1:length(vtices);
+            v=Int(vtices[i])
+            pms[i]=(in(v,the_word)) ? PseudoMonomial([],[v]) : PseudoMonomial([v],[])
+        end
+        return pms
+    else return canonical_form(matrix_form(C))
+    end
+end
+
+
+
+
+# This computes the canonical form for the BitMatrix representation of C
+# Note that it can *not* handle codes with less then two elements 
+function canonical_form(C::BitMatrix)::Array{PseudoMonomial,1}
     m,n = size(C) # m codewords on n neurons
     if m == 0
         throw(DomainError("Attempting to compute canonical form of void code"))
     elseif m == 1
-        return [PseudoMonomial(vcat(.!C[1,:], C[1,:]))]
+        throw(DomainError("Attempting to compute canonical form of a code with exactly one element.."))
     else
         notCC = [.!C C]
         # Recursive algorithm starts with CF of a single codeword. Then adds one
@@ -51,7 +72,10 @@ function canonical_form(C::BitMatrix)
         return [PseudoMonomial(collect(CF[l,:])) for l = 1:size(CF,1)]
     end
 end
-canonical_form(C::AbstractCombinatorialCode) = canonical_form(matrix_form(C))
+ 
+
+
+
 function double_diagonal(b::BitArray{1})::BitArray{2}
     n = length(b)>>1
     M = falses(n, 2n)
