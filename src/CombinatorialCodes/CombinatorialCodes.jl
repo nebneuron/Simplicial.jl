@@ -3,7 +3,7 @@
 
 The abstract parent class for concrete implements of *combinatorial codes*.
 """
-abstract type AbstractCombinatorialCode{T<:Integer} <: AbstractFiniteSetCollection{T} end
+abstract type AbstractCombinatorialCode{T} <: AbstractFiniteSetCollection{T} end
 
 ################################################################################
 ### Generic implementations of basic operations
@@ -29,24 +29,22 @@ abstract type AbstractCombinatorialCode{T<:Integer} <: AbstractFiniteSetCollecti
 A collection of subsets of ``[n] = {1,...,n}``. Codewords are stored as
 `Set{T}` objects in an array.
 
-By default, `T` is determined at object construction to be the smallest `Int` type that can
-store all the vertices; see notes below.
-
 # Constructors
 
-    CombinatorialCode(itr, [vertices=union(itr...)]; [squash_int_type=true], [signed=true])
+    CombinatorialCode(itr, [vertices=union(itr...)])
 
-Collects the unique elements of iterable collection `itr` as codewords. If `squash_int_type`
-is true, determines the smallest integer type which can store all the vertices; if
-`signed=false` this will be a `UInt` type, otherwise it will be an `Int` type. Optional
-argument `vertices` allows creation of trivial neurons, i.e. neurons which never fire. Words
-are stored in graded reverse lexicographic order by their binary vector representation  (see
-[`lessequal_GrRevLex`](@ref)).
+Collects the unique elements of iterable collection `itr` as codewords. Optional argument
+`vertices` allows creation of trivial neurons, i.e. neurons which never fire. The vertices
+are of type `eltype(vertices)`; if `vertices` is empty, the type `TheIntegerType` will be
+used. Words are stored in graded reverse lexicographic order by their binary vector
+representation  (see [`lessequal_GrRevLex`](@ref)).
 
-    CombinatorialCode(B::AbstractMatrix{Bool}; order="rows", kwargs...)
+    CombinatorialCode(B::AbstractMatrix{Bool}; order="rows")
 
-Interprets rows of matrix `B` as codewords. Keyword argument `order` is either `rows` or
-`cols` to specify whether rows of `B` or columns of `B` should be interpreted as codewords.
+Interprets rows of matrix `B` as codewords. Keyword argument `order` is either `"rows"` or
+`"cols"` to specify whether rows of `B` or columns of `B` should be interpreted as
+codewords. Defaults to using `TheIntegerType` for vertices unless `B` is *very* large, in
+which case smalles useable integer type is used.
 
 """
 mutable struct CombinatorialCode{T} <: AbstractCombinatorialCode{T}
@@ -77,24 +75,24 @@ mutable struct CombinatorialCode{T} <: AbstractCombinatorialCode{T}
     end
 end
 # preprocess the data to determine the type of vertices to use
-function CombinatorialCode(itr, V=union(itr...); squash_int_type=true, signed=true)
-    T = if squash_int_type
-        signed ? smallest_int_type(extrema(V)...) : smallest_uint_type(extrema(V)...)
-    else
-        eltype(V)
-    end
-    CombinatorialCode{T}(map(Set{T}, collect(itr)), Set{T}(V))
+function CombinatorialCode(itr, V=unique(union(itr...)))
+    #TODO the extra `unique` in the method signature ensures that empty arrays (which
+    #default to type `Array{Any,1}`) get ignored in determining the element type for `V`.
+    #This is a quick hack for now; this should be handled more elegantly (and efficiently)
+    #in the future. See also SimplicialComplex(itr, V)
+    T = isempty(V) ? TheIntegerType : eltype(V)
+    CombinatorialCode{T}(Set{T}.(collect(itr)), Set{T}(V))
 end
-function CombinatorialCode(B::AbstractMatrix{Bool}; squash_int_type=true, signed=true, order="rows")
+function CombinatorialCode(B::AbstractMatrix{Bool}; order="rows")
     _B = if order == "cols"
         transpose(B)
     else
         B
     end
     V = 1:size(_B,2)
-    CombinatorialCode([V[_B[i,:]] for i=1:size(_B,1)], V; squash_int_type=squash_int_type, signed=signed)
+    CombinatorialCode([V[_B[i,:]] for i=1:size(_B,1)], V)
 end
-CombinatorialCode(C::AbstractFiniteSetCollection; squash_int_type=true, signed=true) = CombinatorialCode(C, vertices(C); squash_int_type=squash_int_type, signed=signed)
+CombinatorialCode(C::AbstractFiniteSetCollection{T}) where T = CombinatorialCode{T}(collect(C), vertices(C))
 
 ### REQUIRED FUNCTIONS: CombinatorialCode
 

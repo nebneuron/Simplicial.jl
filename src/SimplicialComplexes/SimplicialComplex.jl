@@ -111,23 +111,27 @@ list of its facets.
 
 # Constructors
 
-    SimplicialComplex(itr, vertices=union(itr...))
+    SimplicialComplex(itr, [vertices=union(itr...)])
 
 Uses the maximal elements of `itr` as facets. Optional argument `vertices` can specify
 vertex set if some vertices do not appear as faces. The vertices are of type
-`eltype(vertices)`; if this is a subtype of `Integer` the smallest type which can store
-those values is used.
+`eltype(vertices)`; if `vertices` is empty, the type `TheIntegerType` will be used. Note
+this constructor will sort the elements of `itr` according to [graded reverse lexicographic
+order](https://en.wikipedia.org/wiki/Monomial_order#Graded_reverse_lexicographic_order), see
+[`lessequal_GrRevLex`](@ref)
 
-    SimplicialComplex(B)
+    SimplicialComplex(B; order="rows")
 
-Interprets rows of binary matrix `B` as codewords.
+Interprets rows of binary matrix `B` as codewords. If `order="cols"` first transposes `B`.
+Defaults to using `TheIntegerType` for vertices, but will use larger `Int` type as necessary
+(if `B` is *really* big).
 
 """
 mutable struct SimplicialComplex{T} <: AbstractSimplicialComplex{T}
     facets::Vector{Set{T}}  # the maximal faces ordered by the weights (in the increasing order)
     dimensions::Vector{Int} # the dimensions of the facets
-    dim::Int    # the dimension of maximum face (=-1 if only the empty set, =-2 if this is NULL)
-    Nwords::Int # total number of facets in the code (=0 if the complex is just the empty set, -1 if Null)
+    dim::Int    # maximal dimension of a facet
+    Nwords::Int # total number of facets in the complex
     vertices::Set{T}    # the set of all vertices that show up in the simplicial complex
 
     # offload fiddling with types to external constructor(s)
@@ -151,24 +155,25 @@ mutable struct SimplicialComplex{T} <: AbstractSimplicialComplex{T}
         end
     end
 end
-function SimplicialComplex(itr, V=unique(union(itr...)); squash_int_type=true)
+function SimplicialComplex(itr, V=unique(union(itr...)))
     #TODO the extra `unique` in the method signature ensures that empty arrays (which
     #default to type `Array{Any,1}`) get ignored in determining the element type for `V`.
     #This is a quick hack for now; this should be handled more elegantly (and efficiently)
-    #in the future.
+    #in the future. See also CombinatorialCode(itr, V)
 
-    T = isempty(V) ? Int : eltype(V)
-    #TODO additionally, the check below avoids evaluating `extrema([])` which would throw
-    #any error. Again, not the most efficient but it works for now.
-    if !isempty(V) && T <: Integer && squash_int_type
-        T = smallest_int_type(extrema(V)...)
-    end
+    T = isempty(V) ? TheIntegerType : eltype(V) #default type is "TheIntegerType"
     SimplicialComplex{T}(Set{T}.(collect(itr)), Set{T}(V))
 end
-function SimplicialComplex(B::AbstractMatrix{Bool}; squash_int_type=true)
-    T = squash_int_type ? smallest_int_type(size(B,2)) : Int
-    V = T.(1:size(B,2))
-    SimplicialComplex{T}([Set{T}(V[B[i,:]]) for i=1:size(B,1)], Set{T}(V))
+function SimplicialComplex(B::AbstractMatrix{Bool}; order="rows")
+    _B = if order == "cols"
+        transpose(B)
+    else
+        B
+    end
+    n = size(_B,2)
+    T = n < 2^16 ? TheIntegerType : smallest_int_type(n)
+    V = T.(1:size(_B,2))
+    SimplicialComplex{T}([Set{T}(V[_B[i,:]]) for i=1:size(_B,1)], Set{T}(V))
 end
 SimplicialComplex{T}(C::AbstractFiniteSetCollection{T}) where T = SimplicialComplex{T}(collect(facets(C)), vertices(C))
 
