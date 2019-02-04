@@ -3,7 +3,6 @@ The following function tests the correctness of a persistent homology computatio
 Usage: TestPersistenceComputationsOfDowkerComplex()
 If this returns true, then this computation passed the test
 """
-
 function TestPersistenceComputationsOfDowkerComplex()::Bool
 A=[0.490139  0.29962   0.440286   0.549578  0.258924  0.633683   0.444271   0.113547  0.26646    0.00468185
 0.382347  0.167826  0.418372   0.966152  0.921775  0.251849   0.370131   0.937359  0.572653   0.185558
