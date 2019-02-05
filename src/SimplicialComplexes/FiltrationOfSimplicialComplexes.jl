@@ -1,4 +1,3 @@
-
 mutable struct FiltrationOfSimplicialComplexes
     faces::Array{CodeWord,1}     # these are all possible faces that appear in the filtration (may include just the `emptyset` if the first complex is the irrelevant complex)
     dimensions::Array{Int,1}     # the dimensions of the faces -- these are the dimensions of the faces (IN THE SAME ORDER)
@@ -131,7 +130,6 @@ end
 """
     FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},AddedFace::CodeWord,AssignedBirth::Int)
 """
-
 ## The function FaceBirthpush!is  used for defining type FiltrationOfSimplicialComplexes
 ## This function is the core of the type FiltrationOfSimplicialComplexes
 ## Its inputs are
@@ -249,18 +247,9 @@ for i=1:length(Sorted) ## this is the main loop on the unique values of the matr
         break
      end
 end # for i=1:length(Sorted)
-
 # The variable GraphDensity assignes graph density
-
-
-
     return  FiltrationOfSimplicialComplexes(ListOfFaces,birth,CodeWord(1:Nrows)), GraphDensity
 end
-
-
-
-
-
 
 
 
@@ -321,34 +310,11 @@ end# for i=1:length(FS.faces)
 
 return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #  
 #  
 
 PrintLine(io::IO, width=30)= println(io, "_"^width);
 PrintLine(width=30) = println("_"^width)
-
-
-
 """
     show(FS::FiltrationOfSimplicialComplexes)
 """
@@ -363,84 +329,4 @@ for i=1:length(FS.faces);
    print(io, "|  "); print_with_color(:blue, io, "$(map(Int,sort(collect(FS.faces[i])))) \n");
  end
   PrintLine(io)
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##################################### Obsolete versions of functions that are left for reference
-"""
-    Skeleton_OLD(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-    This Function takes a filtration of simplicial complexes and produces a filtration of their skeletons
-    This implementation is "naive", old and very inefficient on large skeleta
-"""
-function Skeleton_OLD(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-if dim<0; error("The maximal mimension needs to be positive"); end;
-if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
-
-birth=Int[]; # these are birth times of faces
-ListOfFaces=Array{CodeWord,1}([]);
-DimensionsOfFaces=Array{Int,1}([]);
-IndicesOfTopDimensionalFaces=[];
-# Here we compute theh set of subsets of a given set
-MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),dim+1);
-CurrentIndex=1;
-for i=1:length(FS.faces)
-    this_face=FS.faces[i]
-    this_face_dim=FS.dimensions[i]
-    if this_face_dim<=dim
-       push!(ListOfFaces,this_face);
-       push!(DimensionsOfFaces,length(this_face))
-       push!(birth, FS.birth[i]);
-       if this_face_dim==dim
-          push!(IndicesOfTopDimensionalFaces,CurrentIndex)
-        end
-     CurrentIndex+=1 # make sure we keep track of the current index
-     else
-           # now we compute all the dim-dimensional subsets of FS.birth[i] and add them assuming that they are not already in the previous faces
-            for f in combinations(collect( this_face),dim+1)
-                 CodeWord_of_f=CodeWord(f);
-                 # First, we determine if f is not already equal to one of the previous faces
-                 f_is_not_redundant=true;
-                 for j=1: length(IndicesOfTopDimensionalFaces)
-                      if ListOfFaces[IndicesOfTopDimensionalFaces[j]]==CodeWord_of_f
-                            f_is_not_redundant=false;
-                         break
-                      end
-                 end
-                 if f_is_not_redundant
-                    push!(ListOfFaces,CodeWord_of_f);
-                    push!(DimensionsOfFaces,length(CodeWord_of_f))
-                    push!(birth, FS.birth[i]);
-                    push!(IndicesOfTopDimensionalFaces,CurrentIndex);
-                    CurrentIndex+=1 # make sure we keep track of the current index
-                  end
-                  if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces
-                    break ;
-                  end # Here we stop if we filled all possible top-dimensional faces
-            end # for f in combinations(collect( this_face)),dim+1)
-     end # if this_face_dim<=dim
-if length(IndicesOfTopDimensionalFaces)== MaximalPossibleNumberOfTopDimensionalFaces; break ; end # Here we stop if we filled all possible top-dimensional faces
-end# for i=1:length(FS.faces)
-
-return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
 end
