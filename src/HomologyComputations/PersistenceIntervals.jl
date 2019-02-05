@@ -9,7 +9,7 @@
 function BettiNumbers(K::AbstractSimplicialComplex)::Array{Int,1}
 I=PersistenceIntervals(FiltrationOfSimplicialComplexes(K));
 L=length(I);
-betti=Array{Int,1}(L);
+betti= VERSION>= v"0.7.0" ?  Array{Int,1}(undef, L)  : Array{Int,1}(L)
 for i=1:L
     betti[i]=size(I[i],1);
 end
