@@ -1,9 +1,8 @@
 "DirectedCodeword is the type that encodes (ordered) sequences of vertices"
 DirectedCodeword=Vector{TheIntegerType}
 const EmptyDirectedCodeword=DirectedCodeword();
+
 " issubsequence(a,b) a.k.a. <=(a,b)  determines if the sequence a is a subsequence of sequence b"
-
-
 function <=(a::DirectedCodeword,b::DirectedCodeword)::Bool
 # This function is written very ugly, to optimize it for speed..
         Na=length(a); if Na==0; return true end
@@ -135,10 +134,10 @@ end # function  Matrix2Permutations(A)
 
 
 """
+DirectedComplex(A::Union{Matrix{Float64},Matrix{Int}})::DirectedComplex
 This function takes a matrix (of integers or Floats and produces a directed complex )
 
 """
-
 function DirectedComplex(A::Union{Matrix{Float64},Matrix{Int}})::DirectedComplex
   RowOrdering=Matrix2Permutations(A);
   return DirectedComplex([DirectedCodeword(RowOrdering[i,:]) for i=1:size(RowOrdering,1)])
