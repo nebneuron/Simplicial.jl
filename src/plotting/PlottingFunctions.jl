@@ -1,11 +1,9 @@
 
 # using Plotly
-
 """
 Usage: PlotBettiCurves(Intervals::PersistenceIntervalsType,GraphDensity::Vector,maxdim)
 
 """
-
 function PlotBettiCurves(Intervals::PersistenceIntervalsType,GraphDensity::Vector,maxdim::Int=3)
     Bettis = Intervals2Bettis(Intervals, length(GraphDensity), maxdim)
     Curves=Array{Any}(maxdim);
