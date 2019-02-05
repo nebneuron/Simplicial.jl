@@ -24,7 +24,6 @@ end
 Usage: Betti=PHAT_BettiNumbers(D); # here D is a directed complex.
 This function inputs a directed complex and computes the Z_2 homology using the PHAT library
 """
-
 function PHAT_BettiNumbers(D::DirectedComplex)::Array{Int64,1}
          print("Computing the poset structure..")
          P=GradedPoset(D);  print("..done! Now compute the Z_2-homology using the PHAT library..")
@@ -62,7 +61,6 @@ end
 This function plugs the phat executable for julia PHAT interface, written by Pawel Dlotko
 
 """
-
 function compute_PersistenceIntervals_Of_PHAT_array(number_of_cells::UInt64,dimension::UInt64,A::Array{Int64,2})::Vector{Int}
 ############   First, take care of the location of the various executables:
     The_Location_Of_PHAT_Executables=PATHOF_Simplicial*"/HomologyComputations/phat/src"
@@ -97,7 +95,6 @@ example usage:
 P=PersistenceIntervals(Fz); 
 show(P); 
 """
-
 function PersistenceIntervals(complex::Simplicial.FiltrationOfZ2Complexes)::Simplicial.PersistenceIntervalsType
 result =
 compute_PersistenceIntervals_Of_PHAT_array(convert(UInt64,length(complex.dimensions)),convert(UInt64,length(complex.dimensions)+1),PHATarray(complex));
@@ -161,8 +158,6 @@ end
  P=PersistenceIntervals(facet_complex );
  show(P)
 """
-
-
 function PersistenceIntervals(FD::Simplicial.FiltrationOfDirectedComplexes)::Simplicial.PersistenceIntervalsType
 return   PersistenceIntervals(FiltrationOfZ2Complexes(FD));
 end
