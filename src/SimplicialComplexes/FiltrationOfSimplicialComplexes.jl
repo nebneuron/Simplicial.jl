@@ -125,11 +125,6 @@ function Sample(S::FiltrationOfSimplicialComplexes, DepthsOfSampling::Array{Int,
     return T
 end
 
-
-
-"""
-    FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},AddedFace::CodeWord,AssignedBirth::Int)
-"""
 ## The function FaceBirthpush!is  used for defining type FiltrationOfSimplicialComplexes
 ## This function is the core of the type FiltrationOfSimplicialComplexes
 ## Its inputs are
@@ -140,6 +135,10 @@ end
 ## The function examines whether the added face is contained in any of the face in the list:
 ## if true, return the matrix [ListOfFaces births];
 ## if false, return the matrix [ListOfFaces births; AddedFace AssignedBirth].
+
+"""
+    FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},AddedFace::CodeWord,AssignedBirth::Int)
+"""
 function FaceBirthpush!(ListOfFaces::Array{CodeWord,1},births::Array{Int,1},AddedFace::CodeWord,AssignedBirth::Int)
     if length(ListOfFaces)!=length(births) # ListOfFaces should have the same length as births.
         error("List of faces and births do not have the same length.")
