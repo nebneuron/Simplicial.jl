@@ -106,8 +106,6 @@ end
   (*) in-between the first and last entry (exclusively) are the vertex indices of the simplex.
   (*) the last entry indicates the birth time of the simplex,
 """
-
-
 function WritePerseusSimplexFile(FilteredComplex::FiltrationOfSimplicialComplexes, baseFileName::String)
   # See https://www.sas.upenn.edu/~vnanda/perseus/ for file formet
          outfile = open("$baseFileName.txt", "w");
