@@ -9,8 +9,6 @@ The following type encodes a filtration of Z2 chain complexes.
     * the convention of how boundaries are reffered to is different from that in the GradedPoset type..
 
 """
-
-
 struct FiltrationOfZ2Complexes
 
   dimensions::Array{Int,1} # this is the list of dimensions of the graded poset.
@@ -159,7 +157,6 @@ into array that can be input into PHAT.
 Usage:
 A=PHATarray(Fz)
 """
-
 function PHATarray(Fz::FiltrationOfZ2Complexes)::Array{Int64,2};
 Nelements=length(Fz.dimensions)
 cells=Array{Int,1}([]); # initialize as empty
@@ -206,5 +203,3 @@ for i=1:length(Fz.birth);
  end
 println();
 end
-
-                            
