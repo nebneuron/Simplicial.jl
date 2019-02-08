@@ -3,8 +3,7 @@ E=setdiff(C,D) computes the set-theoretic difference of two codes on the same ve
 """
 function setdiff(C::CombinatorialCode, D::CombinatorialCode)::CombinatorialCode
 if C.vertices!=D.vertices error("Both codes need to have the same vertex set") end
-new_vertices=setdiff(C.words,D.words)
-E=  CombinatorialCode(new_vertices);
+E=CombinatorialCode(setdiff(C.words,D.words))
 E.vertices=C.vertices
 return E
 end
