@@ -9,8 +9,8 @@ import Combinatorics: combinations
 # methods to extend
 import Base: in, ==, <=, >=, <, >, show, push!, transpose,
              start, next, done, eltype, length,
-             max, show
-
+             max, show,
+             setdiff
 
     # because of the changes in   julia version >=0.7 
     # we introduce these backward compartibility fixes below
@@ -92,6 +92,7 @@ export
 in, ==, <=, >=, >, <, show, push!, transpose,
 start, next, done, eltype, length,
 max, show,
+setdiff,
 
 # core.jl
 CodeWord, emptyset, TheIntegerType,
