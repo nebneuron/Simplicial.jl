@@ -192,4 +192,4 @@ while word_number<=C.Nwords
 return  sort!(transient_CF, by=degree)
 end  #function canonical_form(C::CombinatorialCode)::Array{Pseudomonomial,1}
 #######################################################################
-end # module Pseudomonomials
+ 
