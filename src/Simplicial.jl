@@ -42,7 +42,6 @@ map(include,
      "CombinatorialCodes/CodeOperations.jl",
      "CombinatorialCodes/PseudoMonomials.jl",
      "CombinatorialCodes/morphisms.jl",
-     "CombinatorialCodes/NeuralRing.jl",
      "CombinatorialCodes/examples_of_codes.jl",
      # Simplicial complexes
      "SimplicialComplexes/SimplicialComplex.jl",
