@@ -126,7 +126,7 @@ function show(io::IO, CF::Array{Pseudomonomial,1})
 end
 
 ######
-function CanonForm(single_codeword::Set, available_vertices::Set)::Array{Pseudomonomial,1}
+function canonical_form(single_codeword::Set, available_vertices::Set)::Array{Pseudomonomial,1}
  return [ ((i in single_codeword) ? Pseudomonomial(Int[], [Int(i)]) : Pseudomonomial([Int(i)],Int[]) )  for i in available_vertices]
 end
 ######
@@ -139,7 +139,7 @@ end
 ####
 
 
-function CanonForm(C::CombinatorialCode)::Array{Pseudomonomial,1}
+function canonical_form(C::CombinatorialCode)::Array{Pseudomonomial,1}
 	if  C.Nwords==0  return [Pseudomonomial(Int[], Int[])]  end # i.e. the neural ideal  is all the functions
 	n=length(C.vertices);
 	# note that the expression below works correctly only on a 64-bit processor
@@ -147,7 +147,7 @@ function CanonForm(C::CombinatorialCode)::Array{Pseudomonomial,1}
        return empty_canonical_form             # i.e. the neural ideal is {0}
     end
 	verts=sort(collect(vertices(C))); N_vertices=length(verts);
-transient_CF=CanonForm( C.words[1], C.vertices)
+transient_CF=canonical_form( C.words[1], C.vertices)
 word_number=2;
 while word_number<=C.Nwords
 	theword=CodeWord(C.words[word_number])
@@ -190,6 +190,6 @@ while word_number<=C.Nwords
  word_number+=1
  end # while word_number<=C.Nwords
 return  sort!(transient_CF, by=degree)
-end  #function CanonForm(C::CombinatorialCode)::Array{Pseudomonomial,1}
+end  #function canonical_form(C::CombinatorialCode)::Array{Pseudomonomial,1}
 #######################################################################
 end # module Pseudomonomials
