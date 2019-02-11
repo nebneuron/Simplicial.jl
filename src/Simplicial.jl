@@ -7,7 +7,7 @@ import IterTools: chain, distinct, product, subsets
 import Combinatorics: combinations
 
 # methods to extend
-import Base: in, ==, <=, >=, <, >, show, push!, transpose,
+import Base: in, ==, <=, >=, <, >,*, show, push!, transpose, iszero,
              start, next, done, eltype, length,
              max, show,
              setdiff
@@ -116,7 +116,7 @@ union_product, intersection_completion, max_intersection_completion, union_compl
 trunk, core, delta, product, coproduct, trunksmorphism, simplexmap,
 
 # NeuralRing.jl
-PseudoMonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form,
+Pseudomonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form, ==, <=, *, iszero, degree
 
 # SimplicialComplex.jl
 AbstractSimplicialComplex, SimplicialComplex,
