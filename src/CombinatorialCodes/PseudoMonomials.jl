@@ -37,10 +37,43 @@ if isempty(p.x) return false end
 end
 
 
+"""
+==(pm1,pm2)
+This takes two pseudomonomials and checks if they are equal to each other.
+This includes checking if they are indeed both zeroes
+"""
+function ==(pm1::Pseudomonomial,pm2::Pseudomonomial)::Bool
+		 if iszero(pm1) && iszero(pm2) return true end
+         if length(pm1.x)!=length(pm2.x) || length(pm1.y)!=length(pm2.y) return false
+	     elseif  pm1.x==pm2.x  &&  pm1.y==pm2.y
+			   return true
+         else  return false
+		 end
+end
 
-# function is_zero(p::Pseudomonomial):Bool
-#return !isempty(intersect(p.x,p.y))
-# end
+
+
+
+
+"""
+==(f,g)
+This takes two arrays of pseudomonomials (interpreted as canonical forms)
+and checks if they are identical (discarding the particular ordering as arrays -- for some reason the obvious set operations did not work here)
+"""
+function ==(f::Array{Pseudomonomial,1},g::Array{Pseudomonomial,1})::Bool
+	    ug=unique(g); uf=unique(f); # discard repetitions if any
+	    if length(ug)!=length(uf) return false end
+        answer=true
+		for p in uf
+			if !(p in ug) return false end
+		end
+		return true
+end
+
+
+
+
+
 
 """
 pairing_is_zero(p, c)
