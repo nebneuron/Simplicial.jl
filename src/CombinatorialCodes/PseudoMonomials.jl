@@ -39,14 +39,29 @@ end
 
 
 
-
 """
-pairing_is_zero(p, c)
-This cheks if the pseudomonomial p evaluates to zero at x=binary_vector_form(c)
+vanishes_at(p, c)
+This checks if the pseudomonomial p evaluates to zero at x=binary_vector_form(c)
+Note that this longish implementation is optimized for speed and memory
+Otherwise we could have just done return !(isempty(intersect(p.y,c))) || !(issubset(p.x,c)  )
 """
-function pairing_is_zero(p::Pseudomonomial, c::CodeWord)::Bool
-	return !(isempty(intersect(p.y,c))) || !(issubset(p.x,c)  )
+function vanishes_at(p::Pseudomonomial, c::CodeWord)::Bool
+    # if any element in C is in p.y return true
+	for v in c
+        if (v in p.y)
+			 return true
+		 end
+	end
+    # if any element in p.x is NOT in C, return true
+    for u in p.x
+		if !(u in c)
+			return true
+		end
+   end
+# if we have not returned true yet, this means it does not vanish
+return false
 end
+
 
 
 
@@ -181,7 +196,7 @@ while word_number<=C.Nwords
 	index_of_M=Int[]; index_of_L=Int[]
 	 N =Array{Pseudomonomial,1}()
      for i=1:length(transient_CF)
-		if pairing_is_zero(transient_CF[i],theword)
+		if vanishes_at(transient_CF[i],theword)
 			 push!(index_of_L,i)
 		else push!(index_of_M,i)
 		end
