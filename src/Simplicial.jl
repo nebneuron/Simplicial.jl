@@ -115,7 +115,7 @@ union_product, intersection_completion, max_intersection_completion, union_compl
 trunk, core, delta, product, coproduct, trunksmorphism, simplexmap,
 
 # NeuralRing.jl
-Pseudomonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form, ==, <=, *, iszero, degree
+Pseudomonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form, ==, <=, *, iszero, degree, vanishes_at, 
 
 # SimplicialComplex.jl
 AbstractSimplicialComplex, SimplicialComplex,
