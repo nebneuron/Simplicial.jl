@@ -1,5 +1,5 @@
 ## Compatibility Warning
- 
+ The current version of `Simplicial` requires Julia v0.6 or higher. 
 
 # Package Simplicial
 
@@ -20,16 +20,19 @@ This package interfaces with existing TDA software for homology computations. Cu
 
 # Installation:
 
-The current version of `Simplicial` requires Julia v0.6; Julia v0.7 is not yet supported. Package installation is done via `Pkg.clone`:
+ The current version of `Simplicial` requires Julia v0.6 or higher. 
+ 
+ In Julia v0.6 or Julia v0.7  the package installation is done via `Pkg.clone`:
 
 ```julia-repl
 julia> Pkg.clone("https://github.com/nebneuron/Simplicial.jl.git")
 ```
 
-If you are using Julia v0.5, you will need to manually checkout v0.1 of the package. This can be accomplished from Julia as follows:
-
-```julia-repl
-julia> cd(Pkg.dir("Simplicial")); run(`git checkout v0.1`)
+In Julia 1.0 the package installation is done via
+```
+]
+add https://github.com/nebneuron/Simplicial.jl
+<backspace> 
 ```
 
-Since Julia v0.5 is no longer supported, it is recommended to upgrade to version v0.6.
+
