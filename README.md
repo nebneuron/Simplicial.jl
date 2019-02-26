@@ -1,6 +1,3 @@
-## Compatibility Warning
- The current version of `Simplicial` requires Julia v0.6 or higher. 
-
 # Package Simplicial
 
 | **Stable** | **Latest** |
