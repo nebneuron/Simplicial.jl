@@ -121,11 +121,34 @@ end
 
 
 
+
 """
 beta=BettiNumbers(D::DirectedComplex,maximaldimension=Inf)
+This function returns the Betti numbers of the homology of a   directed complex using an interface to PHAT
+
+Here the length of beta is equal to maximaldimension+1,
+beta[1] is 0-th Betti number  and beta[P.dim+1] is the P.dim-dimensional Betti number
+maximaldimension is an optional parameter to restrict the maximal possible dimension of homology to compute
+"""
+function BettiNumbers(D::DirectedComplex, maximaldimension=Inf)::Vector{Int}
+
+ if (maximaldimension == Inf) || (maximaldimension == D.dim)
+    maxdim = D.dim;
+ elseif maximaldimension > D.dim
+    error("maximaldimension ($maximaldimension) exceeds the dimension of the directed complex ($D.dim) ")
+ else
+    maxdim = maximaldimension + 1 # if we want first k BettiNumbers of D, we need k+1-skeleton of D
+ end
+ P =GradedPoset(D, maxdim);
+ beta = zeros(Int,maxdim+1);
+return PHAT_BettiNumbers(D);
+end
+
+
+"""
+beta=BettiNumbers_naive_method(D::DirectedComplex,maximaldimension=Inf)
 
 This function returns the Betti numbers of the homology of a (so far only pure) directed complex
-
 This is a very crude way to compute directed homology -- this does not use any tricks,
 just the definition and the built-in rank function that may fail to work properly on large enough matrices.
 Use with caution. Works as prescribed on small enough complexes.
@@ -135,7 +158,7 @@ beta[1] is 0-th Betti number  and beta[P.dim+1] is the P.dim-dimensional Betti n
 maximaldimension is an optional parameter to restrict the maximal possible dimension of homology to compute
 
 """
-function BettiNumbers(D::DirectedComplex, maximaldimension=Inf)::Vector{Int}
+function BettiNumbers_naive_method(D::DirectedComplex, maximaldimension=Inf)::Vector{Int}
 
  if (maximaldimension == Inf) || (maximaldimension == D.dim)
     maxdim = D.dim;
