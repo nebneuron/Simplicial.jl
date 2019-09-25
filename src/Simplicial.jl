@@ -24,6 +24,7 @@ import Base: in, ==, <=, >=, <, >,*, show, push!, transpose, iszero,
        is_apple()=Sys.isapple()
        find=findall # make up for this horrible decision of deprecating the find function that was made under the pressure of mathworks goons
        export is_linux, is_windows, is_apple
+       print_with_color=printstyled
   else 
   const PATHOF_Simplicial= Pkg.dir("Simplicial")*"/src"
   findall=find
