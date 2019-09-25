@@ -321,11 +321,11 @@ function show(io::IO, FS::FiltrationOfSimplicialComplexes)
  number_of_vertices=length(FS.vertices); depth=FS.depth;
  print(io, "A fitration of $depth simplicial complexes on $number_of_vertices vertices: $(map(Int,sort(collect(FS.vertices))))\n");
  PrintLine(io)
- print_with_color(:green,  "birth time"); print(" | ") ; print_with_color(:blue, io, "face \n");
+ print(  "birth time"); print(" | ") ; print( "face \n");
  PrintLine()
 for i=1:length(FS.faces);
-   print_with_color(:green, " $(FS.birth[i])        "); if FS.birth[i]<=9;  print(io, " "); end
-   print(io, "|  "); print_with_color(:blue,  "$(map(Int,sort(collect(FS.faces[i])))) \n");
+   print( " $(FS.birth[i])        "); if FS.birth[i]<=9;  print(io, " "); end
+   print( "|  "); print(  "$(map(Int,sort(collect(FS.faces[i])))) \n");
  end
   PrintLine(io)
 end
