@@ -312,20 +312,20 @@ end
 #  
 #  
 
-PrintLine(io::IO, width=30)= println(io, "_"^width);
-PrintLine(width=30) = println("_"^width)
+
 """
     show(FS::FiltrationOfSimplicialComplexes)
 """
 function show(io::IO, FS::FiltrationOfSimplicialComplexes)
- number_of_vertices=length(FS.vertices); depth=FS.depth;
- print(io, "A fitration of $depth simplicial complexes on $number_of_vertices vertices: $(map(Int,sort(collect(FS.vertices))))\n");
- PrintLine(io)
- print(  "birth time"); print(" | ") ; print( "face \n");
- PrintLine()
+width=30;    
+number_of_vertices=length(FS.vertices); depth=FS.depth;
+print( "A fitration of $depth simplicial complexes on $number_of_vertices vertices: $(map(Int,sort(collect(FS.vertices))))\n");
+println("_"^width)
+print(  "birth time"); print(" | ") ; print( "face \n");
+println("_"^width)
 for i=1:length(FS.faces);
    print( " $(FS.birth[i])        "); if FS.birth[i]<=9;  print(io, " "); end
    print( "|  "); print(  "$(map(Int,sort(collect(FS.faces[i])))) \n");
  end
-  PrintLine(io)
+ println("_"^width)
 end
