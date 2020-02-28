@@ -6,7 +6,7 @@ Usage: PlotBettiCurves(Intervals::PersistenceIntervalsType,GraphDensity::Vector,
 """
 function PlotBettiCurves(Intervals::PersistenceIntervalsType,GraphDensity::Vector,maxdim::Int=3)
     Bettis = Intervals2Bettis(Intervals, length(GraphDensity), maxdim)
-    Curves=Array{Any}(maxdim);
+    Curves=(VERSION < v"0.7.0") ?  Array{Any}(maxdim) :  Array{Any}(undef,maxdim);
     
     for d=1:maxdim
         Curves[d]=Plotly.scatter(;x=GraphDensity, y=Bettis[d,:], mode="lines", name="beta_$d")
