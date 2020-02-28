@@ -100,14 +100,15 @@ result =
 compute_PersistenceIntervals_Of_PHAT_array(convert(UInt64,length(complex.dimensions)),convert(UInt64,length(complex.dimensions)+1),PHATarray(complex));
 # now we translate the sequence numbers to the fitration numbers
 # initialize the empty persistence interval
-PersistenceIntervals=PersistenceIntervalsType(complex.dim+1);
+PersistenceIntervals=  (VERSION < v"0.7.0") ? PersistenceIntervalsType(complex.dim+1) : PersistenceIntervalsType(undef,complex.dim+1)  
 for d=0:complex.dim;
-    PersistenceIntervals[d+1]=SingleDimensionPersistenceIntervalsType(0,0);
+    PersistenceIntervals[d+1]= (VERSION < v"0.7.0") ? SingleDimensionPersistenceIntervalsType(0,0) : SingleDimensionPersistenceIntervalsType(undef,0,0) ;
 end
 ###
 dimensions_of_intervals=Vector{Int}()
-deathtimes=Vector{Float64}(0);
-birthtimes=Vector{Float64}(0);
+deathtimes=(VERSION < v"0.7.0") ?  Vector{Float64}(0) :  Vector{Float64}(undef, 0);
+birthtimes=(VERSION < v"0.7.0") ?  Vector{Float64}(0) :  Vector{Float64}(undef, 0);
+  
 i=1; IsInfiniteInterval=false;
 while i<=length(result)
 if (!IsInfiniteInterval)&&(result[i]==-1);
