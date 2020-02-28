@@ -74,7 +74,7 @@ function compute_PersistenceIntervals_Of_PHAT_array(number_of_cells::UInt64,dime
     end
   funhandle = Libdl.dlsym(libhandle, :compute_persistence_intervals);
 ###########  now we call the phat executable
-         result = Vector{Int64}(dimension)
+         result =  zeros(Int64,dimension)
          ccall(funhandle, Void, (UInt64, UInt64, Ref{Int64}, Ref{Int64}),
                number_of_cells, dimension, A, result)
          return result
