@@ -140,7 +140,7 @@ end
 # now we compose the PersistenceIntervals array
 for d=0:complex.dim;
 cycle_indices_in_d=find(dimensions_of_intervals.==d);
-PersistenceIntervals[d+1]=Matrix{Float64}(length(cycle_indices_in_d),2);
+PersistenceIntervals[d+1]=zeros(Float64, length(cycle_indices_in_d), 2);
 for j=1: length(cycle_indices_in_d);
     PersistenceIntervals[d+1][j,:]=[ birthtimes[cycle_indices_in_d[j]] deathtimes[cycle_indices_in_d[j]]]
 end
