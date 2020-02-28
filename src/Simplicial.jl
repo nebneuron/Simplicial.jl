@@ -18,7 +18,8 @@ import Base: in, ==, <=, >=, <, >,*, show, push!, transpose, iszero,
        print_with_color=printstyled
        const PATHOF_Simplicial=dirname(pathof(Simplicial))
        using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl, Random 
-       const Void=Nothing 
+       Void=Cvoid     # make it possible to call c functions like it wa from 0.6
+       export Void  
        full=Array
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
