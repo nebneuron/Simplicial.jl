@@ -37,8 +37,15 @@ function FiltrationOfDirectedComplexes(ListOfFaces::Array{DirectedCodeword,1}, b
       # births might be not ordered, sort it first. (along with the ListOfFaces)
       # We add (and delte afterwards using [:,[1,3]]) the column -map(length,ListOfFaces)
       # in the sorting so that at a fixed birth time, the faces are ordered reversely w.r.t. their lengths
-      SortFaceBirth = sortrows([births -map(length,ListOfFaces)   ListOfFaces])[:,[1,3]]
-      faces = DirectedCodeword[SortFaceBirth[1,2]] # we will add the faces recursively; now, add the first one.
+      
+       if VERSION>= v"0.7.0"
+          SortFaceBirth = sortslices([births -map(length,ListOfFaces)   ListOfFaces],dims=1)[:,[1,3]]
+       else
+          SortFaceBirth = sortrows([births -map(length,ListOfFaces)   ListOfFaces])[:,[1,3]]
+       end
+           
+      # we will add the faces recursively; now, add the first one.  
+      faces = DirectedCodeword[SortFaceBirth[1,2]] 
       birth = Int[SortFaceBirth[1,1]] # add the first birth in births into birth
       for i = 2:Nfaces # this loop is the adding of the faces and births
         FaceBirthpush!(faces, birth, SortFaceBirth[i,2], SortFaceBirth[i,1])
