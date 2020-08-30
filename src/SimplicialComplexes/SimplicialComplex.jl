@@ -18,7 +18,7 @@ function show(io::IO, K::AbstractSimplicialComplex)
                println(io)
                println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
                # this was broken: println(io, "max K = {$(join(collect(facets(K)),", "))}")
-               println.(collect(K1.facets));
+               println.(collect(K.facets));
             end
        end
 
