@@ -5,7 +5,4 @@ license = "MIT"
 
 
 [deps]
-Combinatorics
-LightGraphs
-PyPlot
-IterTools
+
