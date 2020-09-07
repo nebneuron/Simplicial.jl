@@ -1,0 +1,11 @@
+name = "Simplicial"
+uuid = "bb1577d6-fed0-5ffd-8131-5296c7c3c7ad"
+keywords = ["algebraic topology", "TDA", "Homology"]
+license = "MIT"
+
+
+[deps]
+Combinatorics
+LightGraphs
+PyPlot
+IterTools
