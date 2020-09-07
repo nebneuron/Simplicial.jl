@@ -166,6 +166,10 @@ function SimplicialComplex(itr, V=unique(union(itr...)))
     T = isempty(V) ? TheIntegerType : eltype(V) #default type is "TheIntegerType"
     SimplicialComplex{T}(Set{T}.(collect(itr)), Set{T}(V))
 end
+
+# The function below completes a code to the appropriate simplicial complex
+SimplicialComplex(C:: CombinatorialCode)=SimplicialComplex(C.words)
+
 function SimplicialComplex(B::AbstractMatrix{Bool}; order="rows")
     _B = if order == "cols"
         transpose(B)
