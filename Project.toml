@@ -5,6 +5,7 @@ license = "MIT"
 
 
 [deps]
+DelimitedFiles="8bb1440f-4735-579b-a4ab-409b98df4dab"
 Combinatorics="861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 LightGraphs ="093fc24a-ae57-5d10-9952-331d41423f4d"
 PyPlot="d330b81b-6aea-500a-939a-2ce795aea3ee"
