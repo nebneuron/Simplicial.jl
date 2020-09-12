@@ -8,25 +8,26 @@ import Combinatorics: combinations
 
 # methods to extend
 import Base: in, ==, <=, >=, <, >,*, show, push!, transpose, iszero,
-             start, next, done, eltype, length,
+             # start, next, done,
+             iterate, eltype, length,
              max, show,
              setdiff
 
-    # because of the changes in   julia version >=0.7 
+    # because of the changes in   julia version >=0.7
     # we introduce these backward compartibility fixes below
  if VERSION>= v"0.7.0"
        print_with_color=printstyled
        const PATHOF_Simplicial=dirname(pathof(Simplicial))
-       using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl, Random 
-       const Void=Nothing 
+       using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl, Random
+       const Void=Nothing
        full=Array
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
        is_apple()=Sys.isapple()
        find=findall # make up for this horrible decision of deprecating the find function that was made under the pressure of mathworks goons
        export is_linux, is_windows, is_apple
-       
-  else 
+
+  else
   const PATHOF_Simplicial= Pkg.dir("Simplicial")*"/src"
   findall=find
   end
@@ -64,20 +65,20 @@ map(include,
      "DirectedComplexes/FiltrationOfDirectedComplexes.jl",
      "DirectedComplexes/Posets.jl",
      "DirectedComplexes/EulerCharacteristic.jl",
-    
+
      "utilities/subset_of_a_sequence.jl",
      "utilities/IntersectionsOfSequences.jl",
 
      # Filtrations Of Z2 Complexes
     "HomologyComputations/FiltrationOfZ2Complexes.jl",
      "HomologyComputations/PHAT_interface.jl",
-    
+
     # Functions testing the homology computations:
     "HomologyComputations/Test_PersistenceComputations.jl",
-    
+
     # Laplacians:
      "Laplacians/CombinatorialLaplacians.jl",
-    
+
      # utility files
      "utilities/mixed_type_operations.jl",
 
@@ -91,7 +92,9 @@ export PATHOF_Simplicial
 export
 # Imported from Base
 in, ==, <=, >=, >, <, show, push!, transpose,
-start, next, done, eltype, length,
+# start, next, done,
+iterate,
+eltype, length,
 max, show,
 setdiff,
 
@@ -117,7 +120,7 @@ union_product, intersection_completion, max_intersection_completion, union_compl
 trunk, core, delta, product, coproduct, trunksmorphism, simplexmap,
 
 # NeuralRing.jl
-Pseudomonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form, ==, <=, *, iszero, degree, vanishes_at, 
+Pseudomonomial, PseudoMonomialType, pseudomonomialtype, CanonicalForm, canonical_form, ==, <=, *, iszero, degree, vanishes_at,
 
 # SimplicialComplex.jl
 AbstractSimplicialComplex, SimplicialComplex,
@@ -133,7 +136,7 @@ TwoTorus, KleinBottle, PoincareHomologyThreeSphere, DunceHat,
 Bicomplex, polar_complex
 
 ###### Not yet organized
-export BettiNumbers, BettiNumbers_naive_method 
+export BettiNumbers, BettiNumbers_naive_method
 export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export MaximalDimension, MaximalHomologicalDimension
 export PlotBettiCurves
