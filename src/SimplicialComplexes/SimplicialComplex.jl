@@ -10,16 +10,18 @@ abstract type AbstractSimplicialComplex{T} <: AbstractFiniteSetCollection{T} end
 ### generic implementation of basic operations
 ################################################################################
 function show(io::IO, K::AbstractSimplicialComplex)
-    if !get(io, :compact, false)
-        println(io, typeof(K))
-    end
-    print(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
-    if !get(io, :compact, false)
-        println(io)
-        println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
-        println(io, "max K = {$(join(collect(facets(K)),", "))}")
-    end
-end
+           if !get(io, :compact, false)
+               println(io, typeof(K))
+           end
+           print(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
+           if !get(io, :compact, false)
+               println(io)
+               println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
+               # this was broken: println(io, "max K = {$(join(collect(facets(K)),", "))}")
+               println.(collect(K.facets));
+            end
+       end
+
 
 ==(K1::AbstractSimplicialComplex, K2::AbstractSimplicialComplex) = Set(map(Set,facets(K1))) == Set(map(Set,facets(K2)))
 
@@ -183,6 +185,10 @@ function SimplicialComplex(itr, V=unique(union(itr...)))
     T = isempty(V) ? TheIntegerType : eltype(V) #default type is "TheIntegerType"
     SimplicialComplex{T}(Set{T}.(collect(itr)), Set{T}(V))
 end
+
+# The function below completes a code to the appropriate simplicial complex
+SimplicialComplex(C:: CombinatorialCode)=SimplicialComplex(C.words)
+
 function SimplicialComplex(B::AbstractMatrix{Bool}; order="rows")
     _B = if order == "cols"
         transpose(B)

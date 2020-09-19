@@ -18,8 +18,9 @@ import Base: in, ==, <=, >=, <, >,*, show, push!, transpose, iszero,
  if VERSION>= v"0.7.0"
        print_with_color=printstyled
        const PATHOF_Simplicial=dirname(pathof(Simplicial))
-       using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl, Random
-       const Void=Nothing
+       using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl, Random 
+       Void=Cvoid     # make it possible to call c functions like it wa from 0.6
+       export Void  
        full=Array
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
@@ -144,7 +145,7 @@ export PlotBettiCurves
 export DirectedCodeword, issubsequence, subset_of_a_sequence, IntersectionsOfSequences, DirectedComplex, Matrix2Permutations, EmptyDirectedCodeword
 export GradedPoset, BoundaryOperator, EulerCharacteristic
 export The_Location_Of_PHAT_Executables, phat_compute_betti_numbers, PHAT_BettiNumbers
-export PHATarray, FiltrationOfDirectedComplexes, FiltrationOfZ2Complexes, FiltrationOfRandomSequences
+export PHATarray, compute_PersistenceIntervals_Of_PHAT_array,  FiltrationOfDirectedComplexes, FiltrationOfZ2Complexes, FiltrationOfRandomSequences
 export SkeletonOfFiltration
 export Laplacians
 

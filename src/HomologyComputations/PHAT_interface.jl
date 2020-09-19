@@ -74,7 +74,7 @@ function compute_PersistenceIntervals_Of_PHAT_array(number_of_cells::UInt64,dime
     end
   funhandle = Libdl.dlsym(libhandle, :compute_persistence_intervals);
 ###########  now we call the phat executable
-         result = Vector{Int64}(dimension)
+         result =  zeros(Int64,dimension)
          ccall(funhandle, Void, (UInt64, UInt64, Ref{Int64}, Ref{Int64}),
                number_of_cells, dimension, A, result)
          return result
@@ -100,14 +100,15 @@ result =
 compute_PersistenceIntervals_Of_PHAT_array(convert(UInt64,length(complex.dimensions)),convert(UInt64,length(complex.dimensions)+1),PHATarray(complex));
 # now we translate the sequence numbers to the fitration numbers
 # initialize the empty persistence interval
-PersistenceIntervals=PersistenceIntervalsType(complex.dim+1);
+PersistenceIntervals=  (VERSION < v"0.7.0") ? PersistenceIntervalsType(complex.dim+1) : PersistenceIntervalsType(undef,complex.dim+1)  
 for d=0:complex.dim;
-    PersistenceIntervals[d+1]=SingleDimensionPersistenceIntervalsType(0,0);
+    PersistenceIntervals[d+1]= (VERSION < v"0.7.0") ? SingleDimensionPersistenceIntervalsType(0,0) : SingleDimensionPersistenceIntervalsType(undef,0,0) ;
 end
 ###
 dimensions_of_intervals=Vector{Int}()
-deathtimes=Vector{Float64}(0);
-birthtimes=Vector{Float64}(0);
+deathtimes=(VERSION < v"0.7.0") ?  Vector{Float64}(0) :  Vector{Float64}(undef, 0);
+birthtimes=(VERSION < v"0.7.0") ?  Vector{Float64}(0) :  Vector{Float64}(undef, 0);
+  
 i=1; IsInfiniteInterval=false;
 while i<=length(result)
 if (!IsInfiniteInterval)&&(result[i]==-1);
@@ -139,7 +140,7 @@ end
 # now we compose the PersistenceIntervals array
 for d=0:complex.dim;
 cycle_indices_in_d=find(dimensions_of_intervals.==d);
-PersistenceIntervals[d+1]=Matrix{Float64}(length(cycle_indices_in_d),2);
+PersistenceIntervals[d+1]=zeros(Float64, length(cycle_indices_in_d), 2);
 for j=1: length(cycle_indices_in_d);
     PersistenceIntervals[d+1][j,:]=[ birthtimes[cycle_indices_in_d[j]] deathtimes[cycle_indices_in_d[j]]]
 end
