@@ -18,7 +18,7 @@ end # of the dumb costructor function of FiltrationOfSimplicialComplexes
   # this functions takes the list of faces together with their birth times, cleans it up (there may be redundant words), and then constructs the appropriate object
   # First we check if ListOfFaces is empty. If so then return the void complex with a bunch of empty fields
       if isempty(ListOfFaces)
-         new(Array{CodeWord}(0), Array{Int}(0), 0,  VERSION>= v"0.7.0" ? Array{Int}(undef,0) : Array{Int}(0), CodeWord([]));
+         new(Array{CodeWord}(undef, 0), Array{Int}(undef, 0), 0,  VERSION>= v"0.7.0" ? Array{Int}(undef,0) : Array{Int}(undef, 0), CodeWord([]));
       else
             # The length of ListOfFaces and that of births being different is not allowed.
             if length(ListOfFaces)!=length(births); error("The list of faces needs to be of the same length as the list of births"); end
