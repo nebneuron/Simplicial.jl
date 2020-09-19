@@ -10,7 +10,7 @@ import Combinatorics: combinations
 import Base: in, ==, <=, >=, <, >,*, show, push!, transpose, iszero,
              # start, next, done,
              iterate, eltype, length,
-             max, show,
+             max,
              setdiff
 
     # because of the changes in   julia version >=0.7
@@ -95,7 +95,7 @@ in, ==, <=, >=, >, <, show, push!, transpose,
 # start, next, done,
 iterate,
 eltype, length,
-max, show,
+max,
 setdiff,
 
 # core.jl
