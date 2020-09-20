@@ -9,16 +9,16 @@ abstract type AbstractCombinatorialCode{T} <: AbstractFiniteSetCollection{T} end
 ### Generic implementations of basic operations
 ################################################################################
 ### This funcion is broken in Julia 1 please fix!
-# function show(io::IO, C::AbstractCombinatorialCode)
-#    if !get(io, :compact, false)
-#        println(io, typeof(C))
-#    end
-#    print(io, "Code on [$(maximum(vertices(C)))] with $(length(C)) codewords")
-#    if !get(io, :compact, false)
-#        println(io)
-#        println(io, "C = {$(join(C, ", "))}")
-#    end
-# end
+function show(io::IO, C::AbstractCombinatorialCode)
+   if !get(io, :compact, false)
+       println(io, typeof(C))
+   end
+   print(io, "Code on [$(maximum(vertices(C)))] with $(length(C)) codewords")
+   if !get(io, :compact, false)
+       println(io)
+       println(io, "C = {$(join(C, ", "))}")
+   end
+end
 
 ################################################################################
 ### CombinatorialCode
@@ -254,19 +254,33 @@ isirrelevant(code::CombinatorialCode)=(code.words==[emptyset])
 eltype(::CombinatorialCode{T}) where T = Set{T}
 eltype(::Type{CombinatorialCode{T}}) where T = Set{T}
 length(CC::CombinatorialCode) = length(CC.words)
-start(CC::CombinatorialCode) = 1
-next(CC::CombinatorialCode, state) = (CC.words[state], state+1)
-done(CC::CombinatorialCode, state) = state > length(CC.words)
+
+###### Julia v0.6 iteration interface:
+# start(CC::CombinatorialCode) = 1
+# next(CC::CombinatorialCode, state) = (CC.words[state], state+1)
+# done(CC::CombinatorialCode, state) = state > length(CC.words)
+
+###### Julia v0.7+ iteration interface:
+iterate(CC::CombinatorialCode, state=1) = state > length(CC.words) ? nothing : (CC.words[state], state+1)
 
 ###### Iteration over maximal codewords
 length(maxC::MaximalSetIterator{CombinatorialCode{T}}) where T = length(maxC.collection.maximal_idx)
-start(maxC::MaximalSetIterator{CombinatorialCode{T}}) where T = 1
-function next(maxC::MaximalSetIterator{CombinatorialCode{T}}, state) where T
+###### Julia v0.6 iteration interface:
+# start(maxC::MaximalSetIterator{CombinatorialCode{T}}) where T = 1
+# function next(maxC::MaximalSetIterator{CombinatorialCode{T}}, state) where T
+#     C = maxC.collection
+#     return (C.words[C.maximal_idx[state]], state+1)
+# end
+# done(maxC::MaximalSetIterator{CombinatorialCode{T}}, state) where T = state > length(maxC.collection.maximal_idx)
+
+###### Julia v0.7+ iteration interface:
+function iterate(maxC::MaximalSetIterator{CombinatorialCode{T}}, state=1) where T
+    if state > length(maxC.collection.maximal_idx)
+        return nothing
+    end
     C = maxC.collection
     return (C.words[C.maximal_idx[state]], state+1)
 end
-done(maxC::MaximalSetIterator{CombinatorialCode{T}}, state) where T = state > length(maxC.collection.maximal_idx)
-
 
 
 
@@ -279,5 +293,3 @@ done(maxC::MaximalSetIterator{CombinatorialCode{T}}, state) where T = state > le
     This function is an alias to [`matrix_form`](@ref), use that instead.
 """
 BitArrayOfACombinatorialCode(C::CombinatorialCode) = matrix_form(C)
-
-

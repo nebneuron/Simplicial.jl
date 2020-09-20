@@ -18,7 +18,7 @@ end # of the dumb costructor function of FiltrationOfSimplicialComplexes
   # this functions takes the list of faces together with their birth times, cleans it up (there may be redundant words), and then constructs the appropriate object
   # First we check if ListOfFaces is empty. If so then return the void complex with a bunch of empty fields
       if isempty(ListOfFaces)
-         new(Array{CodeWord}(0), Array{Int}(0), 0,  VERSION>= v"0.7.0" ? Array{Int}(undef,0) : Array{Int}(0), CodeWord([]));
+         new(Array{CodeWord}(undef, 0), Array{Int}(undef, 0), 0,  VERSION>= v"0.7.0" ? Array{Int}(undef,0) : Array{Int}(undef, 0), CodeWord([]));
       else
             # The length of ListOfFaces and that of births being different is not allowed.
             if length(ListOfFaces)!=length(births); error("The list of faces needs to be of the same length as the list of births"); end
@@ -314,23 +314,23 @@ end# for i=1:length(FS.faces)
 
 return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
 end
-#  
-#  
+#
+#
 
 
 """
     show(FS::FiltrationOfSimplicialComplexes)
 """
 function show(io::IO, FS::FiltrationOfSimplicialComplexes)
-width=30;    
-number_of_vertices=length(FS.vertices); depth=FS.depth;
-print( "A fitration of $depth simplicial complexes on $number_of_vertices vertices: $(map(Int,sort(collect(FS.vertices))))\n");
-println("_"^width)
-print(  "birth time"); print(" | ") ; print( "face \n");
-println("_"^width)
-for i=1:length(FS.faces);
-   print( " $(FS.birth[i])        "); if FS.birth[i]<=9;  print(io, " "); end
-   print( "|  "); print(  "$(map(Int,sort(collect(FS.faces[i])))) \n");
- end
- println("_"^width)
+    width=30;
+    number_of_vertices=length(FS.vertices); depth=FS.depth;
+    print(io, "A filtration of $depth simplicial complexes on $number_of_vertices vertices: $(map(Int,sort(collect(FS.vertices))))\n");
+    println(io, "_"^width)
+    print(io,  "birth time"); print(io, " | ") ; print(io, "face \n");
+    println(io,"_"^width)
+    for i=1:length(FS.faces);
+        print(io, " $(FS.birth[i])        "); if FS.birth[i]<=9;  print(io, " "); end
+        print(io, "|  "); print(io,  "$(map(Int,sort(collect(FS.faces[i])))) \n");
+    end
+    println(io, "_"^width)
 end

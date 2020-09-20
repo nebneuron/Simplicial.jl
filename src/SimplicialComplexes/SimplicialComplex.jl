@@ -77,6 +77,7 @@ end
 
 
 ### ITERATION: generic iteration over _all_ faces of a complex
+### Relies on facets(K) being implemented
 function length(K::AbstractSimplicialComplex{T}) where T
     ans = 0
     for Fs in combinations(collect(facets(K)))
@@ -84,6 +85,8 @@ function length(K::AbstractSimplicialComplex{T}) where T
     end
     return ans
 end
+
+###### Julia v0.6 iteration interface:
 function start(K::AbstractSimplicialComplex{T}) where T
     #TODO subsets does not work on sets, so we have to use collect here, and then cast back
     #to Set{T} in next(). Surely there is a better way to handle this.
@@ -100,6 +103,22 @@ function next(K::AbstractSimplicialComplex{T}, state) where T
     return (Set{T}(f), (state[1], st))
 end
 done(K::AbstractSimplicialComplex{T}, state) where T = done(state[1], state[2])
+
+###### Julia v0.7+ iteration interface:
+function iterate(K::AbstractSimplicialComplex{T}) where T
+    all_subsets = map(f -> subsets(collect(f)), facets(K))
+    itr = distinct(chain(all_subsets...))
+    first, state = iterate(itr)
+    return (Set{T}(f), (itr, state))
+end
+function iterate(K::AbstractSimplicialComplex{T}, state) where T
+    # "state" is actually a tuple of an "inner" iterator and its current state; the
+    # inner iterator will return the object(s) we want as well as the next state, so
+    # we just have to unpack things, get the face and the new state, then pack it
+    # all up again.
+    (f, st) = iterate(state[1], state[2])
+    return (Set{T}(f), (state[1], st))
+end
 
 ################################################################################
 ### type SimplicialComplex
@@ -280,6 +299,10 @@ end
 
 ###### Iteration over facets: SimplicialComplex
 length(maxK::MaximalSetIterator{T}) where {T <: SimplicialComplex} = length(maxK.collection.facets)
-start(maxK::MaximalSetIterator{T}) where {T <: SimplicialComplex} = 1
-next(maxK::MaximalSetIterator{T}, state) where {T <: SimplicialComplex} = (maxK.collection.facets[state], state+1)
-done(maxK::MaximalSetIterator{T}, state) where {T <: SimplicialComplex} = state > length(maxK.collection.facets)
+###### Julia v0.6 iteration interface:
+# start(maxK::MaximalSetIterator{T}) where {T <: SimplicialComplex} = 1
+# next(maxK::MaximalSetIterator{T}, state) where {T <: SimplicialComplex} = (maxK.collection.facets[state], state+1)
+# done(maxK::MaximalSetIterator{T}, state) where {T <: SimplicialComplex} = state > length(maxK.collection.facets)
+
+###### Julia v0.7+ iteration interface:
+iterate(maxK::MaximalSetIterator{T}, state=1) where {T <: SimplicialComplex} = state > length(maxK.collection.facets) ? nothing : (maxK.collection.facets[state], state+1)
