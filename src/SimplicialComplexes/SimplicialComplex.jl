@@ -10,17 +10,26 @@ abstract type AbstractSimplicialComplex{T} <: AbstractFiniteSetCollection{T} end
 ### generic implementation of basic operations
 ################################################################################
 function show(io::IO, K::AbstractSimplicialComplex)
-           if !get(io, :compact, false)
-               println(io, typeof(K))
-           end
-           print(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
-           if !get(io, :compact, false)
-               println(io)
-               println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
-               # this was broken: println(io, "max K = {$(join(collect(facets(K)),", "))}")
-               println.(collect(K.facets));
-            end
-       end
+    print(io, typeof(K), " ", dim(K), "-dimensional simplicial complex on ", length(vertices(K)), " vertices with ", length(facets(K)), " facets")
+end
+function show(io::IO, ::MIME"text/plain", K::AbstractSimplicialComplex)
+    println(io, typeof(K))
+    println(io, "  ", dim(K), "-dimensional simplicial complex on ", length(vertices(K)), " vertices with ", length(facets(K)), " facets")
+    println(io, "      V = {", join(sort(collect(vertices(K))), ", "), "}")
+    println(io, "  max K = {", join(collect(facets(K)), ", "), "}")
+end
+# function show(io::IO, K::AbstractSimplicialComplex)
+#            if !get(io, :compact, false)
+#                println(io, typeof(K))
+#            end
+#            print(io, "$(dim(K))-dimensional simplicial complex on $(length(vertices(K))) vertices with $(length(facets(K))) facets")
+#            if !get(io, :compact, false)
+#                println(io)
+#                println(io, "    V = {$(join(sort(collect(vertices(K))), ", "))}")
+#                # this was broken: println(io, "max K = {$(join(collect(facets(K)),", "))}")
+#                println.(collect(K.facets));
+#             end
+#        end
 
 
 ==(K1::AbstractSimplicialComplex, K2::AbstractSimplicialComplex) = Set(map(Set,facets(K1))) == Set(map(Set,facets(K2)))
