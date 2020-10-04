@@ -85,6 +85,9 @@ function in(sigma, K::AbstractSimplicialComplex)
 end
 
 
+### Override isvoid for efficiency
+isvoid(K::AbstractSimplicialComplex{T}) where T = isempty(K.facets)
+
 ### ITERATION: generic iteration over _all_ faces of a complex
 ### Relies on facets(K) being implemented
 function length(K::AbstractSimplicialComplex{T}) where T
