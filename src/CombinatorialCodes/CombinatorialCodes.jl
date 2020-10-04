@@ -10,7 +10,7 @@ abstract type AbstractCombinatorialCode{T} <: AbstractFiniteSetCollection{T} end
 ################################################################################
 ### This funcion is broken in Julia 1 please fix!
 function show(io::IO, C::AbstractCombinatorialCode)
-    print(io, typeof(C), " on [", maximum(vertices(C)) ,"] with ", length(C), " words")
+    print(io, "Code on [", maximum(vertices(C)) ,"] with ", length(C), " words")
 end
 function show(io::IO, ::MIME"text/plain", C::AbstractCombinatorialCode)
     println(io, typeof(C))

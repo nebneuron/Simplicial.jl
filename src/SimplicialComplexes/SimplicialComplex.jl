@@ -10,7 +10,7 @@ abstract type AbstractSimplicialComplex{T} <: AbstractFiniteSetCollection{T} end
 ### generic implementation of basic operations
 ################################################################################
 function show(io::IO, K::AbstractSimplicialComplex)
-    print(io, typeof(K), " ", dim(K), "-dimensional simplicial complex on ", length(vertices(K)), " vertices with ", length(facets(K)), " facets")
+    print(io, dim(K), "-dimensional simplicial complex on ", length(vertices(K)), " vertices with ", length(facets(K)), " facets")
 end
 function show(io::IO, ::MIME"text/plain", K::AbstractSimplicialComplex)
     println(io, typeof(K))
