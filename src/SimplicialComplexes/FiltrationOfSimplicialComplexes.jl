@@ -256,66 +256,70 @@ end # for i=1:length(Sorted)
 end
 
 
+ """
+     Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
+     This Funcion takes a filtration of simplicial complexes and produces a filtration of their skeletons
+ """
+ function Skeleton(FS::FiltrationOfSimplicialComplexes,max__dim::Int)::FiltrationOfSimplicialComplexes
+ if max__dim<=0; error("The maximal mimension needs to be positive"); end;
+ if max__dim>MaximalHomologicalDimension;
+   error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension");
+ end
 
-"""
-    Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-    This Funcion takes a filtration of simplicial complexes and produces a filtration of their skeletons
+ MaxDimOfFS= maximum(FS.dimensions);
 
-"""
-function Skeleton(FS::FiltrationOfSimplicialComplexes,dim::Int)::FiltrationOfSimplicialComplexes
-if dim<=0; error("The maximal mimension needs to be positive"); end;
-if dim>MaximalHomologicalDimension; error("This function is currently not designed to handle skeletons in dimension that is higher than $MaximalHomologicalDimension"); end
-MaxDimOfFS= maximum(FS.dimensions);
-
-birth=Int[]; # these are birth times of faces
-ListOfFaces=Array{CodeWord,1}([]);
-NumberOfTopDimensionalFaces=0;
-# Here we compute theh set of subsets of a given set
-MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),dim+1);
-AllCombinations=map(CodeWord,collect(combinations(sort(collect(FS.vertices)),dim+1))); # These are all possible dim-dimensional faces
-DoesNotHaveThisFace=trues(length(AllCombinations));  # This keps track of which of all possible faces are in the skeleton
+ birth=Int[]; # these are birth times of faces
+ ListOfFaces=Array{CodeWord,1}([]);
+ NumberOfTopDimensionalFaces=0;
+ # Here we compute theh set of subsets of a given set
+ MaximalPossibleNumberOfTopDimensionalFaces=binomial(length(FS.vertices),max__dim+1);
+ all_combinations = combinations(sort(collect(FS.vertices)),max__dim+1);
+ AllCombinations= collect( all_combinations);
+ # AllCombinations=map(CodeWord, all_faces); # These are all possible max__dim-dimensional faces
+ DoesNotHaveThisFace=trues(length(AllCombinations));  # This keps track of which of all possible faces are in the skeleton
 
 
-for i=1:length(FS.faces)
-    this_face_dim=FS.dimensions[i]
-    this_face=FS.faces[i]
- if this_face_dim<=dim
-       push!(ListOfFaces,this_face);
-       push!(birth, FS.birth[i]);
-       if this_face_dim==dim
-          NumberOfTopDimensionalFaces+=1
-          # Now, also make sure we keep track of this in DoesNotHaveThisFace
-          for j=1: MaximalPossibleNumberOfTopDimensionalFaces;
-            if AllCombinations[j]==this_face;
-            DoesNotHaveThisFace[j]=false; break;
-            end;
-          end
+ for i=1:length(FS.faces)
+     this_face_dim=FS.dimensions[i]
+     this_face=FS.faces[i]
+     this_face_array=sort(collect(this_face))
+  if this_face_dim<=max__dim
+        push!(ListOfFaces,this_face);
+        push!(birth, FS.birth[i]);
+        if this_face_dim==max__dim
+            NumberOfTopDimensionalFaces+=1
+            # Now, also make sure we keep track of this in DoesNotHaveThisFace
+            for j=1: MaximalPossibleNumberOfTopDimensionalFaces;
+              if  AllCombinations[j]==this_face_array;
+                  DoesNotHaveThisFace[j]=false;
+                  break;
+              end;
+            end # for j=1
         end  # if this_face_dim==dim
-  else # i.e. if this face has higher dimension and we now need to determine what dim-dimensional faces it contains
+   else # i.e. if this face has higher dimension and we now need to determine what max__dim-dimensional faces it contains
 
-      # Now we cycle through those dim-dimensional faces indexed in DoesNotHaveThisFace and check if it is contained in the current face
-      for k=1:MaximalPossibleNumberOfTopDimensionalFaces
-          if  DoesNotHaveThisFace[k]
-              if  issubset(AllCombinations[k],this_face)
-                DoesNotHaveThisFace[k]=false # we now put this face to the skeleton
-                push!(ListOfFaces,AllCombinations[k])
-                push!(birth, FS.birth[i]);
-                NumberOfTopDimensionalFaces+=1
-              end
-          end
-      end
-  end # if this_face_dim<=dim
-    if NumberOfTopDimensionalFaces== MaximalPossibleNumberOfTopDimensionalFaces;
-        println( "Warning: the entire $dim-dimensional skeleton was filled  \n") ;break ;
-      elseif NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces
-             error("something went wrong: NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces")
-    end # Here we stop if we filled all possible top-dimensional faces
-end# for i=1:length(FS.faces)
+       # Now we cycle through those max__dim-dimensional faces indexed in DoesNotHaveThisFace and check if it is contained in the current face
+       for k=1:MaximalPossibleNumberOfTopDimensionalFaces
+           if  DoesNotHaveThisFace[k]
+               if  issubset(AllCombinations[k],this_face_array)
+                 DoesNotHaveThisFace[k]=false # we now put this face to the skeleton
+                 push!(ListOfFaces,CodeWord(AllCombinations[k]))
+                 push!(birth, FS.birth[i]);
+                 NumberOfTopDimensionalFaces+=1
+               end
+           end
+       end
+   end # if this_face_dim<=dim
+     if NumberOfTopDimensionalFaces== MaximalPossibleNumberOfTopDimensionalFaces;
+         println( "Warning: the entire $max__dim-dimensional skeleton was filled  \n") ;break ;
+       elseif NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces
+              error("something went wrong: NumberOfTopDimensionalFaces> MaximalPossibleNumberOfTopDimensionalFaces")
+     end # Here we stop if we filled all possible top-dimensional faces
+ end# for i=1:length(FS.faces)
 
-return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
-end
-#
-#
+ return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
+ end
+ 
 
 
 """
