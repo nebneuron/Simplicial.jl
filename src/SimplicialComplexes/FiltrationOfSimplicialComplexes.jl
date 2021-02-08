@@ -319,7 +319,37 @@ end
 
  return FiltrationOfSimplicialComplexes(ListOfFaces,birth,FS.vertices);
  end
- 
+
+
+
+####
+"""
+  the function
+  birth(f::CodeWord, FS::FiltrationOfSimplicialComplexes)::Int
+  returns -1 if f is not a face in any stage of the filtration
+  otherwise, it returns the birtime of the face
+"""
+function birth(f::CodeWord, FS::FiltrationOfSimplicialComplexes)::Int
+  if FS.birth[1]<0;
+          error(" the births are supposed to be non-negative ");
+  end
+    # the following part of this function is devectorized for speed, thus the awkward for loop
+    b=-1
+    for i=1:FS.depth
+          if issubset(f, FS.faces[i])
+            b= FS.birth[i]
+            break
+          end #   if issubset
+    end
+return b
+end
+
+
+
+
+
+
+
 
 
 """

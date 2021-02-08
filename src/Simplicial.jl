@@ -17,10 +17,14 @@ import Base: in, ==, <=, >=, <, >,*, show, push!, transpose, iszero,
     # we introduce these backward compartibility fixes below
  if VERSION>= v"0.7.0"
        print_with_color=printstyled
-       const PATHOF_Simplicial=dirname(pathof(Simplicial))
-       using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl, Random 
+       if pwd()=="/Users/vladimiritskov/Documents/GitHub/Simplicial.jl/src"
+             const PATHOF_Simplicial= pwd()
+      else
+            const PATHOF_Simplicial=dirname(pathof(Simplicial))
+      end
+       using DelimitedFiles, SparseArrays, LinearAlgebra, Test, Libdl, Random
        Void=Cvoid     # make it possible to call c functions like it wa from 0.6
-       export Void  
+       export Void
        full=Array
        is_linux()=Sys.islinux()
        is_windows()=Sys.iswindows()
@@ -138,7 +142,7 @@ Bicomplex, polar_complex
 
 ###### Not yet organized
 export BettiNumbers, BettiNumbers_naive_method
-export FiltrationOfSimplicialComplexes, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
+export FiltrationOfSimplicialComplexes, birth, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export MaximalDimension, MaximalHomologicalDimension
 export PlotBettiCurves
 # definitions related to directed complexes
