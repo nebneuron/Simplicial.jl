@@ -1,6 +1,8 @@
 # Simplicial.jl
 
-[`Simplicial`](https://github.com/nebneuron/Simplicial.jl) is a [Julia](julialang.org) package for manipulating simplicial complexes and topological data analysis (TDA). The package defines types for [Combinatorial Codes](@ref man-combinatorial-codes), [Simplicial Complexes](@ref man-simplicial-complexes), [Filtered Simplicial Complexes](@ref man-filtered-simplicial-complexes), and [Directed Complexes](@ref man-directed-complexes).
+[`Simplicial`](https://github.com/nebneuron/Simplicial.jl) is a [Julia](julialang.org) package for manipulating simplicial complexes and topological data analysis (TDA). 
+
+The package defines types for [Combinatorial Codes](@ref man-combinatorial-codes), [Simplicial Complexes](@ref man-simplicial-complexes), [Filtered Simplicial Complexes](@ref man-filtered-simplicial-complexes), and [Directed Complexes](@ref man-directed-complexes).
 
 ## Package Overview
 
