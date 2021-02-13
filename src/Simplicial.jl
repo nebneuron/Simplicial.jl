@@ -142,7 +142,7 @@ Bicomplex, polar_complex
 
 ###### Not yet organized
 export BettiNumbers, BettiNumbers_naive_method
-export FiltrationOfSimplicialComplexes, birth, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
+export FiltrationOfSimplicialComplexes, birth, dim, Skeleton, Skeleton_OLD, PersistenceIntervals, Intervals2Bettis, DowkerComplex, DowkerPersistentintervals, Sample
 export MaximalDimension, MaximalHomologicalDimension
 export PlotBettiCurves
 # definitions related to directed complexes
