@@ -119,17 +119,22 @@ done(K::AbstractSimplicialComplex{T}, state) where T = done(state[1], state[2])
 ###### Julia v0.7+ iteration interface:
 function iterate(K::AbstractSimplicialComplex{T}) where T
     all_subsets = map(f -> subsets(collect(f)), facets(K))
-    itr = distinct(chain(all_subsets...))
+    # itr = distinct(chain(all_subsets...))
+    itr = distinct(Iterators.flatten(all_subsets))
     first, state = iterate(itr)
-    return (Set{T}(f), (itr, state))
+    return (Set{T}(first), (itr, state))
 end
 function iterate(K::AbstractSimplicialComplex{T}, state) where T
     # "state" is actually a tuple of an "inner" iterator and its current state; the
     # inner iterator will return the object(s) we want as well as the next state, so
     # we just have to unpack things, get the face and the new state, then pack it
     # all up again.
-    (f, st) = iterate(state[1], state[2])
-    return (Set{T}(f), (state[1], st))
+    if iterate(state[1], state[2]) == nothing
+        return nothing
+    else
+        (f, st) = iterate(state[1], state[2])
+        return (Set{T}(f), (state[1], st))
+    end
 end
 
 ################################################################################

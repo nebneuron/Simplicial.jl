@@ -101,7 +101,7 @@ function CombinatorialCode(B::AbstractMatrix{Bool}; order="rows")
     V = 1:size(_B,2)
     CombinatorialCode([V[_B[i,:]] for i=1:size(_B,1)], V)
 end
-CombinatorialCode(C::AbstractFiniteSetCollection{T}) where T = CombinatorialCode{T}(collect(C), vertices(C))
+CombinatorialCode(C::AbstractFiniteSetCollection{T}) where T = CombinatorialCode{T}(Set{T}.(collect(C)), Set{T}(vertices(C)))
 
 ### REQUIRED FUNCTIONS: CombinatorialCode
 
