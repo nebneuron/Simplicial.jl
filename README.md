@@ -22,9 +22,7 @@ This package interfaces with existing TDA software for homology computations. Cu
 
 In Julia 1.0 the package installation is done via
 ```
-]
-add https://github.com/nebneuron/Simplicial.jl
-<backspace> 
+import Pkg; Pkg.add("Simplicial");
 ```
 
 
