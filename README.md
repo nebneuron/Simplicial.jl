@@ -20,7 +20,7 @@ This package interfaces with existing TDA software for homology computations. Cu
  The current version of `Simplicial` requires Julia 1.0 or higher. 
  
 
-In Julia 1.0 the package installation is done via
+Installing this package is accomplished by
 ```
 import Pkg; Pkg.add("Simplicial");
 ```
