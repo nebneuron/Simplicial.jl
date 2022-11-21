@@ -7,6 +7,12 @@ mutable struct GradedPoset
 
 # here boundaries[i][j] is an array of boundaries of the j-th element in i-th dimension
 # here negativesigns[i][j] is an array that indicates if the appropriate boundaary has negative signs
+  
+  # This function exposes the naive constructor
+ function GradedPoset(dimensions::Vector{Int64}, maxdim:: Int64, Nelements::Vector{Int64},boundaries::Vector{Vector{Vector{Int64}}},negativesigns::Vector{Vector{BitArray}})
+     new(dimensions, maxdim, Nelements,boundaries,negativesigns)
+ end
+
 "This is the constructor for theGradedPoset type from the  DirectedComplex type.
 The way it works, it starts at the top sequences, and iteratively takes the subsequences
 "
