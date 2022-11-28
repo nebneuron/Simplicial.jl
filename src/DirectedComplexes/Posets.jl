@@ -18,6 +18,7 @@ The way it works, it starts at the top sequences, and iteratively takes the subs
  
 
 function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
+  println("Constructing a graded poset"); 
   if maximaldimension == Inf
      maxdim = D.dim;
   elseif maximaldimension > D.dim
