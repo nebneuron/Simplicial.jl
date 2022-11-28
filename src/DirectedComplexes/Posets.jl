@@ -106,7 +106,7 @@ function GradedPoset(D::DirectedComplex, maximaldimension = Inf, verbose=false)
    previoussequences = currentsequences
 
  end # for currentdimensioncounter= 3:Ndimensions
-new(dimensions, maxdim, Nelements,boundaries,negativesigns)
+return GradedPoset(dimensions, maxdim, Nelements,boundaries,negativesigns)
 end
 
 
