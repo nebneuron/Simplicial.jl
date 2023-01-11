@@ -2,9 +2,10 @@ mutable struct GradedPoset
   dimensions::Array{Int,1} # this is the list of dimensions of the graded poset. This can not be smaller then -1 (corresponding to the empty set)
   dim::Int   # the maximun of dimensions
   Nelements::Array{Int,1}  # total number of facets in teach dimension
-  boundaries::Array{Array{Array{Int,1},1},1}   # this is a list of lists each list enumerates the boundary one step down
+  boundaries::Array{Array{Array{Int,1},1},1} # this is a list of lists each list enumerates the boundary one step down
+                                             # an element ξ' of the poset is considered to be a boundary of ξ iff
+                                             # the incidence function κ(ξ,ξ') is not equal to zero    
   negativesigns::Array{Array{BitArray,1},1}
-
 # here boundaries[i][j] is an array of boundaries of the j-th element in i-th dimension
 # here negativesigns[i][j] is an array that indicates if the appropriate boundaary has negative signs  
 end# GradedPoset
